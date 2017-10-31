@@ -8,19 +8,20 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ru.teosa.GUI.model.MainInfo;
+import ru.teosa.GUI.model.LoginForm;
+import ru.teosa.GUI.view.LoginController;
 
 public class MainApp extends Application {
 	
     private Stage primaryStage;
     private BorderPane rootLayout;
-    private MainInfo mainInfoInitData = new MainInfo("0", "0", "No connection-");
+    private LoginForm mainInfoInitData;// = new LoginForm("0", "0", "No connection-");
     
     public Stage getPrimaryStage() {
         return primaryStage;
     }
 
-	public MainInfo getMainInfoInitData() {
+	public LoginForm getMainInfoInitData() {
 		return mainInfoInitData;
 	}
 
@@ -31,7 +32,7 @@ public class MainApp extends Application {
 
         initRootLayout();
 
-        showPersonOverview();
+        showLoginForm();
 	}
 
 	public static void main(String[] args) {
@@ -58,14 +59,16 @@ public class MainApp extends Application {
         }
     }
     
-    public void showPersonOverview() {
+    public void showLoginForm() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/MainInfo.fxml"));
-            AnchorPane mainInfo = (AnchorPane) loader.load();
+            loader.setLocation(MainApp.class.getResource("view/Login.fxml"));
+            AnchorPane loginForm = (AnchorPane) loader.load();
 
-            rootLayout.setCenter(mainInfo);
+            rootLayout.setCenter(loginForm);
             
+            LoginController controller = loader.getController();
+            controller.setMainApp(this);
             
         } catch (IOException e) {
             e.printStackTrace();
