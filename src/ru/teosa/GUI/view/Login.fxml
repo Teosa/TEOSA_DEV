@@ -21,7 +21,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="loginButton" layoutX="92.0" layoutY="123.0" mnemonicParsing="false" onAction="#testfunc" prefHeight="14.0" prefWidth="116.0" text="Подключение" textAlignment="CENTER" />
+            <Button fx:id="loginButton" layoutX="92.0" layoutY="123.0" mnemonicParsing="false" onAction="#login" prefHeight="14.0" prefWidth="116.0" text="Подключение" textAlignment="CENTER" />
             <TextField fx:id="username" layoutX="111.0" layoutY="31.0" />
             <TextField fx:id="password" layoutX="111.0" layoutY="67.0" />
          </children>

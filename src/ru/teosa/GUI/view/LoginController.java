@@ -51,31 +51,34 @@ public class LoginController {
     	this.mainApp = mainApp;
     }
     
+    
+    
     @FXML
-    public void testfunc(){
+    public void login(){
+    	runWithCrome();
+//    	runWithHeadlessBrowser();
+    }
+    
+    
+    
+    
+    private void runWithCrome(){
+	    System.setProperty("webdriver.chrome.driver", "L:\\Downloads Opera\\chromedriver_win32\\chromedriver.exe");
+	    WebDriver driver = new ChromeDriver();
 
-    	  System.setProperty("webdriver.chrome.driver", "L:\\Downloads Opera\\chromedriver_win32\\chromedriver.exe");
-    	  WebDriver driver = new ChromeDriver();
-    	
-    	
-//        java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(java.util.logging.Level.OFF);
-//        java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
-//    	WebDriver driver = new HtmlUnitDriver(BrowserVersion.CHROME, true);
-    	  
-    	  
     	driver.get("https://www.howrse.com/site/logIn?redirection=/jeu/");
     	driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
     
     	driver.findElement(By.id("login")).sendKeys("Teosa");
-    	driver.findElement(By.id("password")).sendKeys("3437391");
-    	
-    	driver.findElement(By.id("authentificationSubmit")).click();
-    	
-
-            
+    	driver.findElement(By.id("password")).sendKeys("3437391");    	
+    	driver.findElement(By.id("authentificationSubmit")).click();    
     } 
-	
-	
+    
+    
+    private void runWithHeadlessBrowser(){}
+//  java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(java.util.logging.Level.OFF);
+//  java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
+//	WebDriver driver = new HtmlUnitDriver(BrowserVersion.CHROME, true);
 	
 	
 }
