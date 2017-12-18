@@ -1,5 +1,6 @@
 package ru.teosa.GUI.view;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -55,6 +56,7 @@ public class LoginController {
     
     @FXML
     public void login(){
+//    	System.out.println(this.getClass().getResource("/chromedriver.exe").getPath());
     	runWithCrome();
 //    	runWithHeadlessBrowser();
     }
@@ -63,7 +65,8 @@ public class LoginController {
     
     
     private void runWithCrome(){
-	    System.setProperty("webdriver.chrome.driver", "L:\\Downloads Opera\\chromedriver_win32\\chromedriver.exe");
+//	    System.setProperty("webdriver.chrome.driver", "L:\\Downloads Opera\\chromedriver_win32\\chromedriver.exe");
+	    System.setProperty("webdriver.chrome.driver", this.getClass().getResource("/chromedriver.exe").getPath());
 	    WebDriver driver = new ChromeDriver();
 
     	driver.get("https://www.howrse.com/site/logIn?redirection=/jeu/");
