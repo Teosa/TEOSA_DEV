@@ -56,8 +56,18 @@ public class LoginController {
     
     @FXML
     public void login(){
-//    	System.out.println(this.getClass().getResource("/chromedriver.exe").getPath());
+
+    	
+    	
     	runWithCrome();
+    	
+    	
+    	mainApp.showMainForm();
+    	mainApp.getPrimaryStage().sizeToScene();
+    	mainApp.getPrimaryStage().centerOnScreen();
+    	
+    	
+
 //    	runWithHeadlessBrowser();
     }
     
@@ -68,13 +78,15 @@ public class LoginController {
 //	    System.setProperty("webdriver.chrome.driver", "L:\\Downloads Opera\\chromedriver_win32\\chromedriver.exe");
 	    System.setProperty("webdriver.chrome.driver", this.getClass().getResource("/chromedriver.exe").getPath());
 	    WebDriver driver = new ChromeDriver();
+	    
+	    mainApp.setDriver(driver);
 
     	driver.get("https://www.howrse.com/site/logIn?redirection=/jeu/");
     	driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
     
     	driver.findElement(By.id("login")).sendKeys("Teosa");
     	driver.findElement(By.id("password")).sendKeys("3437391");    	
-    	driver.findElement(By.id("authentificationSubmit")).click();    
+//    	driver.findElement(By.id("authentificationSubmit")).click();    
     } 
     
     
