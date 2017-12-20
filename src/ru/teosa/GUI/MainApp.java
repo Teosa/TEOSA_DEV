@@ -38,6 +38,9 @@ public class MainApp extends Application {
 	public void setDriver(WebDriver driver) {
 		this.driver = driver;
 	}
+	public WebDriver getDriver() {
+		return driver;
+	}
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -49,7 +52,8 @@ public class MainApp extends Application {
 			@Override
 			public void handle(WindowEvent event) {
 				System.out.println(driver);
-				if(driver != null) driver.close();
+				if(driver != null) driver.quit();
+				
 			}
 		});
         

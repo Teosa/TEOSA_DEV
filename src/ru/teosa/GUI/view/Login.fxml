@@ -6,10 +6,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.LoginController">
+<AnchorPane prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.LoginController">
    <children>
-      <Pane layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+      <Pane layoutX="5.0" layoutY="5.0" maxHeight="200.0" maxWidth="300.0" prefHeight="200.0" prefWidth="300.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
             <Label layoutX="13.0" layoutY="33.0" prefHeight="20.0" prefWidth="80.0" text="Логин">
                <font>
@@ -21,9 +22,10 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="loginButton" layoutX="92.0" layoutY="123.0" mnemonicParsing="false" onAction="#login" prefHeight="14.0" prefWidth="116.0" text="Подключение" textAlignment="CENTER" />
+            <Button fx:id="loginButton" layoutX="87.0" layoutY="143.0" mnemonicParsing="false" onAction="#login" prefHeight="14.0" prefWidth="116.0" text="Подключение" textAlignment="CENTER" />
             <TextField fx:id="username" layoutX="111.0" layoutY="31.0" />
             <TextField fx:id="password" layoutX="111.0" layoutY="67.0" />
+            <Text fx:id="loginErrorMsg" fill="RED" layoutX="18.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="255.0" />
          </children>
       </Pane>
    </children>
