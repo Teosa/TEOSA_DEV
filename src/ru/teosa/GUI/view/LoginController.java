@@ -3,11 +3,9 @@ package ru.teosa.GUI.view;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -42,16 +40,10 @@ public class LoginController {
     
     @FXML
     public void login(){
-
     	if(!checkLogopas()) return;
-
     	if(mainApp.getDriver() == null) runWithCrome();
-    	
-    	if(accountLogin()) {
-        	mainApp.showMainForm();
-        	mainApp.getPrimaryStage().sizeToScene();
-        	mainApp.getPrimaryStage().centerOnScreen();
-    	}
+    	if(accountLogin()) mainApp.showMainForm(); 
+    	      
     }
     
     private void runWithCrome(){
@@ -61,7 +53,7 @@ public class LoginController {
 
     	mainApp.getDriver().get("https://www.howrse.com/site/logIn?redirection=/jeu/");
 
-    	mainApp.getDriver().manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+    	mainApp.getDriver().manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
     	mainApp.getDriver().manage().timeouts().setScriptTimeout(30, TimeUnit.SECONDS);
     	mainApp.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     	
@@ -88,14 +80,12 @@ public class LoginController {
 			e.printStackTrace();
 		}
     	
-    	System.out.println(mainApp.getDriver().getCurrentUrl());
-    	
     	if(!mainApp.getDriver().getCurrentUrl().contains("identification")) {
     		loginErrorMsg.setText(mainApp.getDriver().findElement(By.id("fieldError-invalidUser")).getText());
     		return false;
     	}	
     	else {
-    		loginErrorMsg.setText("");
+    		loginErrorMsg.setText("");  		
     		return true;
     	}
     }
