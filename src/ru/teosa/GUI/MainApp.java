@@ -105,7 +105,8 @@ public class MainApp extends Application {
             this.getPrimaryStage().sizeToScene();
         	this.getPrimaryStage().centerOnScreen();
         	
-        	MainWindow.init(this);
+        	controller.initWindow();
+//        	MainWindow.init(this);
 
         } catch (IOException e) {
             e.printStackTrace();
