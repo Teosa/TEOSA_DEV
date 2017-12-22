@@ -8,16 +8,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.objects.SimpleComboRecord;
 
 public class MainWindow {
 
 	private static MainApp mainApp;
 	private static WebDriver driver;
 	
-	private static List<String> farms = new ArrayList<String>();
+	private static List<SimpleComboRecord> farms = new ArrayList<SimpleComboRecord>();
 
 	public MainApp getMainApp() {
 		return mainApp;
@@ -25,14 +24,19 @@ public class MainWindow {
 	public static WebDriver getDriver() {
 		return driver;
 	}
-	public static List<String> getFarms() {
+	public static List<SimpleComboRecord> getFarms() {
 		return farms;
 	}
-	public void setFarms(List<String> farms) {
+	public void setFarms(List<SimpleComboRecord> farms) {
 		MainWindow.farms = farms;
 	}
 	
-	
+	/**
+	 * Инициализация формы.<br>
+	 * 1.Установка ссылок на главное приложение и драйвер.
+	 * 2. Переход на страницу заводов.
+	 * 3. Запонение доступных комбобоксов и полей.
+	 * */
 	public static void init(MainApp mainApp) {
 		MainWindow.mainApp = mainApp;
 		MainWindow.driver = mainApp.getDriver();
@@ -57,7 +61,19 @@ public class MainWindow {
 		
 		for(int i = 0; i < farms.size(); ++i) {
 			WebElement farm = farms.get(i);
-			MainWindow.farms.add(farm.findElement(By.className("tab-action")).getText());
+			SimpleComboRecord record = new SimpleComboRecord();
+			String farmURL = "";
+			
+			if(i != farms.size() -1) {
+				farmURL = farm.findElement(By.className("tab-action")).getAttribute("href");
+				farmURL = farmURL.replace("#tab-", "elevage=");
+			}
+			else farmURL = driver.getCurrentUrl();
+			
+			record.setName(farm.findElement(By.className("tab-action")).getText());
+			record.setURL(farmURL);
+			
+			MainWindow.getFarms().add(record);
 		}
 	}
 	

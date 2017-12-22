@@ -12,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import ru.teosa.GUI.model.MainWindow;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
 import org.apache.log4j.Logger;
@@ -42,6 +41,7 @@ public class MainApp extends Application {
 		launch(args);
 	}
 
+	/** Инициализация корневого макета */
 	@Override
 	public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -58,8 +58,7 @@ public class MainApp extends Application {
         showLoginForm();
 	}
 	
-	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
-    public void initRootLayout() {
+    private void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
@@ -73,7 +72,9 @@ public class MainApp extends Application {
         }
     }
     
-    
+    /**
+     * Инициализация и отображение формы авторизации
+     * */
     public void showLoginForm() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -89,7 +90,9 @@ public class MainApp extends Application {
         }
     }
     
-    
+    /**
+     * Инициализация и отображение главной формы
+     * */
     public void showMainForm() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -106,7 +109,6 @@ public class MainApp extends Application {
         	this.getPrimaryStage().centerOnScreen();
         	
         	controller.initWindow();
-//        	MainWindow.init(this);
 
         } catch (IOException e) {
             e.printStackTrace();
