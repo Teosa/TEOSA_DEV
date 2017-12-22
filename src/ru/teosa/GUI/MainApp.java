@@ -41,7 +41,7 @@ public class MainApp extends Application {
 		launch(args);
 	}
 
-	/** Инициализация корневого макета */
+	/** Инициализация корневого макета + */
 	@Override
 	public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
