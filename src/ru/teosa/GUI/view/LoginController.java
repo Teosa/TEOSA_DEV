@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 public class LoginController {
 	
@@ -43,13 +44,15 @@ public class LoginController {
      * 1. Проверка заполненности логина и пароля. В случае неудачи - выход из метода.<br>
      * 2. Проверка наличия открытого браузера (открытие нового при неудаче) и переход на главную страницу Lowadi.<br>
      * 3. Попытка авторизации с введенными логином и паролем. В случае неудачи - отображение ошибки в окне авторизации приложения.
+     * 4. Инициализация MainAppHolderSingleton.
      * */
     @FXML
     public void login(){
     	if(!checkLogopas()) return;
     	if(mainApp.getDriver() == null) runWithCrome();
     	if(accountLogin()) mainApp.showMainForm(); 
-    	      
+    	
+    	MainAppHolderSingleton.getInstance().setMainApp(mainApp);
     }
     
     private void runWithCrome(){

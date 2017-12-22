@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -84,7 +85,8 @@ public class MainApp extends Application {
             rootLayout.setCenter(loginForm);
         
             LoginController controller = loader.getController();
-            controller.setMainApp(this);            
+            controller.setMainApp(this);  
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
