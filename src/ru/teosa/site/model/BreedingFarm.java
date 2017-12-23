@@ -26,7 +26,8 @@ public class BreedingFarm {
 			WebElement firstHorse = driver.findElement(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul/li[1]"));
 			if(firstHorse != null) {
 				try {
-					firstHorse.findElement(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul/li[1]/div/div[1]/div/ul/li[1]/a")).click();
+					firstHorse.findElement(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul/li[1]/div/div[1]/div/ul/li[1]"))
+					.findElement(By.className("horsename")).click();
 					return true;
 				}
 				catch(Exception e) {
@@ -41,8 +42,12 @@ public class BreedingFarm {
 	}
 	
 	public void herdRun() {
-		if(!findFirstHorse()) return;
+		Logger.getLogger("debug").debug("lastRunedHorse: " + lastRunedHorse);
+		if(lastRunedHorse != null) driver.navigate().to(lastRunedHorse);
+		else if(!findFirstHorse()) return;
+		
 		boolean endOfFarm = false;
+		
 		try {
 			while(!endOfFarm) {
 				Horse horse = new Horse();
@@ -51,11 +56,13 @@ public class BreedingFarm {
 			}
 		}
 		catch(Exception e) {
+			Logger.getLogger("debug").debug("HERD RUNNING ERROR");
+			Logger.getLogger("debug").debug("LAST HORSE URL: " + lastRunedHorse);
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
-			System.out.println("HERD RUNNING ERROR");
-			System.out.println("URL: " + lastRunedHorse);
 			return;
 		}
 		
 	}
+	
+	
 }

@@ -1,5 +1,6 @@
 package ru.teosa.site.model;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 import ru.teosa.utils.objects.MainAppHolderSingleton;
@@ -17,7 +18,7 @@ public class Horse {
 	
 	public Horse() {
 		driver = MainAppHolderSingleton.getInstance().getDriver();
-		pageContent = new HorsePage();
+		pageContent = new HorsePage(this);
 		
 		setURL(driver.getCurrentUrl());
 		
@@ -28,15 +29,21 @@ public class Horse {
 	
 	
 	
-	public boolean run() throws Exception{
+	public boolean run() throws Exception{		
+		Logger.getLogger("debug").debug(toString());
 		
-		System.out.println(toString());
+		if(pageContent.isHorseProcessed()) return true;
+		
+		pageContent.groom();
+		pageContent.drink();
+		pageContent.mission();
 		pageContent.feed();
-//		pageContent.groom();
-//		pageContent.drink();
-//		pageContent.mission();
+		pageContent.putToBed();
+		pageContent.switchToNextHorse();
 		
-		return true;
+		Logger.getLogger("debug").debug("RUNING SUCCESS");
+		
+		return false;
 	}
 	
 	@Override
