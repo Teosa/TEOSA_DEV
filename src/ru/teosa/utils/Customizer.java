@@ -25,14 +25,16 @@ public class Customizer{
 	 * ћетод дл€ кастомизации комбобокса, содержащего SimpleComboRecord в качестве записей.<br>
 	 * ”станавливает дл€ отображени€ в выпадающем списке поле Name. ѕосле выбора записи - переход по ссылке из пол€ URL.
 	 * @param combo комбобокс дл€ кастомизации
+	 * @param URLRedirect переход по ссылке при выборе значени€ в комбобоксе
 	 * @return void
 	 * */
-	public void CustomizeCB(ComboBox<SimpleComboRecord> combo) {		
-		combo.valueProperty().addListener((obs, oldV, newV) -> {
-			if(newV != null) mainApp.getDriver().navigate().to(newV.getURL());		
-		});
-    	
-    	
+	public void CustomizeCB(ComboBox<SimpleComboRecord> combo, boolean URLRedirect) {		
+		if(URLRedirect) {
+			combo.valueProperty().addListener((obs, oldV, newV) -> {
+				if(newV != null) mainApp.getDriver().navigate().to(newV.getURL());		
+			});
+		}
+  	
 		combo.setConverter(new StringConverter<SimpleComboRecord>() {
     	    @Override
     	    public String toString(SimpleComboRecord object) {

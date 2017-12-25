@@ -2,17 +2,24 @@ package ru.teosa.GUI.view;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.Customizer;
+import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
+import ru.teosa.utils.objects.SimpleComboRecord;
 
 public class LoginController {
 	
@@ -24,6 +31,8 @@ public class LoginController {
 	private Button loginButton;
 	@FXML
 	private Text loginErrorMsg;
+	@FXML
+	private ComboBox<SimpleComboRecord> siteVersion;
 	
 	private MainApp mainApp;
 
@@ -33,7 +42,14 @@ public class LoginController {
      * после того, как fxml-файл будет загружен.
      */
     @FXML
-    private void initialize() {}
+    private void initialize() {
+    	new Customizer().CustomizeCB(siteVersion, false);
+    	siteVersion.getItems().addAll(
+	    			new SimpleComboRecord("RUS", "https://www.lowadi.ru/", null),
+	    			new SimpleComboRecord("INTERNATIONAL", "https://www.howrse.com/site/logIn?redirection=/jeu/", null)
+    			);
+    	siteVersion.setValue(siteVersion.getItems().get(0));
+    }
     
     public void setMainApp(MainApp mainApp) {
     	this.mainApp = mainApp;
@@ -60,43 +76,55 @@ public class LoginController {
 	    
 	    mainApp.setDriver(new ChromeDriver());
 
-    	mainApp.getDriver().get("https://www.howrse.com/site/logIn?redirection=/jeu/");
+    	mainApp.getDriver().get(siteVersion.getValue().getURL());
 
     	mainApp.getDriver().manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
     	mainApp.getDriver().manage().timeouts().setScriptTimeout(30, TimeUnit.SECONDS);
     	mainApp.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     	
+    	MainAppHolderSingleton.getInstance().setDriver(mainApp.getDriver());
     } 
      
     private void runWithHeadlessBrowser(){}
-    
+ 
     private boolean accountLogin(){
-
-    	WebElement loginField = mainApp.getDriver().findElement(By.id("login"));
-    	WebElement passwordField = mainApp.getDriver().findElement(By.id("password"));
-    	
-    	loginField.clear();
-    	passwordField.clear();
-    	
-    	loginField.sendKeys(username.getText());
-    	passwordField.sendKeys(password.getText());
-    	
-    	mainApp.getDriver().findElement(By.id("authentificationSubmit")).click();
-    	
     	try {
+    		try {
+        		WebElement loginPanel = Sleeper.waitVisibility("//*[@id=\"header\"]/nav/div/div");
+        		boolean isLoginPanelVisible = loginPanel.getAttribute("class").contains("visible");
+
+        		if(!isLoginPanelVisible) mainApp.getDriver().findElement(By.xpath("//*[@id=\"header\"]/nav/div")).click();
+    		}
+    		catch(NoSuchElementException | TimeoutException e) {
+    			Logger.getLogger("error").error(e);
+    		}
+
+	    	WebElement loginField = mainApp.getDriver().findElement(By.id("login"));
+	    	WebElement passwordField = mainApp.getDriver().findElement(By.id("password"));
+
+	    	loginField.clear();
+	    	passwordField.clear();
+
+	    	loginField.sendKeys(username.getText());
+	    	passwordField.sendKeys(password.getText());
+
+	    	mainApp.getDriver().findElement(By.id("authentificationSubmit")).click();
+	    	
 			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+
+	    	if(!mainApp.getDriver().getCurrentUrl().contains("identification")) {
+	    		loginErrorMsg.setText(mainApp.getDriver().findElement(By.id("fieldError-invalidUser")).getText());
+	    		return false;
+	    	}	
+	    	else {
+	    		loginErrorMsg.setText("");  		
+	    		return true;
+	    	}
+		} catch (Exception e) {
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+			loginErrorMsg.setText("Ошибка авторизации");
+			return false;
 		}
-    	
-    	if(!mainApp.getDriver().getCurrentUrl().contains("identification")) {
-    		loginErrorMsg.setText(mainApp.getDriver().findElement(By.id("fieldError-invalidUser")).getText());
-    		return false;
-    	}	
-    	else {
-    		loginErrorMsg.setText("");  		
-    		return true;
-    	}
     }
     
     private boolean checkLogopas(){    	

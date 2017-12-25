@@ -10,16 +10,22 @@ import org.openqa.selenium.WebElement;
 
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
-public class BreedingFarm {
+public class BreedingFarm implements Runnable{
 	
 	private WebDriver driver;
 	private String lastRunedHorse = null;
+	private static boolean runInterupted = false;
 	
 	public BreedingFarm() {
 		driver = MainAppHolderSingleton.getInstance().getDriver();
+	}	
+	public static boolean isRunInterupted() {
+		return runInterupted;
+	}
+	public static void setRunInterupted(boolean runInterupted) {
+		BreedingFarm.runInterupted = runInterupted;
 	}
 
-	
 	public boolean findFirstHorse() {
 		List<WebElement> farms = driver.findElements(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul"));
 		if(farms.size() > 0) {
@@ -40,19 +46,24 @@ public class BreedingFarm {
 		else return false;
 		
 	}
-	
-	public void herdRun() {
+
+
+	@Override
+	public void run() {
+		Logger.getLogger("debug").debug(Thread.currentThread().getName());
 		Logger.getLogger("debug").debug("lastRunedHorse: " + lastRunedHorse);
+		
 		if(lastRunedHorse != null) driver.navigate().to(lastRunedHorse);
 		else if(!findFirstHorse()) return;
 		
 		boolean endOfFarm = false;
 		
 		try {
-			while(!endOfFarm) {
+			while(!endOfFarm && !runInterupted) {
 				Horse horse = new Horse();
 				lastRunedHorse = horse.getURL();
 				endOfFarm = horse.run();
+				Logger.getLogger("debug").debug("runInterupted: " + runInterupted);
 			}
 		}
 		catch(Exception e) {
@@ -61,7 +72,10 @@ public class BreedingFarm {
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
 			return;
 		}
-		
+		finally {
+			Logger.getLogger("debug").debug("FINNALY");
+			runInterupted = false;
+		}
 	}
 	
 	

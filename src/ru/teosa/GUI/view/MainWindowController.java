@@ -1,5 +1,7 @@
 package ru.teosa.GUI.view;
 
+import org.apache.log4j.Logger;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -18,18 +20,36 @@ public class MainWindowController {
 	private ComboBox<SimpleComboRecord> farms;
 	@FXML
 	private Button startButton;
+	@FXML
+	private Button stopButton;
 
 
     @FXML
     private void initialize() {
-    	customizer.CustomizeCB(farms);
+    	customizer.CustomizeCB(farms, true);
     }
     
     @FXML
-    public void startButtonHandler() {
-    	farms.getValue().getURL();
-    	new BreedingFarm().herdRun(); 
+    public void startButtonHandler() { 	
+    	
+    	BreedingFarm farm;
+    	
+    	if(farms.getValue().getData() == null) {
+        	farm = new BreedingFarm();
+        	farms.getValue().setData(farm);
+    	}
+    	else farm = ((BreedingFarm)farms.getValue().getData());    	
+
+        new Thread(farm).start();
     }
+    
+    @FXML
+    public void stopButtonHandler() throws Exception{ 	
+    	Logger.getLogger("debug").debug("TRY TO INTERRUPT");		
+    	BreedingFarm.setRunInterupted(true);
+    }
+    
+    
 //******************************************************************************************   
 //******************************************************************************************   
 //******************************************************************************************     

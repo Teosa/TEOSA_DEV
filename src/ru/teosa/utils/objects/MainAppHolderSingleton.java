@@ -33,4 +33,6 @@ public class MainAppHolderSingleton {
             _instance = new MainAppHolderSingleton();
         return _instance;
     }
+
+
 }

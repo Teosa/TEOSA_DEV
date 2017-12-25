@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
+
 import org.apache.log4j.Logger;
 
 public class MainApp extends Application {
@@ -86,7 +87,7 @@ public class MainApp extends Application {
         
             LoginController controller = loader.getController();
             controller.setMainApp(this);  
-            
+             
         } catch (IOException e) {
             e.printStackTrace();
         }

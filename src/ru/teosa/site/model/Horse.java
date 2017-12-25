@@ -32,14 +32,15 @@ public class Horse {
 	public boolean run() throws Exception{		
 		Logger.getLogger("debug").debug(toString());
 		
-		if(pageContent.isHorseProcessed()) return true;
+//		if(pageContent.isHorseProcessed()) return true;
+		pageContent.registerInAnEquestrianCenter();
 		
-		pageContent.groom();
-		pageContent.drink();
-		pageContent.mission();
-		pageContent.feed();
-		pageContent.putToBed();
-		pageContent.switchToNextHorse();
+//		pageContent.groom();
+//		pageContent.drink();
+//		pageContent.mission();
+//		pageContent.feed();
+//		pageContent.putToBed();
+//		pageContent.switchToNextHorse();
 		
 		Logger.getLogger("debug").debug("RUNING SUCCESS");
 		

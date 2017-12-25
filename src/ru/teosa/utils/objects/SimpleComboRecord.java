@@ -2,6 +2,7 @@ package ru.teosa.utils.objects;
 
 /** Объект для заполнения комбобоксов */
 public class SimpleComboRecord {
+	
 	/**  Имя записи для отображения в выпадающем списке */
 	private String name;
 	/** Ссылка для перехода при выборе записи */
@@ -9,6 +10,13 @@ public class SimpleComboRecord {
 	/**  Дополнительный объект */
 	private Object data;
 	
+	
+	public SimpleComboRecord() {};
+	public SimpleComboRecord(String name, String URL, Object data) {
+		this.name = name;
+		this.URL = URL;
+		this.data = data;
+	};
 	
 	public String getName() {
 		return name;
