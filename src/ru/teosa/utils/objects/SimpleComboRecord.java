@@ -1,5 +1,7 @@
 package ru.teosa.utils.objects;
 
+import ru.teosa.site.model.BreedingFarm;
+
 /** Объект для заполнения комбобоксов */
 public class SimpleComboRecord {
 	
@@ -9,6 +11,8 @@ public class SimpleComboRecord {
 	private String URL;
 	/**  Дополнительный объект */
 	private Object data;
+	
+	private BreedingFarm farmData;
 	
 	
 	public SimpleComboRecord() {};
@@ -35,5 +39,16 @@ public class SimpleComboRecord {
 	}
 	public void setData(Object data) {
 		this.data = data;
+	}	
+	public BreedingFarm getFarmData() {
+		return farmData;
+	}
+	public void setFarmData(BreedingFarm farmData) {
+		this.farmData = farmData;
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
 	}
 }

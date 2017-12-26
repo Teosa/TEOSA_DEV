@@ -3,12 +3,14 @@ package ru.teosa.GUI.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.objects.SimpleComboRecord;
 
 public class MainWindow {
@@ -56,25 +58,74 @@ public class MainWindow {
 	}
 	
 	private static void getBreedibgFarms(){
+
 		List<WebElement> farms = driver.findElements(By.xpath("//*[@id=\"tab-all-breeding\"]/li"));
 		MainWindow.farms.clear();
 		
+		Logger.getLogger("debug").debug("FARMS QTY: " + farms.size());	
+		
 		for(int i = 0; i < farms.size(); ++i) {
-			WebElement farm = farms.get(i);
+			WebElement farm = driver.findElement(By.xpath("//*[@id=\"tab-all-breeding\"]/li[" + (i+1) + "]"));
+			Logger.getLogger("debug").debug("FARM " + i + " : " + farm);
+			
+			Actions builder = new Actions(driver);
+			builder.moveToElement(farm).build().perform();
+
 			SimpleComboRecord record = new SimpleComboRecord();
+
 			String farmURL = "";
-			
+			String name = "";
+			Logger.getLogger("debug").debug("04");
 			if(i != farms.size() -1) {
-				farmURL = farm.findElement(By.className("tab-action")).getAttribute("href");
-				farmURL = farmURL.replace("#tab-", "elevage=");
+				Sleeper.turnOffImplicitWaits();
+				List<WebElement> subFarms = farm.findElements(By.tagName("li"));
+				Logger.getLogger("debug").debug("SUB FARMS QTY: " + subFarms.size());
+				Sleeper.turnOnImplicitWaits();
+				
+				if(subFarms.size() > 0) {
+					
+					List<SimpleComboRecord> subFarmsRecordsList = new ArrayList<SimpleComboRecord>();
+					for(int k = 0; k < subFarms.size(); ++k) {
+						SimpleComboRecord subFarmRecord = new SimpleComboRecord();
+						String subname = "";
+						String subURL = "";
+						
+						subname = subFarms.get(k).findElement(By.tagName("a")).getText();
+						subURL = subFarms.get(k).findElement(By.tagName("a")).getAttribute("href");
+						subURL = subURL.replace("#tab-", "elevage=");
+						
+						subFarmRecord.setName(subname);
+						subFarmRecord.setURL(subURL);
+						
+						Logger.getLogger("debug").debug("SUB FARM " + k + " : " + subname);
+						Logger.getLogger("debug").debug("SUB FARM " + k + " : " + subURL);
+						
+						subFarmsRecordsList.add(subFarmRecord);
+					}
+					name = farm.findElement(By.className("groupes")).getText();
+					record.setData(subFarmsRecordsList);
+				}
+				else {
+					name = farm.findElement(By.className("tab-action")).getText();
+					farmURL = farm.findElement(By.className("tab-action")).getAttribute("href");
+					farmURL = farmURL.replace("#tab-", "elevage=");
+				}
 			}
-			else farmURL = driver.getCurrentUrl();
+			else {
+				name = farm.findElement(By.tagName("a")).getText();
+				farmURL = driver.getCurrentUrl();
+			}
 			
-			record.setName(farm.findElement(By.className("tab-action")).getText());
+			record.setName(name);
 			record.setURL(farmURL);
 			
-			MainWindow.getFarms().add(record);
+			Logger.getLogger("debug").debug("FARM " + i + " : " + name);
+			Logger.getLogger("debug").debug("FARM " + i + " : " + farmURL);
+			
+			MainWindow.getFarms().add(record);	
 		}
+		
+		Logger.getLogger("debug").debug(MainWindow.getFarms().size());	
 	}
 	
 }

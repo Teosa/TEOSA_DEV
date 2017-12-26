@@ -185,12 +185,15 @@ public class HorsePage {
 		Logger.getLogger("debug").debug("registerInAnEquestrianCenter");
 		
 		try {
-			Sleeper.waitForClickAndClick("//*[@id=\"cheval-inscription\"]/a");
-			WebElement searchECPanel = Sleeper.waitVisibility("//*[@id=\"cheval-centre-inscription\"]");
-			List<WebElement> buttons = searchECPanel.findElements(By.tagName("button"));
-			buttons.get(1).click();
+			Sleeper.pause();
+			Sleeper.waitForClickAndClick("//*[@id=\"cheval-inscription\"]/a/span[1]");
+//			WebElement searchECPanel = Sleeper.waitVisibility("//*[@id=\"cheval-centre-inscription\"]");
+//			List<WebElement> buttons = searchECPanel.findElements(By.tagName("button-inner-0"));
+//			buttons.get(1).click();
 		}
-		catch(TimeoutException e) {}
+		catch(TimeoutException e) {
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+		}
 	}
 	
 //*****************************************************************************************************************	

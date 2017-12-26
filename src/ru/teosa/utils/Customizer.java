@@ -1,6 +1,12 @@
 package ru.teosa.utils;
 
+import org.apache.log4j.Logger;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.util.StringConverter;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.utils.objects.SimpleComboRecord;
@@ -47,6 +53,21 @@ public class Customizer{
 			}
     	});
     	
+	}
+	
+	public void customizeTree(TreeView<SimpleComboRecord> treeView) {
+		 treeView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener() {
+				@Override
+				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+		            TreeItem<SimpleComboRecord> selectedItem = (TreeItem<SimpleComboRecord>) newValue;
+		            SimpleComboRecord value = selectedItem.getValue();
+		            
+		            Logger.getLogger("debug").debug("SELECTED NAME: " + value.getName());
+		            Logger.getLogger("debug").debug("SELECTED URL: " + value.getURL());
+		            Logger.getLogger("debug").debug("SELECTED DATA: " + value.getData() != null);
+		            
+				}
+		      });
 	}
 	
 }

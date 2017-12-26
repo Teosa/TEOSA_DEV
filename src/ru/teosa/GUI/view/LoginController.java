@@ -90,10 +90,7 @@ public class LoginController {
     private boolean accountLogin(){
     	try {
     		try {
-        		WebElement loginPanel = Sleeper.waitVisibility("//*[@id=\"header\"]/nav/div/div");
-        		boolean isLoginPanelVisible = loginPanel.getAttribute("class").contains("visible");
-
-        		if(!isLoginPanelVisible) mainApp.getDriver().findElement(By.xpath("//*[@id=\"header\"]/nav/div")).click();
+    			Sleeper.waitForClickAndClick("//*[@id=\"header\"]/nav/div");
     		}
     		catch(NoSuchElementException | TimeoutException e) {
     			Logger.getLogger("error").error(e);
