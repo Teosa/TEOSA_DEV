@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -100,21 +101,40 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/MainWindow.fxml"));
             
-            AnchorPane loginForm = (AnchorPane) loader.load();
-            MainWindowController controller = loader.getController();
-           
+            BorderPane mainForm = (BorderPane) loader.load();
+            mainForm = loadTabsIntoForm(mainForm);
+            
+            MainWindowController controller = loader.getController();         
             controller.setMainApp(this);
             
-            rootLayout.setCenter(loginForm);
+            rootLayout.setCenter(mainForm);
             
             this.getPrimaryStage().sizeToScene();
         	this.getPrimaryStage().centerOnScreen();
         	
         	controller.initWindow();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    private BorderPane loadTabsIntoForm(BorderPane mainForm) throws Exception{
+        FXMLLoader loader = new FXMLLoader();
+        TabPane t = (TabPane)mainForm.getCenter();
+        
+        //Основная информация
+        loader.setLocation(MainApp.class.getResource("view/InfoTab.fxml"));
+        AnchorPane infoTab = (AnchorPane) loader.load();
+        t.getTabs().get(0).setContent(infoTab);
+
+        //КСК
+        loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("view/ECTab.fxml"));
+        AnchorPane ECTab = (AnchorPane) loader.load();
+        t.getTabs().get(1).setContent(ECTab);
+    	
+    	return mainForm;
     }
     
     

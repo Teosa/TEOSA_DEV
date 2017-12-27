@@ -41,16 +41,16 @@ public class MainWindowController {
 
     @FXML
     private void initialize() {
-    	customizer.customizeTree(tree);
-    	stopButton.setDisable(true);
-    	
-    	ToggleGroup group = new ToggleGroup();
-    	myEC.setToggleGroup(group);
-    	anyEC.setSelected(true);
-    	anyEC.setToggleGroup(group);
-    	
-    	daysEC.getItems().addAll(1,3,10,30,60);
-    	daysEC.setValue(30);
+//    	customizer.customizeTree(tree);
+//    	stopButton.setDisable(true);
+//    	
+//    	ToggleGroup group = new ToggleGroup();
+//    	myEC.setToggleGroup(group);
+//    	anyEC.setSelected(true);
+//    	anyEC.setToggleGroup(group);
+//    	
+//    	daysEC.getItems().addAll(1,3,10,30,60);
+//    	daysEC.setValue(30);
     }
     
     @FXML
@@ -83,13 +83,17 @@ public class MainWindowController {
      * Инициализация окна с главной формой, кастомизация элементов и загрузка данных.
      * */
     public void initWindow(){
-    	MainWindow.init(mainApp);
-    	customizer.setMainApp(mainApp);
-    	loadInfo();
+//    	MainWindow.init(mainApp);
+//    	customizer.setMainApp(mainApp);
+//    	loadInfo();
     }
 	
     //Загрузка данных
     private void loadInfo(){
+    	loadFarmsTree();
+    }
+    
+    private void loadFarmsTree() {
     	TreeItem<SimpleComboRecord> rootItem0 = new TreeItem<SimpleComboRecord> (new SimpleComboRecord("Farms", "", ""));
     	rootItem0.setExpanded(true);
     	
