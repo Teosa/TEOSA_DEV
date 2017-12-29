@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
@@ -29,8 +30,18 @@
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab closable="false" text="Основная информация" />
-          <Tab closable="false" text="КСК" />
+          <Tab closable="false" text="Основные настройки">
+               <content>
+                  <ScrollPane prefHeight="200.0" prefWidth="200.0" />
+               </content></Tab>
+          <Tab closable="false" text="КСК">
+               <content>
+                  <ScrollPane prefHeight="200.0" prefWidth="200.0" />
+               </content></Tab>
+          <Tab closable="false" text="Разведение">
+               <content>
+                  <ScrollPane prefHeight="200.0" prefWidth="200.0" />
+               </content></Tab>
         </tabs>
       </TabPane>
    </center>

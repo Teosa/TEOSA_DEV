@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import ru.teosa.GUI.MainApp;
@@ -59,31 +60,20 @@ public class TestClass extends Application{
             FXMLLoader loader1 = new FXMLLoader();
             loader1.setLocation(MainApp.class.getResource("view/InfoTab.fxml"));
             AnchorPane form1 = (AnchorPane) loader1.load();
-            t.getTabs().get(0).setContent(form1);
-           
-            
+            ((ScrollPane)t.getTabs().get(0).getContent()).setContent(form1);
+                     
             loader1 = new FXMLLoader();
             loader1.setLocation(MainApp.class.getResource("view/ECTab.fxml"));
             AnchorPane form2 = (AnchorPane) loader1.load();
+            ((ScrollPane)t.getTabs().get(1).getContent()).setContent(form2);
             
-            
-//            form2.getProperties().addListener(new ChangeListener<Number>() {
-//                public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-//                        vb.setLayoutY(-new_val.doubleValue());
-//                    }
-//            });
-            
-            
-            t.getTabs().get(1).setContent(form2);
-            
+            loader1 = new FXMLLoader();
+            loader1.setLocation(MainApp.class.getResource("view/BreedingTab.fxml"));
+            AnchorPane form3 = (AnchorPane) loader1.load();
+            ((ScrollPane)t.getTabs().get(2).getContent()).setContent(form3);
+                        
             rootLayout.setCenter(form);
-            primaryStage.sizeToScene();
-        
-            
-            
-            
-//            MainWindowController controller = loader.getController();
-//            controller.setMainApp(this);  
+            primaryStage.sizeToScene();    
              
         } catch (IOException e) {
             e.printStackTrace();

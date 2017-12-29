@@ -12,5 +12,8 @@
       <Separator layoutX="14.0" layoutY="44.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
       <CheckBox layoutX="14.0" layoutY="59.0" mnemonicParsing="false" text="Запись в КСК" />
       <CheckBox layoutX="14.0" layoutY="90.0" mnemonicParsing="false" text="Продление постоя" />
+      <CheckBox layoutX="14.0" layoutY="154.0" mnemonicParsing="false" text="Случки (жеребцы)" />
+      <CheckBox layoutX="14.0" layoutY="183.0" mnemonicParsing="false" text="Случки (кобылы)" />
+      <CheckBox layoutX="14.0" layoutY="212.0" mnemonicParsing="false" text="Жеребята" />
    </children>
 </AnchorPane>

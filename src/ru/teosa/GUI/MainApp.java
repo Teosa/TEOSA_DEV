@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -126,14 +127,20 @@ public class MainApp extends Application {
         //Основная информация
         loader.setLocation(MainApp.class.getResource("view/InfoTab.fxml"));
         AnchorPane infoTab = (AnchorPane) loader.load();
-        t.getTabs().get(0).setContent(infoTab);
+        ((ScrollPane)t.getTabs().get(0).getContent()).setContent(infoTab);
 
         //КСК
         loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/ECTab.fxml"));
         AnchorPane ECTab = (AnchorPane) loader.load();
-        t.getTabs().get(1).setContent(ECTab);
-    	
+        ((ScrollPane)t.getTabs().get(1).getContent()).setContent(ECTab);
+             
+        //Разведение
+        loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("view/BreedingTab.fxml"));
+        AnchorPane breedingTab = (AnchorPane) loader.load();
+        ((ScrollPane)t.getTabs().get(2).getContent()).setContent(breedingTab);
+        
     	return mainForm;
     }
     
