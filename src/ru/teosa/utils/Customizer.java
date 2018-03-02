@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -41,6 +43,8 @@ public class Customizer{
 			});
 		}
   	
+//		combo.setOnInputMethodTextChanged(new EventHandler<Event>() );
+		
 		combo.setConverter(new StringConverter<SimpleComboRecord>() {
     	    @Override
     	    public String toString(SimpleComboRecord object) {

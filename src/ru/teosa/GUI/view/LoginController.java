@@ -48,11 +48,11 @@ public class LoginController {
      */
     @FXML
     private void initialize() {
-    	
+    	siteVersion.setEditable(true);
     	new Customizer().CustomizeCB(siteVersion, false);
     	
-//    	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
-    	MainAppHolderSingleton.getInstance().getPstmt().query("SELECT * FROM GAMEVERSIONS ORDER BY LASTUSED DESC, FULLNAME ASC", new RowMapper() {
+    	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+    	pstmt.query("SELECT * FROM GAMEVERSIONS ORDER BY LASTUSED DESC, FULLNAME ASC", new RowMapper() {
 			@Override
 			public Object mapRow(ResultSet res, int arg1) throws SQLException {
 				siteVersion.getItems().add(
@@ -62,12 +62,6 @@ public class LoginController {
 			}
 		});
     	
-    	
-    	
-//    	siteVersion.getItems().addAll(
-//	    			new SimpleComboRecord("RUS", "https://www.lowadi.ru/", null),
-//	    			new SimpleComboRecord("INTERNATIONAL", "https://www.howrse.com/site/logIn?redirection=/jeu/", null)
-//    			);
     	siteVersion.setValue(siteVersion.getItems().get(0));
     }
     
@@ -85,6 +79,8 @@ public class LoginController {
     @FXML
     public void login(){
 
+    	saveSelectedVersion();
+    	
     	if(!checkLogopas()) return;
     	if(mainApp.getDriver() == null) runWithCrome();
     	if(accountLogin()) mainApp.showMainForm(); 
@@ -153,6 +149,22 @@ public class LoginController {
     	else {
     		loginErrorMsg.setText("");
     		return true;
+    	}
+    }
+    
+    private void saveSelectedVersion() {
+    	try {
+    		NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+    		
+    		HashMap params = new HashMap();
+    		params.put("id", siteVersion.getValue().getData());
+
+    		
+    		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'N' WHERE LASTUSED = 'Y'", params);
+    		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'Y' WHERE ID = :id", params);
+    	}
+    	catch(Exception e) {
+    		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
     	}
     }
 	

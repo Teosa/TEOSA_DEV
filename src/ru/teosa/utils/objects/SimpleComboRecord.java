@@ -1,5 +1,10 @@
 package ru.teosa.utils.objects;
 
+import java.io.FileInputStream;
+
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import ru.teosa.site.model.BreedingFarm;
 
 /** Объект для заполнения комбобоксов */
@@ -51,4 +56,6 @@ public class SimpleComboRecord {
 	public String toString() {
 		return getName();
 	}
+
+
 }
