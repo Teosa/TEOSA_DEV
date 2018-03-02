@@ -1,5 +1,6 @@
 package ru.teosa.utils;
 
+
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -16,14 +17,77 @@ import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import java.sql.ResultSetMetaData;
+
+
 public class TestClass extends Application{
 	
 	 private Stage primaryStage;
 	 private BorderPane rootLayout;
 	
-
+//		public static BasicDataSource  getConnection() throws ClassNotFoundException, SQLException{
+//		       BasicDataSource bdSource = new BasicDataSource();
+//		       bdSource.setDriverClassName(driver);
+//			   bdSource.setUrl(url);
+//			   bdSource.setUsername(user);
+//			   bdSource.setPassword(password);
+//			   bdSource.setMaxActive(20);
+//			   bdSource.setMaxIdle(4);
+//			   bdSource.setTestOnBorrow(true);
+//			   bdSource.setTestOnReturn(true);
+//			   bdSource.setDefaultTransactionIsolation(2);
+//		       return bdSource;
+//		    }
 	public static void main(String[] args) {
-		launch(args);
+
+		String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+		String connectionURL = "jdbc:derby:HBBDB;create=true;";
+		
+		try {
+			Class.forName(driver).newInstance();
+		    Connection conn = null;
+		    Statement stmt = null;
+		    
+			  try {
+//				  conn = DriverManager.getConnection(connectionURL); 
+//				  stmt = conn.createStatement();
+////
+//		            ResultSet results = stmt.executeQuery("select * from testtable");
+//		            ResultSetMetaData rsmd = results.getMetaData();
+//		            int numberCols = rsmd.getColumnCount();
+//		            System.out.println(numberCols);
+//		            results.close();
+//		            stmt.close();
+				  
+//				BasicDataSource bdSource = new BasicDataSource();
+//				bdSource.setUrl(connectionURL);
+//				bdSource.getConnection();
+//				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
+//				System.out.println(pstmt);
+//				
+//				pstmt.queryForObject("select count(*) from testtable", new HashMap(), Integer.class);
+				
+				
+			  }
+			  catch(Exception e) {
+				  e.printStackTrace();
+			  }
+			} catch (Exception e) {
+			 e.printStackTrace();
+			}
+		
+		
+//		launch(args);
 	}
 
 	@Override

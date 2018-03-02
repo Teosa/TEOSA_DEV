@@ -3,6 +3,7 @@ package ru.teosa.GUI;
 import java.io.IOException;
 
 import org.openqa.selenium.WebDriver;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -47,6 +48,9 @@ public class MainApp extends Application {
 	/** Инициализация корневого макета + */
 	@Override
 	public void start(Stage primaryStage) {
+		
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("context.xml");
+		
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("HowrseHelperBot");
 

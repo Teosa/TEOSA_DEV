@@ -1,5 +1,6 @@
 package ru.teosa.GUI.view;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -64,6 +65,7 @@ public class LoginController {
      * */
     @FXML
     public void login(){
+
     	if(!checkLogopas()) return;
     	if(mainApp.getDriver() == null) runWithCrome();
     	if(accountLogin()) mainApp.showMainForm(); 

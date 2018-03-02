@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean id="DerbyDB" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
+		<property name="url" value="jdbc:derby:HBBDB" />
+
+		<property name="maxActive" value="20" />
+		<property name="maxIdle" value="4" />
+		<property name="validationQuery" value="values(1)" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testOnReturn" value="true" />
+		<property name="defaultTransactionIsolation" value="2" />
+	</bean>
+	<bean id="ds" class="net.ttddyy.dsproxy.support.ProxyDataSource">
+		<property name="dataSource" ref="DerbyDB" />
+
+	</bean>
+	<bean id="pstmt"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="ds" />
+	</bean>
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ds" />
+	</bean>
+	<bean id="transactionTemplate"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager">
+			<ref bean="txManager" />
+		</property>
+	</bean>
+
+    <bean id="MainAppHolderSingleton" class="ru.teosa.utils.objects.MainAppHolderSingleton"  factory-method="getInstance" lazy-init="false">
+    	<property name="pstmt" ref="pstmt"/>
+    </bean>	
+
+</beans>
