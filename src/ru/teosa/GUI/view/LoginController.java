@@ -1,5 +1,7 @@
 package ru.teosa.GUI.view;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -10,6 +12,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -44,11 +48,26 @@ public class LoginController {
      */
     @FXML
     private void initialize() {
+    	
     	new Customizer().CustomizeCB(siteVersion, false);
-    	siteVersion.getItems().addAll(
-	    			new SimpleComboRecord("RUS", "https://www.lowadi.ru/", null),
-	    			new SimpleComboRecord("INTERNATIONAL", "https://www.howrse.com/site/logIn?redirection=/jeu/", null)
-    			);
+    	
+//    	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+    	MainAppHolderSingleton.getInstance().getPstmt().query("SELECT * FROM GAMEVERSIONS ORDER BY LASTUSED DESC, FULLNAME ASC", new RowMapper() {
+			@Override
+			public Object mapRow(ResultSet res, int arg1) throws SQLException {
+				siteVersion.getItems().add(
+						new SimpleComboRecord(res.getString("FULLNAME"), res.getString("URL"), res.getString("ID"))
+						);
+				return null;
+			}
+		});
+    	
+    	
+    	
+//    	siteVersion.getItems().addAll(
+//	    			new SimpleComboRecord("RUS", "https://www.lowadi.ru/", null),
+//	    			new SimpleComboRecord("INTERNATIONAL", "https://www.howrse.com/site/logIn?redirection=/jeu/", null)
+//    			);
     	siteVersion.setValue(siteVersion.getItems().get(0));
     }
     

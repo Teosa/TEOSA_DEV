@@ -1,6 +1,9 @@
 package ru.teosa.GUI;
 
 import java.io.IOException;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.HashMap;
 
 import org.openqa.selenium.WebDriver;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -17,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
+import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 import org.apache.log4j.Logger;
 
@@ -58,6 +62,10 @@ public class MainApp extends Application {
 			@Override
 			public void handle(WindowEvent event) {
 				if(driver != null) driver.quit();
+				try {
+					DriverManager.getConnection("jdbc:derby:;shutdown=true");
+				}
+				catch(SQLException e) {System.out.println(e.getMessage());}
 			}
 		});
         
@@ -147,6 +155,5 @@ public class MainApp extends Application {
         
     	return mainForm;
     }
-    
     
 }

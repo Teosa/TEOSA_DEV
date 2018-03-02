@@ -1,6 +1,8 @@
 package ru.teosa.utils;
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -13,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
+import net.sourceforge.htmlunit.corejs.javascript.GeneratedClassLoader;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
@@ -69,12 +72,25 @@ public class TestClass extends Application{
 //		            results.close();
 //		            stmt.close();
 				  
-//				BasicDataSource bdSource = new BasicDataSource();
-//				bdSource.setUrl(connectionURL);
-//				bdSource.getConnection();
-//				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
-//				System.out.println(pstmt);
-//				
+				BasicDataSource bdSource = new BasicDataSource();
+				bdSource.setUrl(connectionURL);
+				bdSource.getConnection();
+				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
+				  
+				System.out.println(ClassLoader.getSystemResource("INT.png"));
+				HashMap params = new HashMap();
+				
+				File file = new File(ClassLoader.getSystemResource("INT.png").getPath());
+                if(file.exists()){
+                	final FileInputStream inStream = new FileInputStream(file);
+                    byte[] bb = new byte[(int)file.length()];
+                    inStream.read(bb);
+                    params.put("img", bb);
+                    inStream.close();
+                    
+                    pstmt.update("update GAMEVERSIONS set FLAGIMG = :img where id = 1", params);
+                }
+				
 //				pstmt.queryForObject("select count(*) from testtable", new HashMap(), Integer.class);
 				
 				
@@ -86,7 +102,10 @@ public class TestClass extends Application{
 			 e.printStackTrace();
 			}
 		
-		
+		try {
+			DriverManager.getConnection("jdbc:derby:;shutdown=true");
+		}
+		catch(SQLException e) {System.out.println(e.getMessage());}
 //		launch(args);
 	}
 

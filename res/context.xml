@@ -11,9 +11,6 @@
 
 		<property name="maxActive" value="20" />
 		<property name="maxIdle" value="4" />
-		<property name="validationQuery" value="values(1)" />
-		<property name="testOnBorrow" value="true" />
-		<property name="testOnReturn" value="true" />
 		<property name="defaultTransactionIsolation" value="2" />
 	</bean>
 	<bean id="ds" class="net.ttddyy.dsproxy.support.ProxyDataSource">
