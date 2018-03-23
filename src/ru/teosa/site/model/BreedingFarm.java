@@ -9,7 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import javafx.scene.control.Button;
-import ru.teosa.HerdRunSettings;
+import ru.teosa.herdSettings.HerdRunSettings;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 public class BreedingFarm implements Runnable{

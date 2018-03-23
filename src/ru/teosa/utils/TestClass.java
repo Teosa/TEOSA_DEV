@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
@@ -71,6 +72,8 @@ public class TestClass extends Application{
 //		            System.out.println(numberCols);
 //		            results.close();
 //		            stmt.close();
+				  
+				  GridPane g = new GridPane();
 				  
 				BasicDataSource bdSource = new BasicDataSource();
 				bdSource.setUrl(connectionURL);
