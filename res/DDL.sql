@@ -24,4 +24,17 @@ CREATE TABLE USERS (
    UNIQUE (ALIAS, VERSION)
 )
 
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+ALTER TABLE USERS DROP COLUMN  VERSION;
+ALTER TABLE USERS ADD COLUMN VERSION INTEGER;
+ALTER TABLE USERS ADD FOREIGN KEY (VERSION) REFERENCES GAMEVERSIONS(ID);
+UPDATE USERS SET VERSION = 1;
+ALTER TABLE USERS ALTER COLUMN VERSION SET NOT NULL;
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+
+
 

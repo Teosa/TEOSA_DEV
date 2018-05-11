@@ -11,7 +11,9 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.util.StringConverter;
 import ru.teosa.GUI.MainApp;
-import ru.teosa.utils.objects.SimpleComboRecord;
+import ru.teosa.utils.objects.RedirectingComboRecord;
+import ru.teosa.utils.objects.RedirectingComboRecordExt;
+import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 /**
  * Класс для кастомизации элементов формы.
@@ -29,42 +31,62 @@ public class Customizer{
 	}
 
 
+	
 	/**
 	 * Метод для кастомизации комбобокса, содержащего SimpleComboRecord в качестве записей.<br>
 	 * Устанавливает для отображения в выпадающем списке поле Name. После выбора записи - переход по ссылке из поля URL.
 	 * @param combo комбобокс для кастомизации
-	 * @param URLRedirect переход по ссылке при выборе значения в комбобоксе
 	 * @return void
 	 * */
-	public void CustomizeCB(ComboBox<SimpleComboRecord> combo, boolean URLRedirect) {		
-		if(URLRedirect) {
-			combo.valueProperty().addListener((obs, oldV, newV) -> {
-				if(newV != null) mainApp.getDriver().navigate().to(newV.getURL());		
-			});
-		}
-  	
-//		combo.setOnInputMethodTextChanged(new EventHandler<Event>() );
-		
-		combo.setConverter(new StringConverter<SimpleComboRecord>() {
+	public void CustomizeCB(ComboBox<SimpleComboRecordExt> combo) {				
+		combo.setConverter(new StringConverter<SimpleComboRecordExt>() {
     	    @Override
-    	    public String toString(SimpleComboRecord object) {
+    	    public String toString(SimpleComboRecordExt object) {
     	        return object.getName();
     	    }
 
 			@Override
-			public SimpleComboRecord fromString(String string) {
+			public SimpleComboRecordExt fromString(String string) {
 				return combo.getItems().stream().filter(record -> record.getName().equals(string)).findFirst().orElse(null);
 			}
     	});
     	
 	}
 	
-	public void customizeTree(TreeView<SimpleComboRecord> treeView) {
+	
+	/**
+	 * Метод для кастомизации комбобокса, содержащего RedirectingComboRecord в качестве записей.<br>
+	 * Устанавливает для отображения в выпадающем списке поле Name. После выбора записи - переход по ссылке из поля URL.
+	 * @param combo комбобокс для кастомизации
+	 * @param URLRedirect переход по ссылке при выборе значения в комбобоксе
+	 * @return void
+	 * */
+	public void CustomizeCB(ComboBox<RedirectingComboRecord> combo, boolean URLRedirect) {		
+		if(URLRedirect) {
+			combo.valueProperty().addListener((obs, oldV, newV) -> {
+				if(newV != null) mainApp.getDriver().navigate().to(newV.getURL());		
+			});
+		}
+  	
+		combo.setConverter(new StringConverter<RedirectingComboRecord>() {
+    	    @Override
+    	    public String toString(RedirectingComboRecord object) {
+    	        return object.getName();
+    	    }
+
+			@Override
+			public RedirectingComboRecord fromString(String string) {
+				return combo.getItems().stream().filter(record -> record.getName().equals(string)).findFirst().orElse(null);
+			}
+    	});   	
+	}
+	
+	public void customizeTree(TreeView<RedirectingComboRecordExt> treeView) {
 		 treeView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener() {
 				@Override
 				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-		            TreeItem<SimpleComboRecord> selectedItem = (TreeItem<SimpleComboRecord>) newValue;
-		            SimpleComboRecord value = selectedItem.getValue();
+		            TreeItem<RedirectingComboRecordExt> selectedItem = (TreeItem<RedirectingComboRecordExt>) newValue;
+		            RedirectingComboRecordExt value = selectedItem.getValue();
 		            
 		            Logger.getLogger("debug").debug("SELECTED NAME: " + value.getName());
 		            Logger.getLogger("debug").debug("SELECTED URL: " + value.getURL());

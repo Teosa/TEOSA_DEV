@@ -15,7 +15,8 @@ import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.model.MainWindow;
 import ru.teosa.site.model.BreedingFarm;
 import ru.teosa.utils.Customizer;
-import ru.teosa.utils.objects.SimpleComboRecord;
+import ru.teosa.utils.objects.RedirectingComboRecordExt;
+import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class MainWindowController {
 
@@ -36,7 +37,7 @@ public class MainWindowController {
 	@FXML
 	private Button stopButton;
 	@FXML
-	private TreeView<SimpleComboRecord> tree;
+	private TreeView<RedirectingComboRecordExt> tree;
 
 
     @FXML
@@ -57,7 +58,7 @@ public class MainWindowController {
     public void startButtonHandler() { 	
     	
     	BreedingFarm farm;
-    	SimpleComboRecord record = tree.getSelectionModel().getSelectedItem().getValue();
+    	RedirectingComboRecordExt record = tree.getSelectionModel().getSelectedItem().getValue();
     	
     	if(record.getFarmData() == null) {
         	farm = new BreedingFarm();
@@ -94,17 +95,18 @@ public class MainWindowController {
     }
     
     private void loadFarmsTree() {
-    	TreeItem<SimpleComboRecord> rootItem0 = new TreeItem<SimpleComboRecord> (new SimpleComboRecord("Farms", "", ""));
+    	//Добавляем корневую ноду
+    	TreeItem<RedirectingComboRecordExt> rootItem0 = new TreeItem<RedirectingComboRecordExt> (new RedirectingComboRecordExt(-1, "Farms", "", null));
     	rootItem0.setExpanded(true);
     	
     	for(int i = 0; i < MainWindow.getFarms().size(); ++i) {
-    		SimpleComboRecord record = MainWindow.getFarms().get(i);
-            TreeItem<SimpleComboRecord> farm = new TreeItem<SimpleComboRecord> (record);
+    		RedirectingComboRecordExt record = MainWindow.getFarms().get(i);
+            TreeItem<RedirectingComboRecordExt> farm = new TreeItem<RedirectingComboRecordExt> (record);
             
             if(record.getData() != null) {
-            	List<SimpleComboRecord> subfarms = (List<SimpleComboRecord>) record.getData();
+            	List<RedirectingComboRecordExt> subfarms = (List<RedirectingComboRecordExt>) record.getData();
             	for(int k = 0; k < subfarms.size(); ++k) {
-            		farm.getChildren().add(new TreeItem<SimpleComboRecord> (subfarms.get(k)));
+            		farm.getChildren().add(new TreeItem<RedirectingComboRecordExt> (subfarms.get(k)));
             	}
             }
             

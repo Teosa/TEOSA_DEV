@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TreeView;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
-import ru.teosa.utils.objects.SimpleComboRecord;
+import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
 public class HerdRunSettings implements Serializable{
 
@@ -36,7 +36,7 @@ public class HerdRunSettings implements Serializable{
 		
 		if(mainApp != null) {
 			Scene scene = mainApp.getPrimaryStage().getScene();			
-			TreeView<SimpleComboRecord> treeView = (TreeView<SimpleComboRecord>) scene.lookup("#tree");
+			TreeView<RedirectingComboRecordExt> treeView = (TreeView<RedirectingComboRecordExt>) scene.lookup("#tree");
 			
 			this.name = treeView.getSelectionModel().getSelectedItem().getValue().getName();
 			this.URL = treeView.getSelectionModel().getSelectedItem().getValue().getURL();

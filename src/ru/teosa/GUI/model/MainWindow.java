@@ -11,14 +11,15 @@ import org.openqa.selenium.interactions.Actions;
 
 import ru.teosa.GUI.MainApp;
 import ru.teosa.utils.Sleeper;
-import ru.teosa.utils.objects.SimpleComboRecord;
+import ru.teosa.utils.objects.RedirectingComboRecord;
+import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
 public class MainWindow {
 
 	private static MainApp mainApp;
 	private static WebDriver driver;
 	
-	private static List<SimpleComboRecord> farms = new ArrayList<SimpleComboRecord>();
+	private static List<RedirectingComboRecordExt> farms = new ArrayList<RedirectingComboRecordExt>();
 
 	public MainApp getMainApp() {
 		return mainApp;
@@ -26,10 +27,10 @@ public class MainWindow {
 	public static WebDriver getDriver() {
 		return driver;
 	}
-	public static List<SimpleComboRecord> getFarms() {
+	public static List<RedirectingComboRecordExt> getFarms() {
 		return farms;
 	}
-	public void setFarms(List<SimpleComboRecord> farms) {
+	public void setFarms(List<RedirectingComboRecordExt> farms) {
 		MainWindow.farms = farms;
 	}
 	
@@ -71,7 +72,7 @@ public class MainWindow {
 			Actions builder = new Actions(driver);
 			builder.moveToElement(farm).build().perform();
 
-			SimpleComboRecord record = new SimpleComboRecord();
+			RedirectingComboRecordExt record = new RedirectingComboRecordExt();
 
 			String farmURL = "";
 			String name = "";
@@ -84,9 +85,9 @@ public class MainWindow {
 				
 				if(subFarms.size() > 0) {
 					
-					List<SimpleComboRecord> subFarmsRecordsList = new ArrayList<SimpleComboRecord>();
+					List<RedirectingComboRecordExt> subFarmsRecordsList = new ArrayList<RedirectingComboRecordExt>();
 					for(int k = 0; k < subFarms.size(); ++k) {
-						SimpleComboRecord subFarmRecord = new SimpleComboRecord();
+						RedirectingComboRecordExt subFarmRecord = new RedirectingComboRecordExt();
 						String subname = "";
 						String subURL = "";
 						

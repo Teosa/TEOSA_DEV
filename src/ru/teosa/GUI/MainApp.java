@@ -22,6 +22,7 @@ import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
 public class MainApp extends Application {
@@ -83,7 +84,7 @@ public class MainApp extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+        	Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
         }
     }
     
@@ -102,7 +103,7 @@ public class MainApp extends Application {
             controller.setMainApp(this);  
              
         } catch (IOException e) {
-            e.printStackTrace();
+        	Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
         }
     }
     
@@ -128,7 +129,7 @@ public class MainApp extends Application {
         	controller.initWindow();
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
         }
     }
     

@@ -22,24 +22,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.utils.Customizer;
+import ru.teosa.utils.Queries;
 import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
-import ru.teosa.utils.objects.SimpleComboRecord;
+import ru.teosa.utils.objects.RedirectingComboRecord;
+import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class LoginController {
 	
-	@FXML
-	private TextField username;
-	@FXML
-	private TextField password;
-	@FXML
-	private Button loginButton;
-	@FXML
-	private Text loginErrorMsg;
-	@FXML
-	private ComboBox<SimpleComboRecord> siteVersion;
-	
-	private MainApp mainApp;
+	@FXML private ComboBox<RedirectingComboRecord>  siteVersion;
+	@FXML private ComboBox<SimpleComboRecordExt>    username;
+	@FXML private TextField  password;
+	@FXML private Button     loginButton;
+	@FXML private Text       loginErrorMsg;
+
+	      private MainApp    mainApp;
 
 
     /**
@@ -48,21 +45,40 @@ public class LoginController {
      */
     @FXML
     private void initialize() {
-    	siteVersion.setEditable(true);
+    	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+    	
+    	//Конфиг и заполнение комбобокса версий сайта
     	new Customizer().CustomizeCB(siteVersion, false);
     	
-    	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
-    	pstmt.query("SELECT * FROM GAMEVERSIONS ORDER BY LASTUSED DESC, FULLNAME ASC", new RowMapper() {
+    	pstmt.query(Queries.GET_GAME_VERSIONS, new RowMapper() {
 			@Override
 			public Object mapRow(ResultSet res, int arg1) throws SQLException {
 				siteVersion.getItems().add(
-						new SimpleComboRecord(res.getString("FULLNAME"), res.getString("URL"), res.getString("ID"))
+						new RedirectingComboRecord(
+								Integer.parseInt(res.getString("ID")),
+								res.getString("FULLNAME"), 
+								res.getString("URL"))
 						);
 				return null;
 			}
 		});
     	
     	siteVersion.setValue(siteVersion.getItems().get(0));
+    	
+    	
+    	//Конфиг и заполнение комбобокса логина
+    	new Customizer().CustomizeCB(username);
+    	
+    	pstmt.query(Queries.GET_USERS_BY_VERSION, new RowMapper() {
+			@Override
+			public Object mapRow(ResultSet res, int arg1) throws SQLException {
+				siteVersion.getItems().add(
+						new SimpleComboRecordExt(res.getString("FULLNAME"), res.getString("URL"), res.getString("ID"))
+						);
+				return null;
+			}
+		});
+    	
     }
     
     public void setMainApp(MainApp mainApp) {
@@ -157,7 +173,7 @@ public class LoginController {
     		NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
     		
     		HashMap params = new HashMap();
-    		params.put("id", siteVersion.getValue().getData());
+    		params.put("id", siteVersion.getValue().getId());
 
     		
     		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'N' WHERE LASTUSED = 'Y'", params);
