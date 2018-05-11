@@ -39,7 +39,7 @@ public class HerdRunSettings implements Serializable{
 			TreeView<RedirectingComboRecordExt> treeView = (TreeView<RedirectingComboRecordExt>) scene.lookup("#tree");
 			
 			this.name = treeView.getSelectionModel().getSelectedItem().getValue().getName();
-			this.URL = treeView.getSelectionModel().getSelectedItem().getValue().getURL();
+			this.URL = treeView.getSelectionModel().getSelectedItem().getValue().getUrl();
 		}
 		
 		this.registerInEC   = false;

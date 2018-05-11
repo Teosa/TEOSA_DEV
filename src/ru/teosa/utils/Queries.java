@@ -2,18 +2,32 @@ package ru.teosa.utils;
 
 public class Queries {
 
+//***********************************************************************************************************************	
+//****************************            GET                  **********************************************************
+//***********************************************************************************************************************	
 	/** Версии сайта */
 	public final static String GET_GAME_VERSIONS = ""
-	        + "SELECT * FROM GAMEVERSIONS ORDER BY LASTUSED DESC, FULLNAME ASC";
+	        + "SELECT ID, FULLNAME AS name, URL FROM GAMEVERSIONS ORDER BY LASTUSED DESC, FULLNAME ASC";
 	
 	/** Список пользователей для выбранной версии сайта */
 	public final static String GET_USERS_BY_VERSION = ""
-			+ "SELECT ID, ALIAS, PASSWORD "
+			+ "SELECT ID, ALIAS AS username, PASSWORD, LASTUSED "
 			+ "FROM USERS "
 			+ "WHERE VERSION = :versionid " 
 			+ "ORDER BY LASTUSED DESC";
 	
 	
 	
+//***********************************************************************************************************************	
+//****************************            SAVE                 **********************************************************
+//***********************************************************************************************************************		
 	
+	public final static String SAVE_USER = ""
+			+ "INSERT INTO USERS VALUES (DEFAULT, :login, :password, 'Y', :gamever )";
+	
+//***********************************************************************************************************************	
+//****************************            UPDATE               **********************************************************
+//***********************************************************************************************************************
+	public final static String UPD_USER_LASTUSED = ""
+			+ "UPDATE USERS SET LASTUSED = 'Y' WHERE ID = :id";
 }

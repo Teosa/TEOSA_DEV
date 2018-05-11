@@ -43,4 +43,10 @@ public class SimpleComboRecord {
 	public String toString() {
 		return getName();
 	}
+	
+	public boolean isValueEmpty(Object value) {
+		if(value != null) 
+			return value.getClass() == String.class && value.toString().trim().length() == 0;
+		else return true;
+	}
 }

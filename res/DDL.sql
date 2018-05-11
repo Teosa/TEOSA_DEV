@@ -34,7 +34,20 @@ ALTER TABLE USERS ALTER COLUMN VERSION SET NOT NULL;
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
+CREATE TRIGGER LASTUSED_USER
+AFTER INSERT ON USER
+REFERENCING NEW AS N
+FOR EACH ROW MODE DB2SQL
+WHEN N.LASTUSED = 'Y'
+UPDATE USER SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND VERSION = N.VERSION AND ID <> N.ID;
 
-
+CREATE TRIGGER LASTUSED_USER_UPD
+AFTER UPDATE ON USER
+REFERENCING NEW AS N
+FOR EACH ROW MODE DB2SQL
+WHEN N.LASTUSED = 'Y'
+UPDATE USER SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND VERSION = N.VERSION AND ID <> N.ID;
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 
 

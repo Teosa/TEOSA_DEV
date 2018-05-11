@@ -1,8 +1,7 @@
 package ru.teosa.GUI.view;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -12,21 +11,25 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.AutoMapper;
 import ru.teosa.utils.Customizer;
 import ru.teosa.utils.Queries;
 import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
+import ru.teosa.utils.objects.SimpleComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
+import ru.teosa.utils.objects.User;
 
 public class LoginController {
 	
@@ -40,46 +43,70 @@ public class LoginController {
 
 
     /**
-     * Инициализация класса-контроллера. Этот метод вызывается автоматически
+     * Инициализация класса-контроллера для формы авторизации. Этот метод вызывается автоматически
      * после того, как fxml-файл будет загружен.
      */
     @FXML
     private void initialize() {
     	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
-    	
-    	//Конфиг и заполнение комбобокса версий сайта
-    	new Customizer().CustomizeCB(siteVersion, false);
-    	
-    	pstmt.query(Queries.GET_GAME_VERSIONS, new RowMapper() {
+
+    	//Конфиг комбобокса версий сайта
+    	new Customizer(RedirectingComboRecord.class.getSimpleName()).CustomizeCB(siteVersion, false);
+    	//Слушатель, меняющий значение в полях Логин и Пароль
+    	siteVersion.valueProperty().addListener(new ChangeListener<RedirectingComboRecord>() {
 			@Override
-			public Object mapRow(ResultSet res, int arg1) throws SQLException {
-				siteVersion.getItems().add(
-						new RedirectingComboRecord(
-								Integer.parseInt(res.getString("ID")),
-								res.getString("FULLNAME"), 
-								res.getString("URL"))
-						);
-				return null;
+			public void changed(ObservableValue observable, RedirectingComboRecord oldValue, RedirectingComboRecord newValue) {
+				fillUsernameCombo();
 			}
-		});
+        });
+    	//Список версий
+    	List<RedirectingComboRecord> records = pstmt.query(Queries.GET_GAME_VERSIONS, new HashMap(), new AutoMapper(RedirectingComboRecord.class, null));
+    	//Заполняем комбобокс версиями
+    	for(RedirectingComboRecord record : records) {
+    		siteVersion.getItems().add(record);
+    	}
     	
+    	//Конфиг комбобокса логина
+    	new Customizer(SimpleComboRecordExt.class.getSimpleName()).CustomizeCB(username);
+    	//Слушатель, меняющий значение в поле Пароль
+    	username.valueProperty().addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+				//Если предыдущий алиас равен новому - выходим из функции
+				if(oldValue != null && ((SimpleComboRecord)oldValue).getName().equalsIgnoreCase(((SimpleComboRecord)newValue).getName()))
+					return;
+				
+				if(newValue != null && ((SimpleComboRecord)newValue).getId() > -1) 
+					password.setText(((User)((SimpleComboRecordExt)newValue).getData()).getPassword()); 
+				else password.setText("");
+			}
+        });
+    	
+    	
+    	//Выбираем первую версию в списке
     	siteVersion.setValue(siteVersion.getItems().get(0));
-    	
-    	
-    	//Конфиг и заполнение комбобокса логина
-    	new Customizer().CustomizeCB(username);
-    	
-    	pstmt.query(Queries.GET_USERS_BY_VERSION, new RowMapper() {
-			@Override
-			public Object mapRow(ResultSet res, int arg1) throws SQLException {
-				siteVersion.getItems().add(
-						new SimpleComboRecordExt(res.getString("FULLNAME"), res.getString("URL"), res.getString("ID"))
-						);
-				return null;
-			}
-		});
-    	
+
     }
+    
+    //Заполнение комбобокса Логин пользователями для выбранной версии сайта
+    private void fillUsernameCombo() {
+    	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+    	
+    	username.getItems().clear();
+    	
+    	//Список всех сохраненных в БД пользователей для выбранной версии
+    	HashMap params = new HashMap();
+    	params.put("versionid", siteVersion.getValue().getId());
+    	List<User> users = pstmt.query(Queries.GET_USERS_BY_VERSION, params, new AutoMapper(User.class, null));
+
+    	//Заполняем комбобокс доступными пользователями
+    	for(User user : users) 
+    		username.getItems().add(new SimpleComboRecordExt(user.getId(), user.getUsername(), user));
+    	
+    	//Если список не пустой, выбираем из него первого пользователя
+    	if(username.getItems().size() > 0) username.setValue(username.getItems().get(0));
+    }
+    
     
     public void setMainApp(MainApp mainApp) {
     	this.mainApp = mainApp;
@@ -109,7 +136,7 @@ public class LoginController {
 	    
 	    mainApp.setDriver(new ChromeDriver());
 
-    	mainApp.getDriver().get(siteVersion.getValue().getURL());
+    	mainApp.getDriver().get(siteVersion.getValue().getUrl());
 
     	mainApp.getDriver().manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
     	mainApp.getDriver().manage().timeouts().setScriptTimeout(30, TimeUnit.SECONDS);
@@ -135,7 +162,7 @@ public class LoginController {
 	    	loginField.clear();
 	    	passwordField.clear();
 
-	    	loginField.sendKeys(username.getText());
+	    	loginField.sendKeys(username.getValue().getName());
 	    	passwordField.sendKeys(password.getText());
 
 	    	mainApp.getDriver().findElement(By.id("authentificationSubmit")).click();
@@ -157,14 +184,66 @@ public class LoginController {
 		}
     }
     
-    private boolean checkLogopas(){    	
-    	if(username.getText().isEmpty() || password.getText().isEmpty()) {
+    //Проверка Логина и Пароля
+    private boolean checkLogopas(){    	    	
+    	Integer userid = -1;
+    	String usernameVal = "";
+    	
+    	//Если выбрасывется исключение, значит был введен новый юзер
+    	try {
+    		if(!username.getValue().isValueEmpty(username.getValue().getName()))
+    			usernameVal = username.getValue().getName();
+    		userid = username.getValue().getId();
+    	}
+    	catch(ClassCastException e) {
+    		usernameVal = username.getEditor().getText();
+    	}
+    	
+    	//Проверяем заполненность полей Логин и Пароль
+    	if(usernameVal.length() == 0 || password.getText().isEmpty()) {
 			loginErrorMsg.setText("Введите логин и пароль");
 			return false;
     	}
+    	//Если был введен новый юзер, сохраняем его в БД
     	else {
     		loginErrorMsg.setText("");
+    		if(userid == -1) saveLogopas(usernameVal);
+    		else changeLastusedProp();
     		return true;
+    	}
+    }
+    
+    //Сохранение нового юзера
+    private void saveLogopas(String alias) {
+    	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+    	
+    	HashMap params = new HashMap();
+    	params.put("login", alias);
+    	params.put("password", password.getText());
+    	params.put("gamever", siteVersion.getValue().getId());
+    	
+    	try {
+        	pstmt.update(Queries.SAVE_USER, params);
+    	}
+    	catch(Exception e) {
+    		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+    	}
+    }
+    
+    //
+    private void changeLastusedProp() {
+    	if(((User)username.getValue().getData()).getLastused().isDigit('N')) {
+        	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+        	
+        	HashMap params = new HashMap();
+        	params.put("id", username.getValue().getId());
+        	
+        	try {
+            	pstmt.update(Queries.UPD_USER_LASTUSED, params);
+        	}
+        	catch(Exception e) {
+        		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+        	}
     	}
     }
     

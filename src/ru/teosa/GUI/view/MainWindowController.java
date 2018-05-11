@@ -62,7 +62,7 @@ public class MainWindowController {
     	
     	if(record.getFarmData() == null) {
         	farm = new BreedingFarm();
-        	farm.setURL(record.getURL());
+        	farm.setURL(record.getUrl());
         	record.setFarmData(farm);
     	}
     	else farm = record.getFarmData();    	

@@ -4,15 +4,14 @@ import org.apache.log4j.Logger;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.util.StringConverter;
-import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
+import ru.teosa.utils.objects.SimpleComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 /**
@@ -21,39 +20,78 @@ import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class Customizer{
 
-	private MainApp mainApp;
+	private String genericClassName;
 	
-	public MainApp getMainApp() {
-		return mainApp;
-	}
-	public void setMainApp(MainApp mainApp) {
-		this.mainApp = mainApp;
+	public Customizer() {}
+	public Customizer(String genericClassName) {
+		this.genericClassName = genericClassName;
 	}
 
-
 	
+	
+	public void CustomizeCB(ComboBox combo) {	
+//		if(genericClassName != null && genericClassName.equalsIgnoreCase("SimpleComboRecord")) 
+//			if(genericClassName.equalsIgnoreCase("SimpleComboRecordExt")) CustomizeCB_SimpleComboRecordExt(combo); 
+//		else 
+			CustomizeCB_SimpleComboRecord(combo);
+
+	}
+	
+	public void CustomizeCB(ComboBox combo, boolean redirectByURL) {
+//		if(genericClassName != null && genericClassName.equalsIgnoreCase("RedirectingComboRecord")) 
+//			if(genericClassName.equalsIgnoreCase("RedirectingComboRecordExt")) CustomizeCB_RedirectingComboRecordExt(combo, redirectByURL); 
+//		else 
+			CustomizeCB_RedirectingComboRecord(combo, redirectByURL);
+
+	}
+//**************************************************************************************************************************	
+//**************************************************************************************************************************
 	/**
 	 * ћетод дл€ кастомизации комбобокса, содержащего SimpleComboRecord в качестве записей.<br>
-	 * ”станавливает дл€ отображени€ в выпадающем списке поле Name. ѕосле выбора записи - переход по ссылке из пол€ URL.
+	 * ”станавливает дл€ отображени€ в выпадающем списке поле Name.
 	 * @param combo комбобокс дл€ кастомизации
 	 * @return void
 	 * */
-	public void CustomizeCB(ComboBox<SimpleComboRecordExt> combo) {				
-		combo.setConverter(new StringConverter<SimpleComboRecordExt>() {
+	private void CustomizeCB_SimpleComboRecord(ComboBox<SimpleComboRecord> combo) {				
+		combo.setConverter(new StringConverter<SimpleComboRecord>() {
     	    @Override
-    	    public String toString(SimpleComboRecordExt object) {
-    	        return object.getName();
+    	    public String toString(SimpleComboRecord object) {
+    	        return object != null ? object.getName() : "";
     	    }
 
 			@Override
-			public SimpleComboRecordExt fromString(String string) {
-				return combo.getItems().stream().filter(record -> record.getName().equals(string)).findFirst().orElse(null);
+			public SimpleComboRecord fromString(String string) {
+				//return (SimpleComboRecord)combo.getItems().stream().filter(record -> ((SimpleComboRecord)record).getName().equals(string)).findFirst().orElse(null);
+				return new SimpleComboRecord(-1, string);
 			}
     	});
     	
 	}
 	
+	/**
+	 * ћетод дл€ кастомизации комбобокса, содержащего SimpleComboRecordExt в качестве записей.<br>
+	 * ”станавливает дл€ отображени€ в выпадающем списке поле Name.
+	 * @param combo комбобокс дл€ кастомизации
+	 * @return void
+	 * */
+	private void CustomizeCB_SimpleComboRecordExt(ComboBox<SimpleComboRecordExt> combo) {				
+		combo.setConverter(new StringConverter<SimpleComboRecordExt>() {
+    	    @Override
+    	    public String toString(SimpleComboRecordExt object) {
+    	        return object != null ? object.getName() : "";
+    	    }
+
+			@Override
+			public SimpleComboRecordExt fromString(String string) {
+//				return combo.getItems().stream().filter(record -> record.getName().equals(string)).findFirst().orElse(null);
+				return new SimpleComboRecordExt(-1, string, null);
+			}
+    	});
+    	
+	}
 	
+
+		
 	/**
 	 * ћетод дл€ кастомизации комбобокса, содержащего RedirectingComboRecord в качестве записей.<br>
 	 * ”станавливает дл€ отображени€ в выпадающем списке поле Name. ѕосле выбора записи - переход по ссылке из пол€ URL.
@@ -61,10 +99,10 @@ public class Customizer{
 	 * @param URLRedirect переход по ссылке при выборе значени€ в комбобоксе
 	 * @return void
 	 * */
-	public void CustomizeCB(ComboBox<RedirectingComboRecord> combo, boolean URLRedirect) {		
+	private void CustomizeCB_RedirectingComboRecord(ComboBox<RedirectingComboRecord> combo, boolean URLRedirect) {		
 		if(URLRedirect) {
 			combo.valueProperty().addListener((obs, oldV, newV) -> {
-				if(newV != null) mainApp.getDriver().navigate().to(newV.getURL());		
+				if(newV != null) MainAppHolderSingleton.getInstance().getDriver().navigate().to(newV.getUrl());		
 			});
 		}
   	
@@ -81,6 +119,33 @@ public class Customizer{
     	});   	
 	}
 	
+	/**
+	 * ћетод дл€ кастомизации комбобокса, содержащего RedirectingComboRecord в качестве записей.<br>
+	 * ”станавливает дл€ отображени€ в выпадающем списке поле Name. ѕосле выбора записи - переход по ссылке из пол€ URL.
+	 * @param combo комбобокс дл€ кастомизации
+	 * @param URLRedirect переход по ссылке при выборе значени€ в комбобоксе
+	 * @return void
+	 * */
+	private void CustomizeCB_RedirectingComboRecordExt(ComboBox<RedirectingComboRecordExt> combo, boolean URLRedirect) {		
+		if(URLRedirect) {
+			combo.valueProperty().addListener((obs, oldV, newV) -> {
+				if(newV != null) MainAppHolderSingleton.getInstance().getDriver().navigate().to(newV.getUrl());		
+			});
+		}
+  	
+		combo.setConverter(new StringConverter<RedirectingComboRecordExt>() {
+    	    @Override
+    	    public String toString(RedirectingComboRecordExt object) {
+    	        return object.getName();
+    	    }
+
+			@Override
+			public RedirectingComboRecordExt fromString(String string) {
+				return combo.getItems().stream().filter(record -> record.getName().equals(string)).findFirst().orElse(null);
+			}
+    	});   	
+	}
+	
 	public void customizeTree(TreeView<RedirectingComboRecordExt> treeView) {
 		 treeView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener() {
 				@Override
@@ -89,11 +154,19 @@ public class Customizer{
 		            RedirectingComboRecordExt value = selectedItem.getValue();
 		            
 		            Logger.getLogger("debug").debug("SELECTED NAME: " + value.getName());
-		            Logger.getLogger("debug").debug("SELECTED URL: " + value.getURL());
+		            Logger.getLogger("debug").debug("SELECTED URL: " + value.getUrl());
 		            Logger.getLogger("debug").debug("SELECTED DATA: " + value.getData() != null);
 		            
 				}
 		      });
+	}
+//*********************************************************************************
+//*********************************************************************************
+	public String getGenericClassName() {
+		return genericClassName;
+	}
+	public void setGenericClassName(String genericClassName) {
+		this.genericClassName = genericClassName;
 	}
 	
 }

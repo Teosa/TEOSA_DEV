@@ -96,7 +96,7 @@ public class MainWindow {
 						subURL = subURL.replace("#tab-", "elevage=");
 						
 						subFarmRecord.setName(subname);
-						subFarmRecord.setURL(subURL);
+						subFarmRecord.setUrl(subURL);
 						
 						Logger.getLogger("debug").debug("SUB FARM " + k + " : " + subname);
 						Logger.getLogger("debug").debug("SUB FARM " + k + " : " + subURL);
@@ -118,7 +118,7 @@ public class MainWindow {
 			}
 			
 			record.setName(name);
-			record.setURL(farmURL);
+			record.setUrl(farmURL);
 			
 			Logger.getLogger("debug").debug("FARM " + i + " : " + name);
 			Logger.getLogger("debug").debug("FARM " + i + " : " + farmURL);

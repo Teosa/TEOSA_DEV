@@ -30,7 +30,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="siteVersion" editable="true" layoutX="110.0" layoutY="38.0" prefWidth="150.0" />
+            <ComboBox fx:id="siteVersion" layoutX="110.0" layoutY="38.0" prefWidth="150.0" />
             <PasswordField fx:id="password" layoutX="111.0" layoutY="148.0" />
             <ComboBox fx:id="username" editable="true" layoutX="110.0" layoutY="115.0" prefWidth="150.0" visibleRowCount="5" />
          </children>
