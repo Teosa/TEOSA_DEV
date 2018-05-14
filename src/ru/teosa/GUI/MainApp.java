@@ -115,6 +115,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/MainWindow.fxml"));
             
+            //загружаем вкладки
             BorderPane mainForm = (BorderPane) loader.load();
             mainForm = loadTabsIntoForm(mainForm);
             

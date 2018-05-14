@@ -13,6 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -41,17 +42,31 @@ public class LoginController {
 
 	      private MainApp    mainApp;
 
-
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
+	}   
+	
+	
     /**
      * Инициализация класса-контроллера для формы авторизации. Этот метод вызывается автоматически
      * после того, как fxml-файл будет загружен.
      */
     @FXML
     private void initialize() {
+    	
+    	//Инициализация комбобоксов
+    	initGameVersionsCombo();
+    	initLoginCombo();
+
+    	//Выбираем первую запись в комбобоксе версий
+    	siteVersion.setValue(siteVersion.getItems().get(0));
+    }
+        
+    private void initGameVersionsCombo() {
     	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
 
     	//Конфиг комбобокса версий сайта
-    	new Customizer(RedirectingComboRecord.class.getSimpleName()).CustomizeCB(siteVersion, false);
+    	new Customizer(RedirectingComboRecord.class).CustomizeCB(siteVersion, false);
     	//Слушатель, меняющий значение в полях Логин и Пароль
     	siteVersion.valueProperty().addListener(new ChangeListener<RedirectingComboRecord>() {
 			@Override
@@ -65,27 +80,43 @@ public class LoginController {
     	for(RedirectingComboRecord record : records) {
     		siteVersion.getItems().add(record);
     	}
-    	
+    }
+    
+    private void initLoginCombo() {
     	//Конфиг комбобокса логина
-    	new Customizer(SimpleComboRecordExt.class.getSimpleName()).CustomizeCB(username);
+    	new Customizer(SimpleComboRecordExt.class).CustomizeCB(username);
     	//Слушатель, меняющий значение в поле Пароль
     	username.valueProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-				//Если предыдущий алиас равен новому - выходим из функции
-				if(oldValue != null && ((SimpleComboRecord)oldValue).getName().equalsIgnoreCase(((SimpleComboRecord)newValue).getName()))
-					return;
-				
-				if(newValue != null && ((SimpleComboRecord)newValue).getId() > -1) 
-					password.setText(((User)((SimpleComboRecordExt)newValue).getData()).getPassword()); 
-				else password.setText("");
+				Logger.getLogger("debug").debug("CHANGE LOGIN COMBO VALUE");
+				/* После потери фокуса в поле Логин отрабатывает данный слушатель.
+				*  Даже если была выбрана запись из выпадающего списка (а не введено новое значение), 
+				*  слушатель принимает за newValue текст из комбобокса с ID = -1, что в дальнейшем приводит к созданию дубликата юзера в БД. 
+				*  Чтобы избежать этого, делаем проверку на совпадение алиасов старого и нового значений и проверяем ID на равенство -1. 
+				*  В случае Успешности обеих проверок - откатываем изменение значения в комбобоксе.
+				*  */
+				if(oldValue != null && newValue != null
+			      && ((SimpleComboRecord)oldValue).getName().equalsIgnoreCase(((SimpleComboRecord)newValue).getName())
+			      && ((SimpleComboRecord)newValue).getId() == -1) 
+				{
+		            Platform.runLater(new Runnable(){
+		                @Override
+		                public void run() {
+		                	username.setValue((SimpleComboRecordExt)oldValue);
+		                	return;
+		                }});
+				}
+				else 
+				{
+					if(newValue != null && ((SimpleComboRecord)newValue).getId() > -1) {
+						Logger.getLogger("debug").debug("COMBO RECORD ID: " + ((SimpleComboRecord)newValue).getId());
+						password.setText(((User)((SimpleComboRecordExt)newValue).getData()).getPassword()); 
+					}
+					else password.setText("");					
+				}
 			}
         });
-    	
-    	
-    	//Выбираем первую версию в списке
-    	siteVersion.setValue(siteVersion.getItems().get(0));
-
     }
     
     //Заполнение комбобокса Логин пользователями для выбранной версии сайта
@@ -106,11 +137,7 @@ public class LoginController {
     	//Если список не пустой, выбираем из него первого пользователя
     	if(username.getItems().size() > 0) username.setValue(username.getItems().get(0));
     }
-    
-    
-    public void setMainApp(MainApp mainApp) {
-    	this.mainApp = mainApp;
-    }   
+
     
     /**
      * Метод вызывается после нажатия кнопки 'Подключение'.<br>
@@ -149,26 +176,33 @@ public class LoginController {
  
     private boolean accountLogin(){
     	try {
-    		try {
-    			Sleeper.waitForClickAndClick("//*[@id=\"header\"]/nav/div");
+    		//Если на странице отсутствует поле Логин, жднм появления кнопки Войти для отображения формы авторизации
+    		if(!mainApp.getDriver().findElement(By.id("login")).isDisplayed()) {
+	    		try {
+	    			Sleeper.waitForClickAndClick("//*[@id=\"header\"]/nav/div");
+	    		}
+	    		catch(NoSuchElementException | TimeoutException e) {
+	    			Logger.getLogger("error").error(e);
+	    		}
     		}
-    		catch(NoSuchElementException | TimeoutException e) {
-    			Logger.getLogger("error").error(e);
-    		}
-
+    		
 	    	WebElement loginField = mainApp.getDriver().findElement(By.id("login"));
 	    	WebElement passwordField = mainApp.getDriver().findElement(By.id("password"));
 
 	    	loginField.clear();
 	    	passwordField.clear();
 
+	    	//Заполняем Логин и Пароль
 	    	loginField.sendKeys(username.getValue().getName());
 	    	passwordField.sendKeys(password.getText());
 
+	    	//Сабмитим
 	    	mainApp.getDriver().findElement(By.id("authentificationSubmit")).click();
 	    	
+	    	//Ждем загрузки страницы
 			Thread.sleep(2000);
 
+			//Если не авторизовались, выводим ошибку в приложение
 	    	if(!mainApp.getDriver().getCurrentUrl().contains("identification")) {
 	    		loginErrorMsg.setText(mainApp.getDriver().findElement(By.id("fieldError-invalidUser")).getText());
 	    		return false;
@@ -191,11 +225,14 @@ public class LoginController {
     	
     	//Если выбрасывется исключение, значит был введен новый юзер
     	try {
+    		Logger.getLogger("debug").debug("TRY TO GET LOGIN VALUE");
+    		Logger.getLogger("debug").debug(username.getValue().getClass().getName());
     		if(!username.getValue().isValueEmpty(username.getValue().getName()))
     			usernameVal = username.getValue().getName();
     		userid = username.getValue().getId();
     	}
     	catch(ClassCastException e) {
+    		Logger.getLogger("debug").debug("COUGHT EXCEPTION WHEN TRY TO GET LOGIN VALUE");
     		usernameVal = username.getEditor().getText();
     	}
     	
@@ -206,6 +243,7 @@ public class LoginController {
     	}
     	//Если был введен новый юзер, сохраняем его в БД
     	else {
+    		Logger.getLogger("debug").debug("USERID: " + userid + " " + usernameVal);
     		loginErrorMsg.setText("");
     		if(userid == -1) saveLogopas(usernameVal);
     		else changeLastusedProp();
@@ -223,6 +261,7 @@ public class LoginController {
     	params.put("gamever", siteVersion.getValue().getId());
     	
     	try {
+    		Logger.getLogger("debug").debug("TRY TO SAVE NEW USER: " + alias);
         	pstmt.update(Queries.SAVE_USER, params);
     	}
     	catch(Exception e) {
@@ -232,13 +271,16 @@ public class LoginController {
     
     //
     private void changeLastusedProp() {
-    	if(((User)username.getValue().getData()).getLastused().isDigit('N')) {
+    	Logger.getLogger("debug").debug("USER LASTUSED:  " + ((User)username.getValue().getData()).getLastused());
+    	Logger.getLogger("debug").debug("USER LASTUSED:  " + ((User)username.getValue().getData()).getLastused().isLetterOrDigit('N'));
+    	if(((User)username.getValue().getData()).getLastused().isLetterOrDigit('N')) {
         	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
         	
         	HashMap params = new HashMap();
         	params.put("id", username.getValue().getId());
         	
         	try {
+        		Logger.getLogger("debug").debug("TRY TO UPDATE LASTUSED FOR ID " + username.getValue().getId());
             	pstmt.update(Queries.UPD_USER_LASTUSED, params);
         	}
         	catch(Exception e) {
@@ -254,8 +296,6 @@ public class LoginController {
     		HashMap params = new HashMap();
     		params.put("id", siteVersion.getValue().getId());
 
-    		
-    		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'N' WHERE LASTUSED = 'Y'", params);
     		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'Y' WHERE ID = :id", params);
     	}
     	catch(Exception e) {

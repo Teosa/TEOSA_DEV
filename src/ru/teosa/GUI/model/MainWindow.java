@@ -11,7 +11,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import ru.teosa.GUI.MainApp;
 import ru.teosa.utils.Sleeper;
-import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
 public class MainWindow {
@@ -50,6 +49,7 @@ public class MainWindow {
 	}
 																	
 	private static void goToBreedingFarm(){	
+		Logger.getLogger("debug").debug("goToBreedingFarm");
 		WebElement breedingFarmMenu = driver.findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]"));
 
 		Actions builder = new Actions(driver);

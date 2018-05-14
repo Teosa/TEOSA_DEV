@@ -8,6 +8,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
@@ -25,7 +26,9 @@
         <menus>
           <Menu mnemonicParsing="false" text="Меню">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem fx:id="convertMoney" mnemonicParsing="false" onAction="#convertMoneyHandler" text="Конвертация" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem fx:id="exit" mnemonicParsing="false" text="Выход" />
             </items>
           </Menu>
         </menus>

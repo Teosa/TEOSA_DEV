@@ -20,19 +20,23 @@ import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class Customizer{
 
-	private String genericClassName;
+//	private String genericClassName;
+	private Class genericClass;
 	
 	public Customizer() {}
-	public Customizer(String genericClassName) {
-		this.genericClassName = genericClassName;
+//	public Customizer(String genericClassName) {
+//		this.genericClassName = genericClassName;
+//	}
+	public Customizer(Class genericClass) {
+		this.genericClass = genericClass;
 	}
-
 	
 	
 	public void CustomizeCB(ComboBox combo) {	
-//		if(genericClassName != null && genericClassName.equalsIgnoreCase("SimpleComboRecord")) 
-//			if(genericClassName.equalsIgnoreCase("SimpleComboRecordExt")) CustomizeCB_SimpleComboRecordExt(combo); 
-//		else 
+		if(genericClass != null)Logger.getLogger("debug").debug("CLASS COMPARE: " + genericClass.getSimpleName().equalsIgnoreCase(SimpleComboRecordExt.class.getSimpleName()));
+		if(genericClass != null && genericClass.getSimpleName().equalsIgnoreCase(SimpleComboRecordExt.class.getSimpleName())) 
+			if(genericClass.getSimpleName().equalsIgnoreCase(SimpleComboRecordExt.class.getSimpleName())) CustomizeCB_SimpleComboRecordExt(combo); 
+		else 
 			CustomizeCB_SimpleComboRecord(combo);
 
 	}
@@ -162,11 +166,6 @@ public class Customizer{
 	}
 //*********************************************************************************
 //*********************************************************************************
-	public String getGenericClassName() {
-		return genericClassName;
-	}
-	public void setGenericClassName(String genericClassName) {
-		this.genericClassName = genericClassName;
-	}
+
 	
 }
