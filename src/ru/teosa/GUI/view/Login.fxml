@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.LoginController">
+<AnchorPane prefHeight="330.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.LoginController">
    <children>
       <Pane layoutX="-5.0" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -33,6 +33,7 @@
             <ComboBox fx:id="siteVersion" layoutX="110.0" layoutY="38.0" prefWidth="150.0" />
             <PasswordField fx:id="password" layoutX="111.0" layoutY="148.0" />
             <ComboBox fx:id="username" editable="true" layoutX="110.0" layoutY="115.0" prefWidth="150.0" visibleRowCount="5" />
+            <Text fx:id="version" fill="#8a8787" layoutX="185.0" layoutY="314.0" strokeType="OUTSIDE" strokeWidth="0.0" text="11" wrappingWidth="100.0" />
          </children>
       </Pane>
    </children>

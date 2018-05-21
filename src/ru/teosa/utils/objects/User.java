@@ -5,7 +5,7 @@ public class User {
 	private String username;
 	private String password;
 	private Character lastused;
-	
+	private Integer accountid;
 	
 	public Integer getId() {
 		return id;
@@ -30,5 +30,11 @@ public class User {
 	}
 	public void setLastused(Character lastused) {
 		this.lastused = lastused;
+	}
+	public Integer getAccountid() {
+		return accountid;
+	}
+	public void setAccountid(Integer accountid) {
+		this.accountid = accountid;
 	}
 }

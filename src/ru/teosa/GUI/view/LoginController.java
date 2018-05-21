@@ -12,6 +12,9 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -39,6 +42,7 @@ public class LoginController {
 	@FXML private TextField  password;
 	@FXML private Button     loginButton;
 	@FXML private Text       loginErrorMsg;
+	@FXML private Text       version;
 
 	      private MainApp    mainApp;
 
@@ -53,6 +57,9 @@ public class LoginController {
      */
     @FXML
     private void initialize() {
+    	
+		//Отображаем версию программы
+    	version.setText(MainAppHolderSingleton.getVer());
     	
     	//Инициализация комбобоксов
     	initGameVersionsCombo();
@@ -169,7 +176,8 @@ public class LoginController {
     	mainApp.getDriver().manage().timeouts().setScriptTimeout(30, TimeUnit.SECONDS);
     	mainApp.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     	
-    	MainAppHolderSingleton.getInstance().setDriver(mainApp.getDriver());
+    	MainAppHolderSingleton.getInstance().setDriver(mainApp.getDriver()); 	
+    	MainAppHolderSingleton.setGameURL(siteVersion.getValue().getUrl());
     } 
      
     private void runWithHeadlessBrowser(){}
@@ -203,14 +211,16 @@ public class LoginController {
 			Thread.sleep(2000);
 
 			//Если не авторизовались, выводим ошибку в приложение
-	    	if(!mainApp.getDriver().getCurrentUrl().contains("identification")) {
-	    		loginErrorMsg.setText(mainApp.getDriver().findElement(By.id("fieldError-invalidUser")).getText());
+			try {
+				WebElement el = Sleeper.waitVisibility("//*[@id=\"fieldError-invalidUser\"]");
+				
+	    		loginErrorMsg.setText(el.getText());
 	    		return false;
-	    	}	
-	    	else {
+			}
+			catch(NoSuchElementException | TimeoutException ex) {
 	    		loginErrorMsg.setText("");  		
 	    		return true;
-	    	}
+			}
 		} catch (Exception e) {
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
 			loginErrorMsg.setText("Ошибка авторизации");
@@ -245,7 +255,7 @@ public class LoginController {
     	else {
     		Logger.getLogger("debug").debug("USERID: " + userid + " " + usernameVal);
     		loginErrorMsg.setText("");
-    		if(userid == -1) saveLogopas(usernameVal);
+    		if(userid == -1) saveLogopas(usernameVal.trim());
     		else changeLastusedProp();
     		return true;
     	}
@@ -254,15 +264,67 @@ public class LoginController {
     //Сохранение нового юзера
     private void saveLogopas(String alias) {
     	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
-    	
+    	TransactionTemplate tmpl = MainAppHolderSingleton.getInstance().getTmpl();
+
     	HashMap params = new HashMap();
     	params.put("login", alias);
     	params.put("password", password.getText());
     	params.put("gamever", siteVersion.getValue().getId());
     	
+    	//Получаем список существующих в БД алиасов
+    	List<SimpleComboRecord> aliases = pstmt.query("SELECT ID, ALIAS AS name FROM USERS", params,  new AutoMapper(SimpleComboRecord.class, null));
+    	Integer existingAlias = null;
+    	
+    	//Проверяем существование алиаса в БД
+    	for(SimpleComboRecord user : aliases) if(alias.equalsIgnoreCase(user.getName())) existingAlias = user.getId();
+    	
     	try {
-    		Logger.getLogger("debug").debug("TRY TO SAVE NEW USER: " + alias);
-        	pstmt.update(Queries.SAVE_USER, params);
+    		//Если алиас существует, то создаем новый аккаунт и привязываем его к алиасу
+    		if(existingAlias != null) {
+	    		final Integer existingAlias_ = existingAlias;
+    			tmpl.execute(new TransactionCallback(){
+	    		    public Object doInTransaction(TransactionStatus ts){
+	    		        try{
+	    		    		pstmt.update(Queries.SAVE_ACCOUNT, params);
+	    		    		Integer newAccountID = pstmt.queryForObject("SELECT MAX(ID) FROM ACCOUNTS", params, Integer.class);
+	    		    			
+	    		    		params.put("userid", existingAlias_);
+	    		    		params.put("accid", newAccountID);
+	    		    			
+	    		    		pstmt.update(Queries.ATTACH_ACCOUNT_TO_USER, params);	
+	    		        }
+	    		        catch(Exception ex){
+	    		            ts.setRollbackOnly(); 
+	    		            Logger.getLogger("error").error(ExceptionUtils.getStackTrace(ex));
+	    		        }
+	    		        return null;
+	    		    }
+	    		});
+    		}
+    		//Иначе создаем нового юзера и аккаунт
+    		else {
+    			tmpl.execute(new TransactionCallback(){
+	    		    public Object doInTransaction(TransactionStatus ts){
+	    		        try{
+	    	    			pstmt.update(Queries.SAVE_USER, params);
+	    	    			pstmt.update(Queries.SAVE_ACCOUNT, params);
+	    	    			
+	    	    			Integer newAccountID = pstmt.queryForObject("SELECT MAX(ID) FROM ACCOUNTS", params, Integer.class);
+	    	    			Integer newUserID = pstmt.queryForObject("SELECT MAX(ID) FROM USERS", params, Integer.class);
+	    	    			
+	    	    			params.put("userid", newUserID);
+	    	    			params.put("accid", newAccountID);
+	    	    			
+	    	    			pstmt.update(Queries.ATTACH_ACCOUNT_TO_USER, params);	    		        	
+	    		        }
+	    		        catch(Exception ex){
+	    		            ts.setRollbackOnly(); 
+	    		            Logger.getLogger("error").error(ExceptionUtils.getStackTrace(ex));
+	    		        }
+	    		        return null;
+	    		    }
+	    		});
+    		} 
     	}
     	catch(Exception e) {
     		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
@@ -271,13 +333,13 @@ public class LoginController {
     
     //
     private void changeLastusedProp() {
-    	Logger.getLogger("debug").debug("USER LASTUSED:  " + ((User)username.getValue().getData()).getLastused());
-    	Logger.getLogger("debug").debug("USER LASTUSED:  " + ((User)username.getValue().getData()).getLastused().isLetterOrDigit('N'));
+
     	if(((User)username.getValue().getData()).getLastused().isLetterOrDigit('N')) {
         	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
         	
         	HashMap params = new HashMap();
         	params.put("id", username.getValue().getId());
+        	params.put("versionid", siteVersion.getValue().getId());
         	
         	try {
         		Logger.getLogger("debug").debug("TRY TO UPDATE LASTUSED FOR ID " + username.getValue().getId());

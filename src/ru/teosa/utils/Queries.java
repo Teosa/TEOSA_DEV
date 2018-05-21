@@ -11,23 +11,30 @@ public class Queries {
 	
 	/** —писок пользователей дл€ выбранной версии сайта */
 	public final static String GET_USERS_BY_VERSION = ""
-			+ "SELECT ID, ALIAS AS username, PASSWORD, LASTUSED "
-			+ "FROM USERS "
-			+ "WHERE VERSION = :versionid " 
-			+ "ORDER BY LASTUSED DESC";
-	
-	
+			+ "SELECT u.ID, u.ALIAS AS username, ac.PASSWORD, ac.LASTUSED, ac.ID AS accountid "
+			+ "FROM USERS u "
+			+ "JOIN USERTOACCOUNT uta ON uta.USERID = u.ID "
+			+ "JOIN ACCOUNTS ac ON ac.ID = uta.ACCOUNTID "
+			+ "WHERE ac.VERSION = :versionid "
+			+ "ORDER BY ac.LASTUSED DESC";
 	
 //***********************************************************************************************************************	
 //****************************            SAVE                 **********************************************************
-//***********************************************************************************************************************		
-	
-	public final static String SAVE_USER = ""
-			+ "INSERT INTO USERS VALUES (DEFAULT, :login, :password, 'Y', :gamever )";
-	
+//***********************************************************************************************************************			
+	public final static String SAVE_ACCOUNT = "INSERT INTO ACCOUNTS VALUES (DEFAULT, :password, :gamever, 'Y')";
+	public final static String SAVE_USER = "INSERT INTO USERS VALUES (DEFAULT, :login)";
+	public final static String ATTACH_ACCOUNT_TO_USER = "INSERT INTO USERTOACCOUNT VALUES (:userid, :accid)";
 //***********************************************************************************************************************	
 //****************************            UPDATE               **********************************************************
 //***********************************************************************************************************************
 	public final static String UPD_USER_LASTUSED = ""
-			+ "UPDATE USERS SET LASTUSED = 'Y' WHERE ID = :id";
+			+ "UPDATE ACCOUNTS "
+			+ "SET LASTUSED = 'Y' "
+			+ "WHERE ID IN ( "
+			+ "  SELECT ac.ID "
+			+ "  FROM USERS u "
+			+ "  JOIN USERTOACCOUNT uta ON uta.USERID = u.ID "
+			+ "  JOIN ACCOUNTS ac ON ac.ID = uta.ACCOUNTID "
+			+ "  WHERE ac.VERSION = :versionid AND u.ID = :id " 
+			+ ")";
 }

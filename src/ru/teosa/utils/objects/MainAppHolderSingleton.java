@@ -2,32 +2,36 @@ package ru.teosa.utils.objects;
 
 import org.openqa.selenium.WebDriver;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import ru.teosa.GUI.MainApp;
+import ru.teosa.threads.MoneyConverterSercice;
 
 public class MainAppHolderSingleton {
     private static MainAppHolderSingleton _instance = null;
     private MainApp mainApp;
-    private WebDriver driver ;
+    private WebDriver driver;
+    private static final String VER = "Version 1.0.1";
+    private static MoneyConverterSercice moneyConverterHandler = new MoneyConverterSercice();
+    
     NamedParameterJdbcTemplate pstmt;
+    TransactionTemplate tmpl;
+    
+    private static String gameURL;
  
     public MainApp getMainApp() {
 		return mainApp;
 	}
-
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		if(mainApp.getDriver() != null) setDriver(mainApp.getDriver());
 	}
-
 	public WebDriver getDriver() {
 		return driver;
 	}
-
 	public void setDriver(WebDriver driver) {
 		this.driver = driver;
 	}
-
 	private MainAppHolderSingleton() {}
 
     public static synchronized MainAppHolderSingleton getInstance() {
@@ -35,13 +39,29 @@ public class MainAppHolderSingleton {
             _instance = new MainAppHolderSingleton();
         return _instance;
     }
-
 	public NamedParameterJdbcTemplate getPstmt() {
 		return pstmt;
 	}
-
 	public void setPstmt(NamedParameterJdbcTemplate pstmt) {
 		this.pstmt = pstmt;
+	}
+	public static String getVer() {
+		return VER;
+	}
+	public TransactionTemplate getTmpl() {
+		return tmpl;
+	}
+	public void setTmpl(TransactionTemplate tmpl) {
+		this.tmpl = tmpl;
+	}
+	public static MoneyConverterSercice getMoneyConverterHandler() {
+		return moneyConverterHandler;
+	}
+	public static String getGameURL() {
+		return gameURL;
+	}
+	public static void setGameURL(String gameURL) {
+		MainAppHolderSingleton.gameURL = gameURL;
 	}
 
 

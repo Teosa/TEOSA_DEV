@@ -13,9 +13,9 @@
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="304.0" prefWidth="620.0" VBox.vgrow="ALWAYS">
       <children>
-            <ToolBar disable="true" layoutX="14.0" layoutY="346.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <ToolBar layoutX="14.0" layoutY="346.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
               <items>
-                <Button fx:id="convertBtn" mnemonicParsing="false" onAction="#convertButtonHandler" text="Конвертировать" />
+                <Button fx:id="convertBtn" disable="true" mnemonicParsing="false" onAction="#convertButtonHandler" text="Конвертировать" />
               </items>
             </ToolBar>
             <Label layoutX="30.0" layoutY="30.0" text="Текущий баланс, экю">
@@ -33,15 +33,15 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text fx:id="moneyCurBal" layoutX="185.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="100.0" />
-            <Text fx:id="wheatCurBal" layoutX="485.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="100.0" />
-            <TextField fx:id="moneyExpBal" layoutX="185.0" layoutY="78.0" prefHeight="25.0" prefWidth="120.0" />
+            <Text fx:id="moneyCurBalText" layoutX="185.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="100.0" />
+            <Text fx:id="wheatCurBalText" layoutX="485.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="100.0" />
+            <TextField fx:id="moneyExpBalField" layoutX="185.0" layoutY="78.0" prefHeight="25.0" prefWidth="120.0" />
             <Label layoutX="320.0" layoutY="80.0" text="Целевой баланс, зерно">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text fx:id="wheatExpBal" layoutX="485.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="100.0" />
+            <Text fx:id="wheatExpBalText" layoutX="485.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="100.0" />
       </children>
     </AnchorPane>
   </children>

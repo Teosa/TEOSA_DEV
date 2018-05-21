@@ -34,6 +34,7 @@
 
     <bean id="MainAppHolderSingleton" class="ru.teosa.utils.objects.MainAppHolderSingleton"  factory-method="getInstance" lazy-init="false">
     	<property name="pstmt" ref="pstmt"/>
+    	<property name="tmpl" ref="transactionTemplate"/>
     </bean>	
 
 </beans>

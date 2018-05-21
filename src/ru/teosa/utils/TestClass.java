@@ -27,8 +27,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.sql.ResultSetMetaData;
@@ -39,62 +41,29 @@ public class TestClass extends Application{
 	 private Stage primaryStage;
 	 private BorderPane rootLayout;
 	
-//		public static BasicDataSource  getConnection() throws ClassNotFoundException, SQLException{
-//		       BasicDataSource bdSource = new BasicDataSource();
-//		       bdSource.setDriverClassName(driver);
-//			   bdSource.setUrl(url);
-//			   bdSource.setUsername(user);
-//			   bdSource.setPassword(password);
-//			   bdSource.setMaxActive(20);
-//			   bdSource.setMaxIdle(4);
-//			   bdSource.setTestOnBorrow(true);
-//			   bdSource.setTestOnReturn(true);
-//			   bdSource.setDefaultTransactionIsolation(2);
-//		       return bdSource;
-//		    }
 	public static void main(String[] args) {
+	
 
-		String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-		String connectionURL = "jdbc:derby:HBBDB;create=true;";
+//		String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+//		String connectionURL = "jdbc:derby:HBBDB;create=true;";
 		
 		try {
-			Class.forName(driver).newInstance();
-		    Connection conn = null;
-		    Statement stmt = null;
+//			Class.forName(driver).newInstance();
+//		    Connection conn = null;
+//		    Statement stmt = null;
 		    
 			  try {
-//				  conn = DriverManager.getConnection(connectionURL); 
-//				  stmt = conn.createStatement();
-////
-//		            ResultSet results = stmt.executeQuery("select * from testtable");
-//		            ResultSetMetaData rsmd = results.getMetaData();
-//		            int numberCols = rsmd.getColumnCount();
-//		            System.out.println(numberCols);
-//		            results.close();
-//		            stmt.close();
-				  
-				  GridPane g = new GridPane();
-				  
-				BasicDataSource bdSource = new BasicDataSource();
-				bdSource.setUrl(connectionURL);
-				bdSource.getConnection();
-				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
-				  
-				System.out.println(ClassLoader.getSystemResource("INT.png"));
-				HashMap params = new HashMap();
+			  
+//				BasicDataSource bdSource = new BasicDataSource();
+//				bdSource.setUrl(connectionURL);
+//				bdSource.getConnection();
+//				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
+
+				  System.out.println(Tools.numStringWithSpaces("56"));
+				  System.out.println(Tools.numStringWithSpaces("64545645"));
+				  System.out.println(Tools.numStringWithSpaces("54564563456342576566"));
+				  System.out.println(Tools.numStringWithSpaces("3"));
 				
-				File file = new File(ClassLoader.getSystemResource("INT.png").getPath());
-                if(file.exists()){
-                	final FileInputStream inStream = new FileInputStream(file);
-                    byte[] bb = new byte[(int)file.length()];
-                    inStream.read(bb);
-                    params.put("img", bb);
-                    inStream.close();
-                    
-                    pstmt.update("update GAMEVERSIONS set FLAGIMG = :img where id = 1", params);
-                }
-				
-//				pstmt.queryForObject("select count(*) from testtable", new HashMap(), Integer.class);
 				
 				
 			  }
@@ -109,7 +78,6 @@ public class TestClass extends Application{
 			DriverManager.getConnection("jdbc:derby:;shutdown=true");
 		}
 		catch(SQLException e) {System.out.println(e.getMessage());}
-//		launch(args);
 	}
 
 	@Override

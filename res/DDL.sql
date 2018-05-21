@@ -70,5 +70,67 @@ WHEN (N.LASTUSED = 'Y')
 UPDATE GAMEVERSIONS SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND ID <> N.ID;
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
+--18/05/18
+--Разбиение таблицы юзеров на USERS и ACCOUNTS со связочной таблицей USERTOACCOUNT.
 
+-- Удаляем юолее не нужные триггеры
+DROP TRIGGER LASTUSED_USER;
+DROP TRIGGER LASTUSED_USER_UPD;
 
+-- Аккаугты
+CREATE TABLE ACCOUNTS (
+ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+PASSWORD VARCHAR(50) NOT NULL, 
+VERSION INTEGER NOT NULL,
+LASTUSED CHAR DEFAULT 'N' NOT NULL ,
+CONSTRAINT ACCOUNTSID_PK PRIMARY KEY (ID),
+CONSTRAINT GAMEVERSION_FK FOREIGN KEY (VERSION) REFERENCES GAMEVERSIONS(ID),
+CONSTRAINT ACCOUNTS_LASTUSED_CHK CHECK (LASTUSED IN ('Y','N'))
+);
+-- PASSWORD - пароль 
+-- VERSION  - ID версии игры
+-- LASTUSED - признак последнего использования в приложении для выбранной версии
+
+-- Связочная таблица аккаунтов и юзеров
+CREATE TABLE USERTOACCOUNT (
+USERID INTEGER NOT NULL,
+ACCOUNTID INTEGER NOT NULL,
+CONSTRAINT USER_FK FOREIGN KEY (USERID) REFERENCES USERS(ID),
+CONSTRAINT ACCOUNT_FK FOREIGN KEY (ACCOUNTID) REFERENCES ACCOUNTS(ID),
+CONSTRAINT IDS_UQ UNIQUE (USERID, ACCOUNTID)
+);
+-- USERID    - идентификатор Юзера
+-- ACCOUNTID - идентификатор Аккаунта
+---------------------------------------------------
+--JAVA 
+SELECT ID, PASSWORD, LASTUSED, VERSION FROM USERS;
+INSERT INTO ACCOUNTS VALUES (DEFAULT, :password, :versionid, :lastused);
+SELECT MAX(ID) FROM ACCOUNTS;
+INSERT INTO USERTOACCOUNT VALUES (:userid, :accountid);
+-- JAVA END
+---------------------------------------------------
+-- При смене признака последнего использования в таблице Аккаунтов на Y (а так же при добавлении новой записи в таблицу), 
+-- автоматически выставляют всем остальным записям с такой же версией признак N.
+CREATE TRIGGER LASTUSED_ACCOUNTS_INS
+AFTER INSERT ON ACCOUNTS
+REFERENCING NEW AS N
+FOR EACH ROW MODE DB2SQL
+WHEN (N.LASTUSED = 'Y')
+UPDATE ACCOUNTS SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND VERSION = N.VERSION AND ID <> N.ID;
+
+CREATE TRIGGER LASTUSED_ACCOUNTS_UPD
+AFTER UPDATE ON ACCOUNTS
+REFERENCING NEW AS N
+FOR EACH ROW MODE DB2SQL
+WHEN (N.LASTUSED = 'Y')
+UPDATE ACCOUNTS SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND VERSION = N.VERSION AND ID <> N.ID;
+
+-- Удаление колонок перенесенных в таблицу Аккаунты
+ALTER TABLE USERS DROP COLUMN PASSWORD;
+ALTER TABLE USERS DROP COLUMN LASTUSED;
+ALTER TABLE USERS DROP COLUMN VERSION;
+
+-- Добавляем контроль уникальности для Алиаса в таблице Юзеров
+ALTER TABLE USERS ADD CONSTRAINT USERNAME_UQ UNIQUE (ALIAS);
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
