@@ -3,7 +3,6 @@ package ru.teosa.GUI;
 import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 import org.openqa.selenium.WebDriver;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -20,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
-import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;

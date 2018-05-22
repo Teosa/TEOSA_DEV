@@ -5,19 +5,24 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import ru.teosa.GUI.MainApp;
+import ru.teosa.account.Account;
 import ru.teosa.threads.MoneyConverterSercice;
 
 public class MainAppHolderSingleton {
     private static MainAppHolderSingleton _instance = null;
-    private MainApp mainApp;
-    private WebDriver driver;
-    private static final String VER = "Version 1.0.1";
+    
+    private MainApp mainApp;                               //Ссылка на 
+    private WebDriver driver;                              //Драйвер
+    
+    private static final Account account = new Account();  // Информация о юзере, аккаунте и т.д
+    private static final String VER = "Version 1.0.1";     // Версия приложения
+    private static String gameURL;                         // Ссылка на главную страницу игры выбранной версии
+    
+    // --
     private static MoneyConverterSercice moneyConverterHandler = new MoneyConverterSercice();
     
     NamedParameterJdbcTemplate pstmt;
     TransactionTemplate tmpl;
-    
-    private static String gameURL;
  
     public MainApp getMainApp() {
 		return mainApp;
@@ -63,6 +68,7 @@ public class MainAppHolderSingleton {
 	public static void setGameURL(String gameURL) {
 		MainAppHolderSingleton.gameURL = gameURL;
 	}
-
-
+	public static Account getAccount() {
+		return account;
+	}
 }

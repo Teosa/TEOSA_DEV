@@ -20,12 +20,14 @@ import net.sourceforge.htmlunit.corejs.javascript.GeneratedClassLoader;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
+import ru.teosa.account.Account;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -58,14 +60,22 @@ public class TestClass extends Application{
 //				bdSource.setUrl(connectionURL);
 //				bdSource.getConnection();
 //				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
+				  String zeros = ",";
+				  for(int i = 0; i < 5; ++i) {
+					  if(i > 0)zeros = "0" + zeros;
+					  for(int k = 1; k < 10; ++k) {
+						  if(k !=9) System.out.print(k + zeros);
+						  else System.out.println(k + zeros);
+						  
+						  
+						  
+					  }
+					  
+					  
+				  }
+				  
 
-				  System.out.println(Tools.numStringWithSpaces("56"));
-				  System.out.println(Tools.numStringWithSpaces("64545645"));
-				  System.out.println(Tools.numStringWithSpaces("54564563456342576566"));
-				  System.out.println(Tools.numStringWithSpaces("3"));
-				
-				
-				
+
 			  }
 			  catch(Exception e) {
 				  e.printStackTrace();
@@ -74,10 +84,11 @@ public class TestClass extends Application{
 			 e.printStackTrace();
 			}
 		
-		try {
-			DriverManager.getConnection("jdbc:derby:;shutdown=true");
-		}
-		catch(SQLException e) {System.out.println(e.getMessage());}
+//		try {
+//			DriverManager.getConnection("jdbc:derby:;shutdown=true");
+//		}
+//		catch(SQLException e) {System.out.println(e.getMessage());}
+
 	}
 
 	@Override

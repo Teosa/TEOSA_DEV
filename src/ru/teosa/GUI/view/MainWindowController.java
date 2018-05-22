@@ -22,6 +22,7 @@ import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.model.MainWindow;
 import ru.teosa.site.model.BreedingFarm;
 import ru.teosa.utils.Customizer;
+import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
@@ -84,7 +85,10 @@ public class MainWindowController {
         dialog.setScene(scene);
         dialog.setTitle("Конвертация");
     	dialog.initOwner(mainApp.getPrimaryStage());
-    	dialog.initModality(Modality.APPLICATION_MODAL); 
+    	dialog.initModality(Modality.APPLICATION_MODAL);
+    	
+    	MainAppHolderSingleton.getMoneyConverterHandler().setConvertorWin(dialog);
+    	
     	dialog.showAndWait();
     }
     
@@ -124,6 +128,8 @@ public class MainWindowController {
 	
     //Загрузка данных
     private void loadInfo(){
+    	
+    	//Загрузка списка заводов
     	loadFarmsTree();
     }
     

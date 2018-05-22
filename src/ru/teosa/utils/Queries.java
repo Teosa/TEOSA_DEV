@@ -11,11 +11,20 @@ public class Queries {
 	
 	/** Список пользователей для выбранной версии сайта */
 	public final static String GET_USERS_BY_VERSION = ""
-			+ "SELECT u.ID, u.ALIAS AS username, ac.PASSWORD, ac.LASTUSED, ac.ID AS accountid "
+			+ "SELECT u.ID, u.ALIAS AS username, ac.PASSWORD, ac.LASTUSED, ac.ID AS accountid, ac.VERSION AS versionid "
 			+ "FROM USERS u "
 			+ "JOIN USERTOACCOUNT uta ON uta.USERID = u.ID "
 			+ "JOIN ACCOUNTS ac ON ac.ID = uta.ACCOUNTID "
 			+ "WHERE ac.VERSION = :versionid "
+			+ "ORDER BY ac.LASTUSED DESC";
+	
+	/** Получение основной информации об аккаунте */
+	public final static String GET_USER = ""
+			+ "SELECT u.ID, u.ALIAS AS username, ac.PASSWORD, ac.LASTUSED, ac.ID AS accountid, ac.VERSION AS versionid "
+			+ "FROM USERS u "
+			+ "JOIN USERTOACCOUNT uta ON uta.USERID = u.ID "
+			+ "JOIN ACCOUNTS ac ON ac.ID = uta.ACCOUNTID "
+			+ "WHERE ac.VERSION = :versionid AND u.ID = :userid "
 			+ "ORDER BY ac.LASTUSED DESC";
 	
 //***********************************************************************************************************************	

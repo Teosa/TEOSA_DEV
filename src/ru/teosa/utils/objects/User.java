@@ -6,6 +6,7 @@ public class User {
 	private String password;
 	private Character lastused;
 	private Integer accountid;
+	private Integer versionid;
 	
 	public Integer getId() {
 		return id;
@@ -36,5 +37,11 @@ public class User {
 	}
 	public void setAccountid(Integer accountid) {
 		this.accountid = accountid;
+	}
+	public Integer getVersionid() {
+		return versionid;
+	}
+	public void setVersionid(Integer versionid) {
+		this.versionid = versionid;
 	}
 }

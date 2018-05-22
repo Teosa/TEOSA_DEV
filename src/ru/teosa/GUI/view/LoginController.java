@@ -132,8 +132,8 @@ public class LoginController {
     	
     	username.getItems().clear();
     	
-    	//Список всех сохраненных в БД пользователей для выбранной версии
-    	HashMap params = new HashMap();
+    	//Получаем список всех сохраненных в БД пользователей для выбранной версии
+    	HashMap<String, Integer> params = new HashMap<String, Integer>();
     	params.put("versionid", siteVersion.getValue().getId());
     	List<User> users = pstmt.query(Queries.GET_USERS_BY_VERSION, params, new AutoMapper(User.class, null));
 
@@ -235,14 +235,11 @@ public class LoginController {
     	
     	//Если выбрасывется исключение, значит был введен новый юзер
     	try {
-    		Logger.getLogger("debug").debug("TRY TO GET LOGIN VALUE");
-    		Logger.getLogger("debug").debug(username.getValue().getClass().getName());
     		if(!username.getValue().isValueEmpty(username.getValue().getName()))
     			usernameVal = username.getValue().getName();
     		userid = username.getValue().getId();
     	}
     	catch(ClassCastException e) {
-    		Logger.getLogger("debug").debug("COUGHT EXCEPTION WHEN TRY TO GET LOGIN VALUE");
     		usernameVal = username.getEditor().getText();
     	}
     	
@@ -251,20 +248,25 @@ public class LoginController {
 			loginErrorMsg.setText("Введите логин и пароль");
 			return false;
     	}
-    	//Если был введен новый юзер, сохраняем его в БД
     	else {
-    		Logger.getLogger("debug").debug("USERID: " + userid + " " + usernameVal);
     		loginErrorMsg.setText("");
-    		if(userid == -1) saveLogopas(usernameVal.trim());
+    		//Если был введен новый юзер, сохраняем его в БД
+    		if(userid == -1) userid = saveLogopas(usernameVal.trim());
+    		//Иначе - выставляем признак последнего исрльзования выбранному аккаунту юзера
     		else changeLastusedProp();
+    		
+    		//Заполняем объект информацией об авторизовавшемся пользователе
+    		initAccount(userid);
     		return true;
     	}
     }
     
     //Сохранение нового юзера
-    private void saveLogopas(String alias) {
+    @SuppressWarnings("unchecked")
+	private Integer saveLogopas(String alias) {
     	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
     	TransactionTemplate tmpl = MainAppHolderSingleton.getInstance().getTmpl();
+    	Integer userID = -1;
 
     	HashMap params = new HashMap();
     	params.put("login", alias);
@@ -300,6 +302,8 @@ public class LoginController {
 	    		        return null;
 	    		    }
 	    		});
+    			
+        		userID = existingAlias_;
     		}
     		//Иначе создаем нового юзера и аккаунт
     		else {
@@ -315,7 +319,7 @@ public class LoginController {
 	    	    			params.put("userid", newUserID);
 	    	    			params.put("accid", newAccountID);
 	    	    			
-	    	    			pstmt.update(Queries.ATTACH_ACCOUNT_TO_USER, params);	    		        	
+	    	    			pstmt.update(Queries.ATTACH_ACCOUNT_TO_USER, params);	    	
 	    		        }
 	    		        catch(Exception ex){
 	    		            ts.setRollbackOnly(); 
@@ -324,11 +328,15 @@ public class LoginController {
 	    		        return null;
 	    		    }
 	    		});
+    			
+    			userID = pstmt.queryForObject("SELECT MAX(ID) FROM USERS", params, Integer.class);
     		} 
     	}
     	catch(Exception e) {
     		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
     	}
+    	
+		return userID;
     }
     
     //
@@ -337,7 +345,7 @@ public class LoginController {
     	if(((User)username.getValue().getData()).getLastused().isLetterOrDigit('N')) {
         	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
         	
-        	HashMap params = new HashMap();
+        	HashMap<String, Integer> params = new HashMap<String, Integer>();
         	params.put("id", username.getValue().getId());
         	params.put("versionid", siteVersion.getValue().getId());
         	
@@ -355,7 +363,7 @@ public class LoginController {
     	try {
     		NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
     		
-    		HashMap params = new HashMap();
+    		HashMap<String, Integer> params = new HashMap<String, Integer>();
     		params.put("id", siteVersion.getValue().getId());
 
     		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'Y' WHERE ID = :id", params);
@@ -365,5 +373,19 @@ public class LoginController {
     	}
     }
 	
-	
+	private void initAccount(Integer userid) {
+		try {
+			HashMap<String, Integer> params = new HashMap<String, Integer>();
+			params.put("userid", userid);
+			params.put("versionid", siteVersion.getValue().getId());
+			
+			MainAppHolderSingleton.getAccount().setUser
+			(
+			 (User)MainAppHolderSingleton.getInstance().getPstmt().queryForObject(Queries.GET_USER, params, new AutoMapper(User.class, null))	
+			);
+		}
+		catch(Exception e) {
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+		}
+	}
 }

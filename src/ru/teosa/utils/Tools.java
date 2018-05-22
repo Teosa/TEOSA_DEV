@@ -15,6 +15,7 @@ public class Tools {
 		if(number != null) 
 		{
 			try {
+//				result = String.format("%,d", Integer.parseInt(number.toString()));
 				char[] chars = number.toString().trim().toCharArray();
 				short numCounter = 0;
 
