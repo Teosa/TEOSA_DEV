@@ -1,9 +1,12 @@
 package ru.teosa.GUI.view;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.model.MainWindow;
 import ru.teosa.site.model.BreedingFarm;
@@ -86,6 +90,19 @@ public class MainWindowController {
         dialog.setTitle("Конвертация");
     	dialog.initOwner(mainApp.getPrimaryStage());
     	dialog.initModality(Modality.APPLICATION_MODAL);
+    	
+    	dialog.setOnCloseRequest(new EventHandler<WindowEvent>() {		
+			@Override
+			public void handle(WindowEvent event) {
+				Logger.getLogger("debug").debug("CONVERSION WIN setOnCloseRequest");	
+				if (MainAppHolderSingleton.getMoneyConverterHandler().isRunning()) 		
+				{   
+					Logger.getLogger("debug").debug("TRY TO STOP THREAD");	
+		    		MainAppHolderSingleton.getMoneyConverterHandler().cancel();
+		    		MainAppHolderSingleton.getMoneyConverterHandler().reset();
+		    	}
+			}
+		});
     	
     	MainAppHolderSingleton.getMoneyConverterHandler().setConvertorWin(dialog);
     	

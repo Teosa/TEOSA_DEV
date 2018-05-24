@@ -13,6 +13,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.text.Text;
 import ru.teosa.account.Account;
 import ru.teosa.account.Resources;
+import ru.teosa.utils.Msgs;
 import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
@@ -31,15 +32,8 @@ public class MoneyConvertorController  {
 	@FXML  
 	private Button copyMoneyCurBal;
 	
-	private static final String BUY_STORE_URL  = "marche/boutique";
-	private static final String SELL_STORE_URL = "marche/boutiqueVendre";
-
-	
-	private static final String CONVERT_TEXT = "Конвертация";
-	private static final String STOP_CONVERT_TEXT = "Остановить";
-	private static final String COPY_TEXT = "Копировать текущий баланс";
-	
-
+	public static final String BUY_STORE_URL  = "marche/boutique";
+	public static final String SELL_STORE_URL = "marche/boutiqueVendre";
 	
     @FXML
     private void initialize() {
@@ -54,7 +48,7 @@ public class MoneyConvertorController  {
     	
     	//Добавляем всплывающую подсказку для кнопки копирования текщего баланса
     	Tooltip tooltip = new Tooltip();
-    	tooltip.setText(COPY_TEXT);
+    	tooltip.setText(Msgs.COPY_TEXT);
     	copyMoneyCurBal.setTooltip(tooltip);
     }
     
@@ -66,13 +60,16 @@ public class MoneyConvertorController  {
     	{
     		MainAppHolderSingleton.getMoneyConverterHandler().cancel();
     		MainAppHolderSingleton.getMoneyConverterHandler().reset();
-    		convertBtn.setText(CONVERT_TEXT);
+    		convertBtn.setText(Msgs.CONVERT_TEXT);
     	}
     	//Иначе - запускаем тред	
     	else 
     	{
-    		MainAppHolderSingleton.getMoneyConverterHandler().start();
-    		convertBtn.setText(STOP_CONVERT_TEXT);
+    		if(MainAppHolderSingleton.getMoneyConverterHandler().getState().toString() == "SUCCEEDED") 
+    			MainAppHolderSingleton.getMoneyConverterHandler().restart();
+    		else MainAppHolderSingleton.getMoneyConverterHandler().start();
+    		
+    		convertBtn.setText(Msgs.STOP_CONVERT_TEXT);
     	}
     }
     
@@ -123,10 +120,8 @@ public class MoneyConvertorController  {
         	driver.findElement(By.xpath("//*[@id=\"tab-ressources\"]")).findElement(By.className("tab-action")).click();
         	
         	//Получаем баланс зерна, отображаем на форме и обновляем информацию в объекте Аккаунт
-        	String wheatCurBal = driver.findElement(By.xpath("//*[@id=\"ressources-inventory-body-content\"]/div/table[1]/tbody/tr/td[2]/span/span/span[2]/div/span"))
-        			             .getText();
-        	wheatCurBalText.setText(Tools.numStringWithSpaces(wheatCurBal.replace("x", "")));
-        	Account.getResources().setWheat(Integer.parseInt(wheatCurBalText.getText().replaceAll(" ", "")));
+        	 Account.getResources().setWheat(Resources.getWheatBalFromForm());
+        	 wheatCurBalText.setText(Tools.numStringWithSpaces(Account.getResources().getWheat()));
     	}
     	catch(Exception e) {
     		e.printStackTrace();

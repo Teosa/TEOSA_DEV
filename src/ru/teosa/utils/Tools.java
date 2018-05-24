@@ -34,4 +34,35 @@ public class Tools {
 	}
 	
 	
+	public static int getQtyForSale(int integer) {
+
+		int result = 0;
+        int mny;
+        boolean started = false;
+        long divisor = 1000000000;
+
+        for(int i = 8; i >= 0; --i){
+
+        	divisor /= 10;
+            mny = (int)(integer / divisor);
+            integer %= divisor;
+                        
+        	if(!started) started = mny > 0;
+            
+            if(mny != 0){
+                result =  Math.toIntExact(mny * divisor);
+                break;
+            }
+            else if(started){
+                result = Math.toIntExact(divisor);
+                break;
+            }
+            else  continue;
+            
+        }
+
+        return result;
+	}
+	
+	
 }

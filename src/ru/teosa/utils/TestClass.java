@@ -30,6 +30,7 @@ import java.sql.Statement;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.jdbc.core.RowMapper;
@@ -60,21 +61,69 @@ public class TestClass extends Application{
 //				bdSource.setUrl(connectionURL);
 //				bdSource.getConnection();
 //				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
-				  String zeros = ",";
-				  for(int i = 0; i < 5; ++i) {
-					  if(i > 0)zeros = "0" + zeros;
-					  for(int k = 1; k < 10; ++k) {
-						  if(k !=9) System.out.print(k + zeros);
-						  else System.out.println(k + zeros);
-						  
-						  
-						  
+
+//				int mcb = 10000;
+//				int wcb = 4000;
+//				int emb = 2510377;
+//
+//	            int mny;
+//	            boolean started = false;
+//
+//	            long divisor = 1000000000;//(long)Math.pow(1000, maxPower);
+//	            long integer = emb - mcb;//(long)Math.floor(num);
+//
+//	            System.out.println(divisor);
+//	            System.out.println(integer);
+//
+//	            
+//	            System.out.println("----------------------");
+//	            for(int i = 8; i >= 0; i--){
+//	            	
+//
+//	            	
+//	            	divisor /= 10;
+//	                mny = (int)(integer / divisor);
+//	                integer %= divisor;
+//	                
+//	                System.out.println(divisor);
+//	                System.out.println(mny);
+//	                System.out.println(integer);
+//	                
+//	            	if(!started)
+//	            	started = mny > 0;
+//	                
+//	                if(mny != 0){
+//		                
+//		                System.out.println("FOR SALE: " + mny * divisor);
+//		                
+//		                System.out.println("***********");	                    
+//	                        
+//	                }
+//	                else if(started){
+//
+//		                
+//		                System.out.println("zFOR SALE: " + divisor);
+//		                
+//		                System.out.println("***********");	
+//	                }
+//	                
+//
+//	            }
+//                System.out.println("----------------------");
+				  
+				  int tosell = 10062;
+				  int i;
+				  
+				  while (tosell > 0) {
+					  i = Tools.getQtyForSale(tosell);
+					  if(i > 0) {
+						  System.out.println("selling:" + i); 
+						  tosell =  tosell -i;
+						  System.out.println("left:" + tosell);  
 					  }
-					  
-					  
 				  }
 				  
-
+//				  System.out.println(Tools.xxx(71));
 
 			  }
 			  catch(Exception e) {
@@ -89,6 +138,16 @@ public class TestClass extends Application{
 //		}
 //		catch(SQLException e) {System.out.println(e.getMessage());}
 
+	}
+	
+	private static int getRandomNumberInRange(int min, int max) {
+
+		if (min >= max) {
+			throw new IllegalArgumentException("max must be greater than min");
+		}
+
+		Random r = new Random();
+		return r.nextInt((max - min) + 1) + min;
 	}
 
 	@Override

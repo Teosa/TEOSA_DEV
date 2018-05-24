@@ -1,5 +1,6 @@
 package ru.teosa.utils;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -14,7 +15,7 @@ import ru.teosa.utils.objects.MainAppHolderSingleton;
 public class Sleeper {
 	public static void pause(){	
 		try {
-			Thread.sleep(500);
+			Thread.sleep(getRandomNumberInRange(400, 800));
 		} catch (InterruptedException e) {
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
 		}
@@ -22,7 +23,7 @@ public class Sleeper {
 	
 	public static void longPause(){	
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(getRandomNumberInRange(1000, 2000));
 		} catch (InterruptedException e) {
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
 		}
@@ -45,5 +46,14 @@ public class Sleeper {
 
 	public static void turnOnImplicitWaits() {
 		MainAppHolderSingleton.getInstance().getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	}
+	
+	private static int getRandomNumberInRange(int min, int max) {
+		if (min >= max) {
+			throw new IllegalArgumentException("max must be greater than min");
+		}
+
+		Random r = new Random();
+		return r.nextInt((max - min) + 1) + min;
 	}
 }
