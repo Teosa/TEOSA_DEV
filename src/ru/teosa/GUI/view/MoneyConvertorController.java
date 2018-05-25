@@ -128,6 +128,7 @@ public class MoneyConvertorController  {
     	}
     }
     
+    // Рассчитываем и отображаем на форме ожидаемый баланс зерна, в зависимости от введенного значения  в поле "Целевой баланс экю".
     private String precalculate(String moneyExpBal) {
     	/*Current money balance*/  Integer cmb = Account.getResources().getMoney();
     	/*Expected money balance*/ Integer emb = moneyExpBal.length() > 0 ? Integer.parseInt(moneyExpBal) : 0;

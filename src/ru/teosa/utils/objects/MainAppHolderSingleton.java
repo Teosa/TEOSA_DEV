@@ -15,7 +15,7 @@ public class MainAppHolderSingleton {
     private WebDriver driver;                              //Драйвер
     
     private static final Account account = new Account();  // Информация о юзере, аккаунте и т.д
-    private static final String VER = "Version 1.0.2";     // Версия приложения
+    private static final String VER = "Version 1.2.0";     // Версия приложения
     private static String gameURL;                         // Ссылка на главную страницу игры выбранной версии
     
     // --

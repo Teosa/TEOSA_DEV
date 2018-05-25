@@ -39,6 +39,8 @@ public class MoneyConverterSercice extends Service<String>{
 		return new Task<String>() {
 			@Override
 			protected String call() throws Exception {
+				
+				Button btn = (Button) convertorWin.getScene().lookup("#convertBtn");
 
 				moneyCurBalText = (Text) convertorWin.getScene().lookup("#moneyCurBalText");
 				wheatCurBalText = (Text) convertorWin.getScene().lookup("#wheatCurBalText");
@@ -67,8 +69,9 @@ public class MoneyConverterSercice extends Service<String>{
 					}
 				}
 				
-				// TODO При выполнении возникает исключение, и текст кнопки меняется только после потери ею фокуса
-				((Button) convertorWin.getScene().lookup("#convertBtn")).setText(Msgs.CONVERT_TEXT);
+				btn.setText(Msgs.CONVERT_TEXT);
+				btn.setDisable(true);
+				
 				return null;
 			}
 		};
@@ -83,8 +86,14 @@ public class MoneyConverterSercice extends Service<String>{
 		WebDriver driver = MainAppHolderSingleton.getInstance().getDriver();
 		String storeURL = MainAppHolderSingleton.getGameURL() + urlPart;
 		
-		if(!driver.getCurrentUrl().trim().equalsIgnoreCase(storeURL))
+		if(!driver.getCurrentUrl().trim().equalsIgnoreCase(storeURL)){
 			driver.navigate().to(storeURL);
+			if(urlPart == MoneyConvertorController.BUY_STORE_URL) {
+				//Выбираем вкладку ресурсы
+				Sleeper.waitVisibility("//*[@id=\"tab-ressources\"]");
+	        	driver.findElement(By.xpath("//*[@id=\"tab-ressources\"]")).findElement(By.className("tab-action")).click();	
+			}
+		}
 	}
 	
 	private void buy() {
