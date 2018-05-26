@@ -1,6 +1,6 @@
 package ru.teosa.account;
 
-import ru.teosa.utils.objects.User;
+import ru.teosa.mainapp.pojo.User;
 
 public class Account {
 

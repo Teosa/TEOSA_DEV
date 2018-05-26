@@ -8,6 +8,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.util.StringConverter;
+import ru.teosa.GUI.view.HerdRunSettingsTabPaneController;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
@@ -25,7 +26,7 @@ public class Customizer{
 	
 	public Customizer() {}
 //	public Customizer(String genericClassName) {
-//		this.genericClassName = genericClassName;
+//		this.genericClassName = genericClassName; 
 //	}
 	public Customizer(Class genericClass) {
 		this.genericClass = genericClass;
@@ -150,18 +151,22 @@ public class Customizer{
     	});   	
 	}
 	
-	public void customizeTree(TreeView<RedirectingComboRecordExt> treeView) {
-		 treeView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener() {
-				@Override
-				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-		            TreeItem<RedirectingComboRecordExt> selectedItem = (TreeItem<RedirectingComboRecordExt>) newValue;
-		            RedirectingComboRecordExt value = selectedItem.getValue();
-		            
-		            Logger.getLogger("debug").debug("SELECTED NAME: " + value.getName());
-		            Logger.getLogger("debug").debug("SELECTED URL: " + value.getUrl());
-		            Logger.getLogger("debug").debug("SELECTED DATA: " + value.getData() != null);
-		            
-				}
+	/***/
+	public static void customizeTree(TreeView<RedirectingComboRecordExt> treeView) {
+		 treeView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<TreeItem<RedirectingComboRecordExt>>() {
+			@Override
+			public void changed(ObservableValue<? extends TreeItem<RedirectingComboRecordExt>> observable,
+					TreeItem<RedirectingComboRecordExt> oldValue, TreeItem<RedirectingComboRecordExt> newValue) {
+				
+//				HerdRunSettingsTabPaneController.getMainTab()
+				
+			}
+//				@Override
+//				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+//		            TreeItem<RedirectingComboRecordExt> selectedItem = (TreeItem<RedirectingComboRecordExt>) newValue;
+//		            RedirectingComboRecordExt value = selectedItem.getValue();
+//				}
+			 
 		      });
 	}
 //*********************************************************************************

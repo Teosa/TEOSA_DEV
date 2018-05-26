@@ -25,6 +25,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.mainapp.pojo.User;
 import ru.teosa.utils.AutoMapper;
 import ru.teosa.utils.Customizer;
 import ru.teosa.utils.Queries;
@@ -33,7 +34,6 @@ import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
-import ru.teosa.utils.objects.User;
 
 public class LoginController {
 	
@@ -67,6 +67,26 @@ public class LoginController {
 
     	//Выбираем первую запись в комбобоксе версий
     	siteVersion.setValue(siteVersion.getItems().get(0));
+    }
+    
+    /**
+     * Метод вызывается после нажатия кнопки 'Подключение'.<br>
+     * 1. Проверка заполненности логина и пароля. В случае неудачи - выход из метода.<br>
+     * 2. Проверка наличия открытого браузера (открытие нового при неудаче) и переход на главную страницу Lowadi.<br>
+     * 3. Попытка авторизации с введенными логином и паролем. В случае неудачи - отображение ошибки в окне авторизации приложения.
+     * 4. Инициализация MainAppHolderSingleton.
+     * */
+    @FXML
+    public void login(){
+
+    	saveSelectedVersion();
+    	
+    	if(!checkLogopas()) return;
+    	if(mainApp.getDriver() == null) runWithCrome();
+    	if(accountLogin()) 
+    		mainApp.showMainForm(); 
+    	
+    	MainAppHolderSingleton.getInstance().setMainApp(mainApp);
     }
         
     private void initGameVersionsCombo() {
@@ -144,26 +164,6 @@ public class LoginController {
     	//Если список не пустой, выбираем из него первого пользователя
     	if(username.getItems().size() > 0) username.setValue(username.getItems().get(0));
     }
-
-    
-    /**
-     * Метод вызывается после нажатия кнопки 'Подключение'.<br>
-     * 1. Проверка заполненности логина и пароля. В случае неудачи - выход из метода.<br>
-     * 2. Проверка наличия открытого браузера (открытие нового при неудаче) и переход на главную страницу Lowadi.<br>
-     * 3. Попытка авторизации с введенными логином и паролем. В случае неудачи - отображение ошибки в окне авторизации приложения.
-     * 4. Инициализация MainAppHolderSingleton.
-     * */
-    @FXML
-    public void login(){
-
-    	saveSelectedVersion();
-    	
-    	if(!checkLogopas()) return;
-    	if(mainApp.getDriver() == null) runWithCrome();
-    	if(accountLogin()) mainApp.showMainForm(); 
-    	
-    	MainAppHolderSingleton.getInstance().setMainApp(mainApp);
-    }
     
     private void runWithCrome(){
 	    System.setProperty("webdriver.chrome.driver", this.getClass().getResource("/chromedriver.exe").getPath());
@@ -184,7 +184,7 @@ public class LoginController {
  
     private boolean accountLogin(){
     	try {
-    		//Если на странице отсутствует поле Логин, жднм появления кнопки Войти для отображения формы авторизации
+    		//Если на странице отсутствует поле Логин, ждем появления кнопки Войти для отображения формы авторизации
     		if(!mainApp.getDriver().findElement(By.id("login")).isDisplayed()) {
 	    		try {
 	    			Sleeper.waitForClickAndClick("//*[@id=\"header\"]/nav/div");

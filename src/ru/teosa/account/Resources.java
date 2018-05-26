@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import ru.teosa.GUI.view.MoneyConvertorController;
+import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
@@ -38,6 +39,7 @@ public class Resources {
 	public static Integer getMoneyBalFromForm() {
 		Integer result = -1;
 		try {
+			Sleeper.waitVisibility("//*[@id=\"reserve\"]");
 			String moneyCurBal = MainAppHolderSingleton.getInstance().getDriver().findElement(By.xpath("//*[@id=\"reserve\"]")).getText();
 			if(moneyCurBal != null) result = Integer.parseInt(moneyCurBal.replace(",", "").trim());
 		}

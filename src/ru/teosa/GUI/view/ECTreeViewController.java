@@ -1,4 +1,4 @@
-package ru.teosa.GUI.model;
+package ru.teosa.GUI.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,59 +9,49 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.Customizer;
 import ru.teosa.utils.Sleeper;
+import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
-public class MainWindow {
+public class ECTreeViewController {
 
-	private static MainApp mainApp;
-	private static WebDriver driver;
+	private MainApp mainApp;
+	private WebDriver driver;
 	
 	private static List<RedirectingComboRecordExt> farms = new ArrayList<RedirectingComboRecordExt>();
-
-	public MainApp getMainApp() {
-		return mainApp;
-	}
-	public static WebDriver getDriver() {
-		return driver;
-	}
-	public static List<RedirectingComboRecordExt> getFarms() {
-		return farms;
-	}
-	public void setFarms(List<RedirectingComboRecordExt> farms) {
-		MainWindow.farms = farms;
-	}
 	
-	/**
-	 * Инициализация формы.<br>
-	 * 1.Установка ссылок на главное приложение и драйвер.
-	 * 2. Переход на страницу заводов.
-	 * 3. Запонение доступных комбобоксов и полей.
-	 * */
-	public static void init(MainApp mainApp) {
-		MainWindow.mainApp = mainApp;
-		MainWindow.driver = mainApp.getDriver();
+	@FXML
+	private TreeView<RedirectingComboRecordExt> tree;
+	
+    @FXML
+    private void initialize() {
+    	mainApp = MainAppHolderSingleton.getInstance().getMainApp();
+    	driver = mainApp.getDriver();
+
+    	Customizer.customizeTree(tree);
+    	
+    	// Переходим на страницу с заводами и заполняем массив заводов контроллера
+    	getBreedingFarms();
+    	// Загружаем дерево из массива заводов
+    	loadFarmsTree();
+
+    	
+    }
+	
+
+
+	private void getBreedingFarms(){
 		
 		goToBreedingFarm();
-		getBreedibgFarms();
-		
-	}
-																	
-	private static void goToBreedingFarm(){	
-		Logger.getLogger("debug").debug("goToBreedingFarm");
-		WebElement breedingFarmMenu = driver.findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]"));
 
-		Actions builder = new Actions(driver);
-		builder.moveToElement(breedingFarmMenu).build().perform();
-	
-		driver.findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]/ul/li[2]/a")).click();
-	}
-	
-	private static void getBreedibgFarms(){
-
+		Sleeper.waitVisibility("//*[@id=\"tab-all-breeding\"]/li");
 		List<WebElement> farms = driver.findElements(By.xpath("//*[@id=\"tab-all-breeding\"]/li"));
-		MainWindow.farms.clear();
+		ECTreeViewController.farms.clear();
 		
 		Logger.getLogger("debug").debug("FARMS QTY: " + farms.size());	
 		
@@ -123,10 +113,52 @@ public class MainWindow {
 			Logger.getLogger("debug").debug("FARM " + i + " : " + name);
 			Logger.getLogger("debug").debug("FARM " + i + " : " + farmURL);
 			
-			MainWindow.getFarms().add(record);	
+			ECTreeViewController.farms.add(record);	
 		}
 		
-		Logger.getLogger("debug").debug(MainWindow.getFarms().size());	
+		Logger.getLogger("debug").debug(ECTreeViewController.getFarms().size());	
 	}
+	
+    private void loadFarmsTree() {
+    	//Добавляем корневую ноду
+    	TreeItem<RedirectingComboRecordExt> rootItem0 = new TreeItem<RedirectingComboRecordExt> (new RedirectingComboRecordExt(-1, "Farms", "", null));
+    	rootItem0.setExpanded(true);
+    	
+    	for(int i = 0; i < ECTreeViewController.getFarms().size(); ++i) {
+    		RedirectingComboRecordExt record = ECTreeViewController.getFarms().get(i);
+            TreeItem<RedirectingComboRecordExt> farm = new TreeItem<RedirectingComboRecordExt> (record);
+            
+            if(record.getData() != null) {
+            	List<RedirectingComboRecordExt> subfarms = (List<RedirectingComboRecordExt>) record.getData();
+            	for(int k = 0; k < subfarms.size(); ++k) {
+            		farm.getChildren().add(new TreeItem<RedirectingComboRecordExt> (subfarms.get(k)));
+            	}
+            }
+            
+            rootItem0.getChildren().add(farm);
+    	}
+    	
+    	tree.setRoot(rootItem0);
+    }
+      
+	private  void goToBreedingFarm(){	
+		Logger.getLogger("debug").debug("goToBreedingFarm");
+		WebElement breedingFarmMenu = driver.findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]"));
+
+		Actions builder = new Actions(driver);
+		builder.moveToElement(breedingFarmMenu).build().perform();
+	
+		driver.findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]/ul/li[2]/a")).click();
+	}
+	
+//*****************************************************************************************************************************	
+//*****************************************************************************************************************************	
+	public static List<RedirectingComboRecordExt> getFarms() {
+		return farms;
+	}
+	
+	
+	
+	
 	
 }

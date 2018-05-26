@@ -1,6 +1,6 @@
 package ru.teosa.utils.objects;
 
-import ru.teosa.site.model.BreedingFarm;
+import ru.teosa.mainapp.pojo.BreedingFarm;
 
 /** Простой объект для заполнения комбобоксов */
 public class SimpleComboRecord {

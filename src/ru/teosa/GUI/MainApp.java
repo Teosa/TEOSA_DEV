@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
+import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -69,6 +70,9 @@ public class MainApp extends Application {
 		});
         
         initRootLayout();
+        
+    	MainAppHolderSingleton.getInstance().setMainApp(this);
+        
         showLoginForm();
 	}
 	
@@ -110,50 +114,18 @@ public class MainApp extends Application {
      * */
     public void showMainForm() {
         try {
+        	// Загружаем главную панель
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/MainWindow.fxml"));
-            
-            //загружаем вкладки
+            loader.setLocation(MainApp.class.getResource("view/MainWindow.fxml"));            
             BorderPane mainForm = (BorderPane) loader.load();
-            mainForm = loadTabsIntoForm(mainForm);
             
-            MainWindowController controller = loader.getController();         
-            controller.setMainApp(this);
-            
-            rootLayout.setCenter(mainForm);
-            
+            // Позиционирование и размеры
+            rootLayout.setCenter(mainForm);           
             this.getPrimaryStage().sizeToScene();
         	this.getPrimaryStage().centerOnScreen();
-        	
-        	controller.initWindow();
-
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
         	Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
         }
     }
-    
-    private BorderPane loadTabsIntoForm(BorderPane mainForm) throws Exception{
-        FXMLLoader loader = new FXMLLoader();
-        TabPane t = (TabPane)mainForm.getCenter();
-        
-        //Основная информация
-        loader.setLocation(MainApp.class.getResource("view/InfoTab.fxml"));
-        AnchorPane infoTab = (AnchorPane) loader.load();
-        ((ScrollPane)t.getTabs().get(0).getContent()).setContent(infoTab);
-
-        //КСК
-        loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("view/ECTab.fxml"));
-        AnchorPane ECTab = (AnchorPane) loader.load();
-        ((ScrollPane)t.getTabs().get(1).getContent()).setContent(ECTab);
-             
-        //Разведение
-        loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("view/BreedingTab.fxml"));
-        AnchorPane breedingTab = (AnchorPane) loader.load();
-        ((ScrollPane)t.getTabs().get(2).getContent()).setContent(breedingTab);
-        
-    	return mainForm;
-    }
-    
 }

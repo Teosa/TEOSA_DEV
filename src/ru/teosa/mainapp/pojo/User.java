@@ -1,4 +1,4 @@
-package ru.teosa.utils.objects;
+package ru.teosa.mainapp.pojo;
 
 public class User {
 	private Integer id;
