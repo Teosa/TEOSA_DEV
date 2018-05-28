@@ -8,12 +8,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.util.StringConverter;
+import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.view.HerdRunSettingsTabPaneController;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 import ru.teosa.utils.objects.SimpleComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
+import javafx.scene.control.Label;
 
 /**
  * Класс для кастомизации элементов формы.
@@ -21,7 +23,7 @@ import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class Customizer{
 
-//	private String genericClassName;
+
 	private Class genericClass;
 	
 	public Customizer() {}
@@ -152,22 +154,15 @@ public class Customizer{
 	}
 	
 	/***/
-	public static void customizeTree(TreeView<RedirectingComboRecordExt> treeView) {
+	public  void customizeTree(TreeView<RedirectingComboRecordExt> treeView) {
 		 treeView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<TreeItem<RedirectingComboRecordExt>>() {
 			@Override
 			public void changed(ObservableValue<? extends TreeItem<RedirectingComboRecordExt>> observable,
 					TreeItem<RedirectingComboRecordExt> oldValue, TreeItem<RedirectingComboRecordExt> newValue) {
-				
-//				HerdRunSettingsTabPaneController.getMainTab()
-				
+				MainApp.getController().getHerdRunSettingsTabController().getInfoTabController()
+					.getSelectedFarmName().setText(newValue.getValue().getName());
 			}
-//				@Override
-//				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-//		            TreeItem<RedirectingComboRecordExt> selectedItem = (TreeItem<RedirectingComboRecordExt>) newValue;
-//		            RedirectingComboRecordExt value = selectedItem.getValue();
-//				}
-			 
-		      });
+		   });
 	}
 //*********************************************************************************
 //*********************************************************************************

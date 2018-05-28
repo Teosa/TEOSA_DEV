@@ -9,10 +9,17 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.Customizer;
+import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
 
 public class MainWindowController {
+	
+	private static AccountInfoPanelController       accountInfoController;
+	private static ECTreeViewController             ECTreeController;
+	private static HerdRunSettingsTabPaneController HerdRunSettingsTabController;
+	private static RunProgrammController            runProgramPanelController;
 
 	private MainApp mainApp;
 	
@@ -24,11 +31,19 @@ public class MainWindowController {
     private void initialize() {
     	try 
     	{
+    		MainAppHolderSingleton.getInstance().getMainApp().setController(this);
+    		setMainApp(MainAppHolderSingleton.getInstance().getMainApp());
+    		
     		//Загружаем панели в форму
         	loadAccountInfoPanel();    		
         	loadECTreeView();
         	loadHerdRunSettingsTabPane();
         	loadRunProgrammPanel();       
+        	
+//        	System.out.println("mainapp in mainWinContr: " + mainApp);
+//        	new Customizer().customizeTree((TreeView)mainApp.getPrimaryStage().getScene().lookup("#tree"));
+        	
+        	MainApp.getController().getECTreeController().customizeContent();
     	}
     	catch (Exception e) {
 			e.printStackTrace();
@@ -84,5 +99,29 @@ public class MainWindowController {
 	}
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+	}
+	public static AccountInfoPanelController getAccountInfoController() {
+		return accountInfoController;
+	}
+	public static void setAccountInfoController(AccountInfoPanelController accountInfoController) {
+		MainWindowController.accountInfoController = accountInfoController;
+	}
+	public static ECTreeViewController getECTreeController() {
+		return ECTreeController;
+	}
+	public static void setECTreeController(ECTreeViewController eCTreeController) {
+		ECTreeController = eCTreeController;
+	}
+	public static HerdRunSettingsTabPaneController getHerdRunSettingsTabController() {
+		return HerdRunSettingsTabController;
+	}
+	public static void setHerdRunSettingsTabController(HerdRunSettingsTabPaneController herdRunSettingsTabController) {
+		HerdRunSettingsTabController = herdRunSettingsTabController;
+	}
+	public static RunProgrammController getRunProgramPanelController() {
+		return runProgramPanelController;
+	}
+	public static void setRunProgramPanelController(RunProgrammController runProgramPanelController) {
+		MainWindowController.runProgramPanelController = runProgramPanelController;
 	}
 }

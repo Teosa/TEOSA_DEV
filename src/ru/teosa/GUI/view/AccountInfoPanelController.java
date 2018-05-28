@@ -18,7 +18,7 @@ import ru.teosa.account.Resources;
 import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
-public class AccountInfoPanelController {
+public class AccountInfoPanelController extends AbstractController{
 
 	private MainApp mainApp;
 	
@@ -42,13 +42,19 @@ public class AccountInfoPanelController {
 	
 	
     @FXML
-    private void initialize() {
+    protected void initialize() {
     	mainApp = MainAppHolderSingleton.getInstance().getMainApp();
     	
     	breederName.setText(Account.getUser().getUsername());
     	Account.getResources().setMoney(Resources.getMoneyBalFromForm());
     	moneyBallance.setText(Tools.numStringWithSpaces(Account.getResources().getMoney()));
     }
+    
+	@Override
+	public void customizeContent() {
+		// TODO Auto-generated method stub
+		
+	}
 	
     //Поднятие диалога конвертации
     @FXML

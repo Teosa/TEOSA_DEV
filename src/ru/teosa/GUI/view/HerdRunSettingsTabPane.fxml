@@ -6,17 +6,17 @@
 
 <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.HerdRunSettingsTabPaneController">
    <tabs>
-      <Tab closable="false" text="Основные настройки">
+      <Tab fx:id="mainInfoTab" closable="false" text="Основные настройки">
          <content>
             <ScrollPane prefHeight="200.0" prefWidth="200.0" />
          </content>
       </Tab>
-      <Tab closable="false" text="КСК">
+      <Tab fx:id="ECTab" closable="false" disable="true" text="КСК">
          <content>
             <ScrollPane prefHeight="200.0" prefWidth="200.0" />
          </content>
       </Tab>
-      <Tab closable="false" text="Разведение">
+      <Tab fx:id="breedingTab" closable="false" disable="true" text="Разведение">
          <content>
             <ScrollPane prefHeight="200.0" prefWidth="200.0" />
          </content>

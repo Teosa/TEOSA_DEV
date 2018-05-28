@@ -11,33 +11,42 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 
 import ru.teosa.GUI.MainApp;
+import ru.teosa.utils.objects.MainAppHolderSingleton;
 
-public class HerdRunSettingsTabPaneController {
+public class HerdRunSettingsTabPaneController extends AbstractController{
 
+	@FXML private TabPane tabPane;  // Панель вкдадок
+	@FXML private Tab mainInfoTab;  // Вкладка основных настроек
+	@FXML private Tab ECTab;        // Вкладка КСК
+	@FXML private Tab breedingTab;  // Вкладка разведение
 	
-	
-	@FXML
-	private TabPane tabPane;
-	
-	@FXML
-	private static Tab mainTab;
-	@FXML
-	private static Tab ECTab;
-	@FXML
-	private static Tab breedingTab;
-	
+	private static InfoTabController     infoTabController;     // Контроллер вкладки основных настроек
+	private static ECTabController       ECTabController;       // Контроллер вкладки КСК
+	private static BreedingTabController breedingTabController; // Контроллер вкладки разведения
 	
 	
     @FXML
-    private void initialize() {
+    protected void initialize() {
     	try {
+    		MainAppHolderSingleton.getInstance().getMainApp().getController().setHerdRunSettingsTabController(this);
+    		
     	   	loadTabsIntoForm();
+    	   	
+    	   	infoTabController.customizeContent();
+//    	   	ECTabController.customizeContent();
+//    	   	breedingTabController.customizeContent();
     	}
     	catch(Exception e) {
     		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
     	}
     }
 	
+	@Override
+	public void customizeContent() {
+		// TODO Auto-generated method stub
+		
+	}
+    
     // Загрузка вкладок в панель
     private void loadTabsIntoForm() throws Exception{
         FXMLLoader loader = new FXMLLoader();
@@ -62,13 +71,47 @@ public class HerdRunSettingsTabPaneController {
     
 //*****************************************************************************************************************  
 //*****************************************************************************************************************  
-	public static Tab getMainTab() {
-		return mainTab;
+	public static InfoTabController getInfoTabController() {
+		return infoTabController;
 	}
-	public static Tab getECTab() {
+	public static void setInfoTabController(InfoTabController infoTabController) {
+		HerdRunSettingsTabPaneController.infoTabController = infoTabController;
+	}
+	public TabPane getTabPane() {
+		return tabPane;
+	}
+	public void setTabPane(TabPane tabPane) {
+		this.tabPane = tabPane;
+	}
+	public Tab getMainInfoTab() {
+		return mainInfoTab;
+	}
+	public void setMainInfoTab(Tab mainInfoTab) {
+		this.mainInfoTab = mainInfoTab;
+	}
+	public Tab getECTab() {
 		return ECTab;
 	}
-	public static Tab getBreedingTab() {
+	public void setECTab(Tab eCTab) {
+		ECTab = eCTab;
+	}
+	public Tab getBreedingTab() {
 		return breedingTab;
-	}    
+	}
+	public void setBreedingTab(Tab breedingTab) {
+		this.breedingTab = breedingTab;
+	}
+	public static ECTabController getECTabController() {
+		return ECTabController;
+	}
+	public static void setECTabController(ECTabController eCTabController) {
+		ECTabController = eCTabController;
+	}
+	public static BreedingTabController getBreedingTabController() {
+		return breedingTabController;
+	}
+	public static void setBreedingTabController(BreedingTabController breedingTabController) {
+		HerdRunSettingsTabPaneController.breedingTabController = breedingTabController;
+	}
+	
 }

@@ -5,15 +5,15 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.InfoTabController">
    <children>
       <Label layoutX="14.0" layoutY="14.0" text="Выбранный завод:" />
-      <Label layoutX="210.0" layoutY="14.0" text="&lt;название завода&gt;" />
+      <Label fx:id="selectedFarmName" layoutX="210.0" layoutY="14.0" text="&lt;название завода&gt;" />
       <Separator layoutX="14.0" layoutY="44.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-      <CheckBox layoutX="14.0" layoutY="59.0" mnemonicParsing="false" text="Запись в КСК" />
-      <CheckBox layoutX="14.0" layoutY="90.0" mnemonicParsing="false" text="Продление постоя" />
-      <CheckBox layoutX="14.0" layoutY="154.0" mnemonicParsing="false" text="Случки (жеребцы)" />
-      <CheckBox layoutX="14.0" layoutY="183.0" mnemonicParsing="false" text="Случки (кобылы)" />
-      <CheckBox layoutX="14.0" layoutY="212.0" mnemonicParsing="false" text="Жеребята" />
+      <CheckBox fx:id="ECRegistration" layoutX="14.0" layoutY="59.0" mnemonicParsing="false" text="Запись в КСК" />
+      <CheckBox fx:id="ECExtending" layoutX="14.0" layoutY="90.0" mnemonicParsing="false" text="Продление постоя" />
+      <CheckBox fx:id="breedingStallon" layoutX="14.0" layoutY="154.0" mnemonicParsing="false" text="Случки (жеребцы)" />
+      <CheckBox fx:id="breedingMare" layoutX="14.0" layoutY="183.0" mnemonicParsing="false" text="Случки (кобылы)" />
+      <CheckBox fx:id="breedingFoal" layoutX="14.0" layoutY="212.0" mnemonicParsing="false" text="Жеребята" />
    </children>
 </AnchorPane>

@@ -18,7 +18,7 @@ import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
-public class ECTreeViewController {
+public class ECTreeViewController extends AbstractController{
 
 	private MainApp mainApp;
 	private WebDriver driver;
@@ -28,22 +28,23 @@ public class ECTreeViewController {
 	@FXML
 	private TreeView<RedirectingComboRecordExt> tree;
 	
-    @FXML
-    private void initialize() {
+	@Override
+    protected void initialize() {
+		MainAppHolderSingleton.getInstance().getMainApp().getController().setECTreeController(this);
     	mainApp = MainAppHolderSingleton.getInstance().getMainApp();
     	driver = mainApp.getDriver();
-
-    	Customizer.customizeTree(tree);
     	
     	// Переходим на страницу с заводами и заполняем массив заводов контроллера
     	getBreedingFarms();
     	// Загружаем дерево из массива заводов
     	loadFarmsTree();
-
-    	
     }
 	
 
+	@Override
+	public void customizeContent() {
+		new Customizer().customizeTree(tree);
+	}
 
 	private void getBreedingFarms(){
 		
@@ -156,6 +157,12 @@ public class ECTreeViewController {
 	public static List<RedirectingComboRecordExt> getFarms() {
 		return farms;
 	}
+
+
+
+
+
+
 	
 	
 	

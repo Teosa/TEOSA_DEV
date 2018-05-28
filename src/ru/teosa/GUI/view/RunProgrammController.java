@@ -4,21 +4,25 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 
-public class RunProgrammController {
+public class RunProgrammController extends AbstractController{
 
 	
 	@FXML
 	private Accordion accordion;
 	
-
-	
-	
     @FXML
-    private void initialize() {
+    protected void initialize() {
     	
     	
     	
     	
     }
+
+
+	@Override
+	public void customizeContent() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

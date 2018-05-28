@@ -11,8 +11,6 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -29,19 +27,8 @@ public class MainApp extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private WebDriver driver;
-    
-//************************************************************************************
-//********************* GETTERS/SETTERS **********************************************
-//************************************************************************************
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-	public void setDriver(WebDriver driver) {
-		this.driver = driver;
-	}
-	public WebDriver getDriver() {
-		return driver;
-	}
+    private static MainWindowController controller;
+
 //************************************************************************************
 //********************* METHODS ******************************************************
 //************************************************************************************	
@@ -128,4 +115,23 @@ public class MainApp extends Application {
         	Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
         }
     }
+    
+//**************************************************************************************************
+//**************************************************************************************************
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+	public void setDriver(WebDriver driver) {
+		this.driver = driver;
+	}
+	public WebDriver getDriver() {
+		return driver;
+	}
+    public static MainWindowController getController() {
+		return controller;
+	}
+	public static void setController(MainWindowController controller) {
+		MainApp.controller = controller;
+	}
+    
 }
