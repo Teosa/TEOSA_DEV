@@ -2,18 +2,9 @@ package ru.teosa.herdSettings;
 
 import java.io.Serializable;
 
-import javafx.scene.Scene;
-import javafx.scene.control.TreeView;
-import ru.teosa.GUI.MainApp;
-import ru.teosa.utils.objects.MainAppHolderSingleton;
-import ru.teosa.utils.objects.RedirectingComboRecordExt;
-
 public class HerdRunSettings implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
-	private String name;
-	private String URL;
 	
 	private boolean registerInEC;
 	private EC_registerSettings EC_registerSettings; 
@@ -32,28 +23,17 @@ public class HerdRunSettings implements Serializable{
 	
 	
 	public HerdRunSettings() {
-		MainApp mainApp = MainAppHolderSingleton.getInstance().getMainApp();
-		
-		if(mainApp != null) {
-			Scene scene = mainApp.getPrimaryStage().getScene();			
-			TreeView<RedirectingComboRecordExt> treeView = (TreeView<RedirectingComboRecordExt>) scene.lookup("#tree");
-			
-			this.name = treeView.getSelectionModel().getSelectedItem().getValue().getName();
-			this.URL = treeView.getSelectionModel().getSelectedItem().getValue().getUrl();
-		}
-		
 		this.registerInEC   = false;
 		this.extendEC       = false;
 		this.stallionMating = false;
 		this.mareMating     = false;
 		this.foals          = false;
 		
-		this.EC_registerSettings   = null;
-		this.EC_extendSettings     = null;
-		this.stallonMatingSettings = null;
-		this.mareMatingSettings    = null;
-		this.foalsSettings         = null;
-
+		this.EC_registerSettings   = new EC_registerSettings();
+		this.EC_extendSettings     = new EC_extendSettings();
+		this.stallonMatingSettings = new StallonMatingSettings();
+		this.mareMatingSettings    = new MareMatingSettings();
+		this.foalsSettings         = new FoalsSettings();
 	}
 	
 	
@@ -62,18 +42,6 @@ public class HerdRunSettings implements Serializable{
 //*******************************************************************************************************************************
 //*******************************************************************************************************************************
 //*******************************************************************************************************************************
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getURL() {
-		return URL;
-	}
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
 	public boolean isRegisterInEC() {
 		return registerInEC;
 	}

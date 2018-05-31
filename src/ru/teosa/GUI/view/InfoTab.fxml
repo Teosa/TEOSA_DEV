@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.InfoTabController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.InfoTabController">
    <children>
       <Label layoutX="14.0" layoutY="14.0" text="Выбранный завод:" />
-      <Label fx:id="selectedFarmName" layoutX="210.0" layoutY="14.0" text="&lt;название завода&gt;" />
-      <Separator layoutX="14.0" layoutY="44.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-      <CheckBox fx:id="ECRegistration" layoutX="14.0" layoutY="59.0" mnemonicParsing="false" text="Запись в КСК" />
-      <CheckBox fx:id="ECExtending" layoutX="14.0" layoutY="90.0" mnemonicParsing="false" text="Продление постоя" />
-      <CheckBox fx:id="breedingStallon" layoutX="14.0" layoutY="154.0" mnemonicParsing="false" text="Случки (жеребцы)" />
-      <CheckBox fx:id="breedingMare" layoutX="14.0" layoutY="183.0" mnemonicParsing="false" text="Случки (кобылы)" />
-      <CheckBox fx:id="breedingFoal" layoutX="14.0" layoutY="212.0" mnemonicParsing="false" text="Жеребята" />
+      <Label fx:id="selectedFarmName" layoutX="137.0" layoutY="14.0" text="&lt;название завода&gt;" />
+      <Separator layoutX="14.0" layoutY="44.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <CheckBox fx:id="ECRegistration" layoutX="15.0" layoutY="90.0" mnemonicParsing="false" text="Запись в КСК" />
+      <CheckBox fx:id="ECExtending" layoutX="15.0" layoutY="120.0" mnemonicParsing="false" text="Продление постоя" />
+      <CheckBox fx:id="breedingStallon" mnemonicParsing="false" text="Случки (жеребцы)" translateX="200.0" translateY="90.0" />
+      <CheckBox fx:id="breedingMare" layoutX="200.0" layoutY="120.0" mnemonicParsing="false" text="Случки (кобылы)" />
+      <CheckBox fx:id="breedingFoal" layoutX="200.0" layoutY="150.0" mnemonicParsing="false" text="Жеребята" />
+      <Label layoutX="280.0" layoutY="14.0" text="Настройки" />
+      <ComboBox fx:id="programs" layoutX="348.0" layoutY="10.0" prefWidth="150.0" />
+      <Button fx:id="addProgramToRun" layoutX="556.0" layoutY="10.0" mnemonicParsing="false" text="Добавить в прогон" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="15.0" layoutY="60.0" text="КСК" underline="true" />
+      <Label layoutX="200.0" layoutY="60.0" text="Разведение" underline="true" />
    </children>
 </AnchorPane>

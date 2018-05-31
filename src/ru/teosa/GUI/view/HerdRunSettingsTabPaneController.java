@@ -33,8 +33,8 @@ public class HerdRunSettingsTabPaneController extends AbstractController{
     	   	loadTabsIntoForm();
     	   	
     	   	infoTabController.customizeContent();
-//    	   	ECTabController.customizeContent();
-//    	   	breedingTabController.customizeContent();
+    	   	ECTabController.customizeContent();
+    	   	breedingTabController.customizeContent();
     	}
     	catch(Exception e) {
     		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));

@@ -1,30 +1,24 @@
 package ru.teosa.mainapp.pojo;
 
-import java.util.List;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
-import javafx.scene.control.Button;
 import ru.teosa.herdSettings.HerdRunSettings;
-import ru.teosa.site.model.Horse;
-import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 public class BreedingFarm {
 	
-	private WebDriver driver;
+	private String name;
 	private String URL;
-//	private String lastRunedHorse = null;
 	private HerdRunSettings settings;
 	
 
 	
-	public BreedingFarm() {
-		driver = MainAppHolderSingleton.getInstance().getDriver();
-	}	
+	
+
+	
+
+	
+	
+
+//*************************************************************************************************************************************
+//*************************************************************************************************************************************
 	public String getURL() {
 		return URL;
 	}
@@ -37,30 +31,40 @@ public class BreedingFarm {
 	public void setSettings(HerdRunSettings settings) {
 		this.settings = settings;
 	}
-	
-	
-	public boolean findFirstHorse() {
-		List<WebElement> farms = driver.findElements(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul"));
-		if(farms.size() > 0) {
-			WebElement firstHorse = driver.findElement(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul/li[1]"));
-			if(firstHorse != null) {
-				try {
-					firstHorse.findElement(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul/li[1]/div/div[1]/div/ul/li[1]"))
-					.findElement(By.className("horsename")).click();
-					return true;
-				}
-				catch(Exception e) {
-					Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
-					return false;
-				}
-			}
-			else return false;
-		}
-		else return false;
-		
+	public String getName() {
+		return name;
 	}
-
-
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
+	
+	
+//	public boolean findFirstHorse() {
+//	WebDriver driver = MainAppHolderSingleton.getInstance().getDriver();
+//	
+//	List<WebElement> farms = driver.findElements(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul"));
+//	if(farms.size() > 0) {
+//		WebElement firstHorse = driver.findElement(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul/li[1]"));
+//		if(firstHorse != null) {
+//			try {
+//				firstHorse.findElement(By.xpath("//*[@id=\"horseList\"]/div/div[2]/ul/li[1]/div/div[1]/div/ul/li[1]"))
+//				.findElement(By.className("horsename")).click();
+//				return true;
+//			}
+//			catch(Exception e) {
+//				Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+//				return false;
+//			}
+//		}
+//		else return false;
+//	}
+//	else return false;
+//	
+//}
+	
+	
 //	@Override
 //	public void run() {
 //		Button start = (Button)MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene().lookup("#startButton");

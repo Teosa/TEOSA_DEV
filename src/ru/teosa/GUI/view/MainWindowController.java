@@ -3,6 +3,7 @@ package ru.teosa.GUI.view;
 import org.apache.log4j.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
@@ -37,27 +38,15 @@ public class MainWindowController {
     		//Загружаем панели в форму
         	loadAccountInfoPanel();    		
         	loadECTreeView();
-        	loadHerdRunSettingsTabPane();
+//        	loadHerdRunSettingsTabPane();
         	loadRunProgrammPanel();       
-        	
-//        	System.out.println("mainapp in mainWinContr: " + mainApp);
-//        	new Customizer().customizeTree((TreeView)mainApp.getPrimaryStage().getScene().lookup("#tree"));
-        	
-        	MainApp.getController().getECTreeController().customizeContent();
+        	     	
+//        	MainApp.getController().getECTreeController().customizeContent();
+//        	MainApp.getController().getECTreeController().getTree().getSelectionModel().select(0);;
     	}
     	catch (Exception e) {
 			e.printStackTrace();
 		}
-	
-    	
-   	
-//    	ToggleGroup group = new ToggleGroup();
-//    	myEC.setToggleGroup(group);
-//    	anyEC.setSelected(true);
-//    	anyEC.setToggleGroup(group);
-//    	
-//    	daysEC.getItems().addAll(1,3,10,30,60);
-//    	daysEC.setValue(30);
     }
 //******************************************************************************************   
 //******************************************************************************************   

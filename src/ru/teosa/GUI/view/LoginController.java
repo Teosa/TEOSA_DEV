@@ -233,7 +233,7 @@ public class LoginController {
     	Integer userid = -1;
     	String usernameVal = "";
     	
-    	//Если выбрасывется исключение, значит был введен новый юзер
+    	//Если выбрасывется исключение, значит был введен новый юзер (возможно уже не выбрасывается...)
     	try {
     		if(!username.getValue().isValueEmpty(username.getValue().getName()))
     			usernameVal = username.getValue().getName();

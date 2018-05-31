@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.ECTabController">
    <children>
       <GridPane layoutX="28.0" layoutY="26.0" prefWidth="600.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -54,9 +54,9 @@
             </Label>
             <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <RadioButton fx:id="myEC" mnemonicParsing="false" text="Свой" />
-                  <RadioButton mnemonicParsing="false" text="Зарезервированные стойла" />
-                  <RadioButton fx:id="anyEC" mnemonicParsing="false" text="Любой" />
+                  <RadioButton fx:id="ECType_owner" mnemonicParsing="false" text="Свой" />
+                  <RadioButton fx:id="ECType_reserved" mnemonicParsing="false" text="Зарезервированные стойла" />
+                  <RadioButton fx:id="ECType_any" mnemonicParsing="false" text="Любой" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -65,17 +65,13 @@
                   <Insets top="5.0" />
                </padding>
             </HBox>
-            <ComboBox fx:id="daysEC" minWidth="80.0" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="дней" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <padding>
-                  <Insets left="90.0" />
-               </padding></Label>
+            <ComboBox fx:id="registrationTerm" minWidth="80.0" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <RadioButton mnemonicParsing="false" text="Лес" />
-                  <RadioButton mnemonicParsing="false" text="Горы" />
-                  <RadioButton mnemonicParsing="false" text="Пляж" />
-                  <RadioButton mnemonicParsing="false" text="Любое" />
+                  <RadioButton fx:id="location_forest" mnemonicParsing="false" text="Лес" />
+                  <RadioButton fx:id="location_mountains" mnemonicParsing="false" text="Горы" />
+                  <RadioButton fx:id="location_beach" mnemonicParsing="false" text="Пляж" />
+                  <RadioButton fx:id="location_any" mnemonicParsing="false" text="Любое" />
                </children>
                <padding>
                   <Insets top="5.0" />
@@ -88,9 +84,9 @@
             </Label>
             <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
-                  <RadioButton mnemonicParsing="false" text="Классика" />
-                  <RadioButton mnemonicParsing="false" text="Вестерн" />
-                  <RadioButton mnemonicParsing="false" text="Любая" />
+                  <RadioButton fx:id="specialization_classic" mnemonicParsing="false" text="Классика" />
+                  <RadioButton fx:id="specialization_western" mnemonicParsing="false" text="Вестерн" />
+                  <RadioButton fx:id="specialization_any" mnemonicParsing="false" text="Любая" />
                </children>
                <padding>
                   <Insets top="5.0" />
@@ -112,27 +108,27 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <CheckBox mnemonicParsing="false" text="Фураж">
+                  <CheckBox fx:id="hay" mnemonicParsing="false" text="Фураж">
                      <GridPane.margin>
                         <Insets right="5.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="Овес" GridPane.columnIndex="1">
+                  <CheckBox fx:id="oat" mnemonicParsing="false" text="Овес" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="Морковь" GridPane.columnIndex="2">
+                  <CheckBox fx:id="carrot" mnemonicParsing="false" text="Морковь" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="Комбикорм" GridPane.rowIndex="1">
+                  <CheckBox fx:id="mash" mnemonicParsing="false" text="Комбикорм" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets right="5.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="Поилка" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <CheckBox fx:id="drinker" mnemonicParsing="false" text="Поилка" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <padding>
                         <Insets right="10.0" />
                      </padding>
@@ -140,7 +136,7 @@
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="Душ" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <CheckBox fx:id="shower" mnemonicParsing="false" text="Душ" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <padding>
                         <Insets right="10.0" />
                      </padding>
@@ -173,19 +169,24 @@
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <Label text="дней" GridPane.columnIndex="1" GridPane.rowIndex="10">
-               <padding>
-                  <Insets left="90.0" />
-               </padding>
-            </Label>
-            <ComboBox minWidth="80.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <Spinner minWidth="80.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <ComboBox fx:id="extendTerm" minWidth="80.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <Spinner fx:id="daysBeforeExtend" minWidth="80.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <Label text="Продлевать только в своем КСК" GridPane.rowIndex="11">
                <padding>
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+            <CheckBox fx:id="onlyOwnerExtend" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+            <Label fx:id="registrationTermLabel" text="дней" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets left="90.0" />
+               </GridPane.margin>
+            </Label>
+            <Label fx:id="extendTermLabel" text="дней" GridPane.columnIndex="1" GridPane.rowIndex="10">
+               <GridPane.margin>
+                  <Insets left="90.0" />
+               </GridPane.margin>
+            </Label>
          </children>
       </GridPane>
    </children>

@@ -10,6 +10,7 @@ import javafx.scene.control.TreeView;
 import javafx.util.StringConverter;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.view.HerdRunSettingsTabPaneController;
+import ru.teosa.GUI.view.InfoTabController;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
@@ -159,8 +160,18 @@ public class Customizer{
 			@Override
 			public void changed(ObservableValue<? extends TreeItem<RedirectingComboRecordExt>> observable,
 					TreeItem<RedirectingComboRecordExt> oldValue, TreeItem<RedirectingComboRecordExt> newValue) {
-				MainApp.getController().getHerdRunSettingsTabController().getInfoTabController()
-					.getSelectedFarmName().setText(newValue.getValue().getName());
+				InfoTabController controller = MainApp.getController().getHerdRunSettingsTabController().getInfoTabController();
+				
+				if(newValue.getValue().getId() > -1) {
+					controller.getSelectedFarmName().setText(newValue.getValue().getName());	
+					controller.disableTab(false);
+				}
+				else {
+					controller.getSelectedFarmName().setText("<не выбрано>");
+					controller.disableTab(true);
+				}
+				
+				
 			}
 		   });
 	}
