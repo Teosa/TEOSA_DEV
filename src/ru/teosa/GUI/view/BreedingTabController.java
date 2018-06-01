@@ -52,7 +52,7 @@ public class BreedingTabController extends AbstractController{
 	
 	@Override
 	protected void initialize() {
-		MainAppHolderSingleton.getInstance().getMainApp().getController().getHerdRunSettingsTabController().setBreedingTabController(this);
+		MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getHerdRunSettingsController().setBreedingTabController(this);
 		
 		matingQty = new ToggleGroup();
 		coverBy = new ToggleGroup();
@@ -69,7 +69,7 @@ public class BreedingTabController extends AbstractController{
 		matingPrice.getItems().addAll(ComboStores.STALLON_MATING_PRICE);
 		maxCoverPrice.getItems().addAll(ComboStores.STALLON_MATING_PRICE);
 		
-		foalsFarm.getItems().addAll(MainAppHolderSingleton.getInstance().getMainApp().getController().getECTreeController().getFarms());
+		foalsFarm.getItems().addAll(MainAppHolderSingleton.getInstance().getMainApp().getController().getFarmsTreeController().getFarms());
 		
 	}
 

@@ -1,6 +1,8 @@
 package ru.teosa.herdSettings;
 
-public class MareMatingSettings {
+import java.io.Serializable;
+
+public class MareMatingSettings implements Serializable{
 
 	private Character coverBy;
 	private int maxCoverPrice;

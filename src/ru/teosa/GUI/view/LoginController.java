@@ -81,9 +81,9 @@ public class LoginController {
 
     	saveSelectedVersion();
     	
-    	if(!checkLogopas()) return;
-    	if(mainApp.getDriver() == null) runWithCrome();
-    	if(accountLogin()) 
+//    	if(!checkLogopas()) return;
+//    	if(mainApp.getDriver() == null) runWithCrome();
+//    	if(accountLogin()) 
     		mainApp.showMainForm(); 
     	
     	MainAppHolderSingleton.getInstance().setMainApp(mainApp);

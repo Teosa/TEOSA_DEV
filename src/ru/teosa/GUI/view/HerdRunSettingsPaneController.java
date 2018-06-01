@@ -13,28 +13,31 @@ import javafx.scene.layout.AnchorPane;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
-public class HerdRunSettingsTabPaneController extends AbstractController{
+public class HerdRunSettingsPaneController extends AbstractController{
 
-	@FXML private TabPane tabPane;  // Панель вкдадок
-	@FXML private Tab mainInfoTab;  // Вкладка основных настроек
-	@FXML private Tab ECTab;        // Вкладка КСК
-	@FXML private Tab breedingTab;  // Вкладка разведение
+	@FXML private TabPane tabPane;     // Панель вкдадок
+	@FXML private Tab mainInfoTab;     // Вкладка основных настроек
+	@FXML private Tab baseActionsTab;  // Вкладка базовых действий
+	@FXML private Tab ECTab;           // Вкладка КСК
+	@FXML private Tab breedingTab;     // Вкладка разведение
 	
-	private static InfoTabController     infoTabController;     // Контроллер вкладки основных настроек
-	private static ECTabController       ECTabController;       // Контроллер вкладки КСК
-	private static BreedingTabController breedingTabController; // Контроллер вкладки разведения
+	private static InfoTabController       infoTabController;       // Контроллер вкладки основных настроек
+	private static BaseActionTabController baseActionTabController; // Контроллер вкладки базовых действий
+	private static ECTabController         ECTabController;         // Контроллер вкладки КСК
+	private static BreedingTabController   breedingTabController;   // Контроллер вкладки разведения
 	
 	
     @FXML
     protected void initialize() {
     	try {
-    		MainAppHolderSingleton.getInstance().getMainApp().getController().setHerdRunSettingsTabController(this);
+    		MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().setHerdRunSettingsController(this);
     		
-    	   	loadTabsIntoForm();
-    	   	
-    	   	infoTabController.customizeContent();
-    	   	ECTabController.customizeContent();
-    	   	breedingTabController.customizeContent();
+        	loadTabsIntoForm();
+        	   	
+        	infoTabController.customizeContent();
+        	ECTabController.customizeContent();
+        	breedingTabController.customizeContent();	
+    		
     	}
     	catch(Exception e) {
     		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
@@ -55,18 +58,24 @@ public class HerdRunSettingsTabPaneController extends AbstractController{
         loader.setLocation(MainApp.class.getResource("view/InfoTab.fxml"));
         AnchorPane infoTab = (AnchorPane) loader.load();
         ((ScrollPane)tabPane.getTabs().get(0).getContent()).setContent(infoTab);
+        
+        //Базовые действия
+        loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("view/BaseActionsTab.fxml"));
+        AnchorPane baseActionTab = (AnchorPane) loader.load();
+        ((ScrollPane)tabPane.getTabs().get(1).getContent()).setContent(baseActionTab);
 
         //КСК
         loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/ECTab.fxml"));
         AnchorPane ECTab = (AnchorPane) loader.load();
-        ((ScrollPane)tabPane.getTabs().get(1).getContent()).setContent(ECTab);
+        ((ScrollPane)tabPane.getTabs().get(2).getContent()).setContent(ECTab);
              
         //Разведение
         loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/BreedingTab.fxml"));
         AnchorPane breedingTab = (AnchorPane) loader.load();
-        ((ScrollPane)tabPane.getTabs().get(2).getContent()).setContent(breedingTab);
+        ((ScrollPane)tabPane.getTabs().get(3).getContent()).setContent(breedingTab);
     }
     
 //*****************************************************************************************************************  
@@ -75,7 +84,7 @@ public class HerdRunSettingsTabPaneController extends AbstractController{
 		return infoTabController;
 	}
 	public static void setInfoTabController(InfoTabController infoTabController) {
-		HerdRunSettingsTabPaneController.infoTabController = infoTabController;
+		HerdRunSettingsPaneController.infoTabController = infoTabController;
 	}
 	public TabPane getTabPane() {
 		return tabPane;
@@ -111,7 +120,19 @@ public class HerdRunSettingsTabPaneController extends AbstractController{
 		return breedingTabController;
 	}
 	public static void setBreedingTabController(BreedingTabController breedingTabController) {
-		HerdRunSettingsTabPaneController.breedingTabController = breedingTabController;
+		HerdRunSettingsPaneController.breedingTabController = breedingTabController;
+	}
+	public Tab getBaseActionsTab() {
+		return baseActionsTab;
+	}
+	public void setBaseActionsTab(Tab baseActionsTab) {
+		this.baseActionsTab = baseActionsTab;
+	}
+	public static BaseActionTabController getBaseActionTabController() {
+		return baseActionTabController;
+	}
+	public static void setBaseActionTabController(BaseActionTabController baseActionTabController) {
+		HerdRunSettingsPaneController.baseActionTabController = baseActionTabController;
 	}
 	
 }

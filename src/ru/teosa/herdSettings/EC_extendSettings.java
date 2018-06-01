@@ -1,6 +1,8 @@
 package ru.teosa.herdSettings;
 
-public class EC_extendSettings {
+import java.io.Serializable;
+
+public class EC_extendSettings implements Serializable{
 
 	private int daysBeforeCheckout;
 	private int extendTerm;

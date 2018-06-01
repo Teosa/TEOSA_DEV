@@ -2,7 +2,6 @@ package ru.teosa.GUI.view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
-import javafx.scene.control.Button;
 
 public class RunProgrammController extends AbstractController{
 
@@ -12,10 +11,8 @@ public class RunProgrammController extends AbstractController{
 	
     @FXML
     protected void initialize() {
-    	
-    	
-    	
-    	
+    	try {}
+    	catch(Exception e) {}
     }
 
 
@@ -24,5 +21,5 @@ public class RunProgrammController extends AbstractController{
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 }

@@ -1,9 +1,15 @@
 package ru.teosa.utils;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +27,8 @@ import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
 import ru.teosa.account.Account;
+import ru.teosa.herdSettings.EC_registerSettings;
+import ru.teosa.herdSettings.HerdRunSettings;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,6 +41,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -48,7 +57,7 @@ public class TestClass extends Application{
 	
 
 //		String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-//		String connectionURL = "jdbc:derby:HBBDB;create=true;";
+		String connectionURL = "jdbc:derby:HBBDB;create=true;";
 		
 		try {
 //			Class.forName(driver).newInstance();
@@ -57,73 +66,121 @@ public class TestClass extends Application{
 		    
 			  try {
 			  
-//				BasicDataSource bdSource = new BasicDataSource();
-//				bdSource.setUrl(connectionURL);
-//				bdSource.getConnection();
-//				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
+				BasicDataSource bdSource = new BasicDataSource();
+				bdSource.setUrl(connectionURL);
+				bdSource.getConnection();
+				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
 
-//				int mcb = 10000;
-//				int wcb = 4000;
-//				int emb = 2510377;
+				EC_registerSettings testclass = new EC_registerSettings();
+				testclass.setCarrot(true);
+				testclass.setLocation('F');
+				
+				HerdRunSettings settings = new HerdRunSettings();
+//				settings.setEC_registerSettings(testclass);
+				
+				
+//				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//				ObjectOutput out = null;
+//				
+//				try {
+//				  out = new ObjectOutputStream(bos);   
+//				  out.writeObject(testclass);
+//				  out.flush();
+//				  
+//				  byte[] yourBytes = bos.toByteArray();
+//				  
+//				  HashMap params = new HashMap();
 //
-//	            int mny;
-//	            boolean started = false;
+//				  params.put("name", "testObject");
+//				  params.put("object", yourBytes);
+//				  
+//				  pstmt.update("INSERT INTO PROGRAMS VALUES (DEFAULT, :name, :object)", params);
+//				
+//				} finally {
+//				  try {
+//				    bos.close();
+//				  } catch (IOException ex) {}
+//				}
+				
+				byte[] bytes = SerializationUtils.serialize(settings);
+				
+				HashMap params = new HashMap();
+
+				params.put("name", "Стандартные настройки");
+				params.put("object", bytes);
+								  
+//				pstmt.update("INSERT INTO PROGRAMS VALUES (DEFAULT, :name, :object)", params);
+//							
+//				System.out.println("*************************");
+				
+
+				
+//				pstmt.queryForObject("SELECT * FROM PROGRAMS WHERE ID = 101", new HashMap(), new RowMapper() {
 //
-//	            long divisor = 1000000000;//(long)Math.pow(1000, maxPower);
-//	            long integer = emb - mcb;//(long)Math.floor(num);
+//					@Override
+//					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+//						byte[] bytes = rs.getBytes("settings");
+//						HerdRunSettings o  = SerializationUtils.deserialize(bytes);
 //
-//	            System.out.println(divisor);
-//	            System.out.println(integer);
+//						  System.out.println(o);
+//						  System.out.println(o.getEC_registerSettings());
+//						  System.out.println(o.getEC_registerSettings().getLocation());
+//						  System.out.println(o.getEC_registerSettings().getTest());
+//						
+//						return null;
+//					}
+//				});
+				
+				
+//				pstmt.queryForObject("SELECT * FROM PROGRAMS WHERE ID = 1", new HashMap(), new RowMapper() {
+//					@Override
+//					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+//						 byte[] bytes = rs.getBytes("settings");
+//						 
+//						 try {
+//								ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+//								ObjectInput in = null;
+//								try {
+//								  in = new ObjectInputStream(bis);
+//								  EC_registerSettings o = (EC_registerSettings)in.readObject(); 
+//								  
+//								  System.out.println(o);
+//								  System.out.println(o.getLocation());
+//								  System.out.println(o.isCarrot());
+//								  
+//								} finally {
+//								  try {
+//								    if (in != null) {
+//								      in.close();
+//								    }
+//								  } catch (IOException ex) {
+//								    // ignore close exception
+//								  }
+//								}
+//						 }
+//						 catch(Exception e) {}
 //
-//	            
-//	            System.out.println("----------------------");
-//	            for(int i = 8; i >= 0; i--){
-//	            	
-//
-//	            	
-//	            	divisor /= 10;
-//	                mny = (int)(integer / divisor);
-//	                integer %= divisor;
-//	                
-//	                System.out.println(divisor);
-//	                System.out.println(mny);
-//	                System.out.println(integer);
-//	                
-//	            	if(!started)
-//	            	started = mny > 0;
-//	                
-//	                if(mny != 0){
-//		                
-//		                System.out.println("FOR SALE: " + mny * divisor);
-//		                
-//		                System.out.println("***********");	                    
-//	                        
-//	                }
-//	                else if(started){
-//
-//		                
-//		                System.out.println("zFOR SALE: " + divisor);
-//		                
-//		                System.out.println("***********");	
-//	                }
-//	                
-//
-//	            }
-//                System.out.println("----------------------");
+//						 
+//						 
+//						return null;
+//					}
+//				});
+				
+
+				
+				
+				
+////			    FileOutputStream fos = new FileOutputStream("temp.out");
+//			    ObjectOutputStream oos = new ObjectOutputStream();
+//		
+//			    oos.writeObject(testclass);
+//			    oos.flush();
+//			    oos.close(); 
 				  
-				  int tosell = 10062;
-				  int i;
 				  
-				  while (tosell > 0) {
-					  i = Tools.getQtyForSale(tosell);
-					  if(i > 0) {
-						  System.out.println("selling:" + i); 
-						  tosell =  tosell -i;
-						  System.out.println("left:" + tosell);  
-					  }
-				  }
 				  
-//				  System.out.println(Tools.xxx(71));
+				  
+				  
 
 			  }
 			  catch(Exception e) {

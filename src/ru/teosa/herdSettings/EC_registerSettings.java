@@ -1,6 +1,10 @@
 package ru.teosa.herdSettings;
 
-public class EC_registerSettings {
+import java.io.Serializable;
+
+public class EC_registerSettings implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private Character EC_type;          //Тип КСК для записи     Свой: "O"   Зарезервированные стойла: "R"   Любой: null
 	private int regTerm;

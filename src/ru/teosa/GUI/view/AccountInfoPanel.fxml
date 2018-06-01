@@ -20,6 +20,12 @@
                   <MenuItem fx:id="exit" mnemonicParsing="false" text="Выход" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Программа прогона">
+              <items>
+                <MenuItem fx:id="addProgram" mnemonicParsing="false" onAction="#addProgramHandler" text="Новая программа" />
+                  <MenuItem fx:id="editProgram" mnemonicParsing="false" onAction="#editProgramHandler" text="Редактировать/удалить программу" />
+              </items>
+            </Menu>
          </menus>
       </MenuBar>
       <Label layoutX="75.0" layoutY="42.0" text="Заводчик" />

@@ -1,6 +1,8 @@
 package ru.teosa.herdSettings;
 
-public class FoalsSettings {
+import java.io.Serializable;
+
+public class FoalsSettings implements Serializable{
 
 	private String name_M;
 	private String name_F;

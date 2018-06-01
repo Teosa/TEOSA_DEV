@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<ScrollPane prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.FarmProgramPanelController">
+   <content>
+      <AnchorPane prefHeight="300.0" prefWidth="650.0">
+         <children>
+            <Label layoutX="24.0" layoutY="24.0" text="Выбранный завод:" />
+            <Label fx:id="selectedFarmName" layoutX="147.0" layoutY="24.0" text="&lt;название завода&gt;" />
+            <Label layoutX="290.0" layoutY="24.0" text="Настройки" />
+            <ComboBox fx:id="programs" layoutX="358.0" layoutY="20.0" prefWidth="150.0" />
+            <Button fx:id="addProgramToRun" layoutX="566.0" layoutY="20.0" mnemonicParsing="false" text="Добавить в прогон" />
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>

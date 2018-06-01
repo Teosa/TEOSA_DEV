@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
@@ -17,15 +18,16 @@ import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
 public class MainWindowController {
 	
-	private static AccountInfoPanelController       accountInfoController;
-	private static ECTreeViewController             ECTreeController;
-	private static HerdRunSettingsTabPaneController HerdRunSettingsTabController;
-	private static RunProgrammController            runProgramPanelController;
+	private static AccountInfoPanelController   accountInfoController;
+	private static FarmsTreeViewController      farmsTreeController;
+	private static FarmProgramPanelController   farmProgramPanelController;
+	private static RunProgrammController        runProgramPanelController;
+	
+	private static ProgramWindowController      programWindowController;
 
 	private MainApp mainApp;
 	
-	@FXML
-	private BorderPane mainForm;
+	@FXML private BorderPane mainForm;
 	
 
     @FXML
@@ -37,12 +39,12 @@ public class MainWindowController {
     		
     		//Загружаем панели в форму
         	loadAccountInfoPanel();    		
-        	loadECTreeView();
-//        	loadHerdRunSettingsTabPane();
+        	loadFarmsTreeView();
+        	loadFramProgramPanel();
         	loadRunProgrammPanel();       
         	     	
-//        	MainApp.getController().getECTreeController().customizeContent();
-//        	MainApp.getController().getECTreeController().getTree().getSelectionModel().select(0);;
+        	MainApp.getController().getFarmsTreeController().customizeContent();
+        	MainApp.getController().getFarmsTreeController().getTree().getSelectionModel().select(0);;
     	}
     	catch (Exception e) {
 			e.printStackTrace();
@@ -59,17 +61,17 @@ public class MainWindowController {
     }
    
     // Загрузка панели с деревем заводов
-    private void loadECTreeView() throws Exception{
+    private void loadFarmsTreeView() throws Exception{
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("view/ECTreeViewl.fxml"));
+        loader.setLocation(MainApp.class.getResource("view/FarmsTreeViewl.fxml"));
         mainForm.setLeft((TreeView<RedirectingComboRecordExt>) loader.load());
     }
     
-    // Загрузка панели с настройками прогона
-    private void loadHerdRunSettingsTabPane() throws Exception{
+    // Загрузка панели программы для выбраного завода
+    private void loadFramProgramPanel() throws Exception{
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("view/HerdRunSettingsTabPane.fxml"));
-        mainForm.setCenter((TabPane) loader.load());
+        loader.setLocation(MainApp.class.getResource("view/FarmProgramInfoPanel.fxml"));
+        mainForm.setCenter((ScrollPane) loader.load());
     }
     
     // Загрузка панели Прогон
@@ -95,22 +97,28 @@ public class MainWindowController {
 	public static void setAccountInfoController(AccountInfoPanelController accountInfoController) {
 		MainWindowController.accountInfoController = accountInfoController;
 	}
-	public static ECTreeViewController getECTreeController() {
-		return ECTreeController;
-	}
-	public static void setECTreeController(ECTreeViewController eCTreeController) {
-		ECTreeController = eCTreeController;
-	}
-	public static HerdRunSettingsTabPaneController getHerdRunSettingsTabController() {
-		return HerdRunSettingsTabController;
-	}
-	public static void setHerdRunSettingsTabController(HerdRunSettingsTabPaneController herdRunSettingsTabController) {
-		HerdRunSettingsTabController = herdRunSettingsTabController;
-	}
 	public static RunProgrammController getRunProgramPanelController() {
 		return runProgramPanelController;
 	}
 	public static void setRunProgramPanelController(RunProgrammController runProgramPanelController) {
 		MainWindowController.runProgramPanelController = runProgramPanelController;
+	}
+	public static FarmsTreeViewController getFarmsTreeController() {
+		return farmsTreeController;
+	}
+	public static void setFarmsTreeController(FarmsTreeViewController farmsTreeController) {
+		MainWindowController.farmsTreeController = farmsTreeController;
+	}
+	public static FarmProgramPanelController getFarmProgramPanelController() {
+		return farmProgramPanelController;
+	}
+	public static void setFarmProgramPanelController(FarmProgramPanelController farmProgramPanelController) {
+		MainWindowController.farmProgramPanelController = farmProgramPanelController;
+	}
+	public static ProgramWindowController getProgramWindowController() {
+		return programWindowController;
+	}
+	public static void setProgramWindowController(ProgramWindowController programWindowController) {
+		MainWindowController.programWindowController = programWindowController;
 	}
 }

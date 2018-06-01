@@ -5,19 +5,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
-import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class InfoTabController extends AbstractController{
 	
-	@FXML private ComboBox<SimpleComboRecordExt> programs; // Программы
-	@FXML private Label selectedFarmName;   // Выбранный завод
-	@FXML private Button addProgramToRun;   // Добавить в прогон
+
     
 	@FXML private CheckBox ECRegistration;  // Запись в КСК
 	@FXML private CheckBox ECExtending;     // Продление постоя
@@ -28,7 +22,7 @@ public class InfoTabController extends AbstractController{
 	
 	@Override
 	protected void initialize() {
-		MainAppHolderSingleton.getInstance().getMainApp().getController().getHerdRunSettingsTabController().setInfoTabController(this);
+		MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getHerdRunSettingsController().setInfoTabController(this);
 	}
 
 	@Override
@@ -63,8 +57,8 @@ public class InfoTabController extends AbstractController{
 		ECRegistration.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				Tab ECTab = MainWindowController.getHerdRunSettingsTabController().getECTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene();
+				Tab ECTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getECTab();
+				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
 				
 				CheckBox ECExt = (CheckBox) scene.lookup("#ECExtending");
 				ECTab.setDisable(!newValue && !ECExt.isSelected());
@@ -77,7 +71,6 @@ public class InfoTabController extends AbstractController{
 						"specialization_classic", "specialization_western", "specialization_any",
 						"hay", "oat", "carrot", "mash", "drinker", "shower"
 				};
-				
 				for(int i = 0; i < fields.length; ++i) {
 					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
 				}
@@ -88,15 +81,14 @@ public class InfoTabController extends AbstractController{
 		ECExtending.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				Tab ECTab = MainWindowController.getHerdRunSettingsTabController().getECTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene();
+				Tab ECTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getECTab();
+				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
 				
 				CheckBox ECReg = (CheckBox) scene.lookup("#ECRegistration");
 				ECTab.setDisable(!newValue && !ECReg.isSelected());
 				
 				// Доступность полей для настройки продления постоя в КСК
 				String[] fields = {"daysBeforeExtend", "extendTerm", "extendTermLabel", "onlyOwnerExtend"};
-				
 				for(int i = 0; i < fields.length; ++i) {
 					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
 				}
@@ -107,8 +99,8 @@ public class InfoTabController extends AbstractController{
 		breedingStallon.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				Tab breedingTab = MainWindowController.getHerdRunSettingsTabController().getBreedingTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene();
+				Tab breedingTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getBreedingTab();
+				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
 				
 				CheckBox breedingMare = (CheckBox) scene.lookup("#breedingMare");
 				CheckBox breedingFoal = (CheckBox) scene.lookup("#breedingFoal");
@@ -120,8 +112,8 @@ public class InfoTabController extends AbstractController{
 		breedingMare.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				Tab breedingTab = MainWindowController.getHerdRunSettingsTabController().getBreedingTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene();
+				Tab breedingTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getBreedingTab();
+				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
 				
 				CheckBox breedingStallon = (CheckBox) scene.lookup("#breedingStallon");
 				CheckBox breedingFoal = (CheckBox) scene.lookup("#breedingFoal");
@@ -133,8 +125,8 @@ public class InfoTabController extends AbstractController{
 		breedingFoal.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				Tab breedingTab = MainWindowController.getHerdRunSettingsTabController().getBreedingTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene();
+				Tab breedingTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getBreedingTab();
+				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
 				
 				CheckBox breedingStallon = (CheckBox) scene.lookup("#breedingStallon");
 				CheckBox breedingMare = (CheckBox) scene.lookup("#breedingMare");
@@ -143,12 +135,6 @@ public class InfoTabController extends AbstractController{
 	}
 //*****************************************************************************************************************************
 //*****************************************************************************************************************************
-	public Label getSelectedFarmName() {
-		return selectedFarmName;
-	}
-	public void setSelectedFarmName(Label selectedFarmName) {
-		this.selectedFarmName = selectedFarmName;
-	}
 	public CheckBox getECRegistration() {
 		return ECRegistration;
 	}

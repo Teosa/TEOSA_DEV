@@ -20,7 +20,7 @@ import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
-public class ECTreeViewController extends AbstractController{
+public class FarmsTreeViewController extends AbstractController{
 
 	private MainApp mainApp;
 	private WebDriver driver;
@@ -32,14 +32,16 @@ public class ECTreeViewController extends AbstractController{
 	
 	@Override
     protected void initialize() {
-		MainAppHolderSingleton.getInstance().getMainApp().getController().setECTreeController(this);
+		MainAppHolderSingleton.getInstance().getMainApp().getController().setFarmsTreeController(this);
     	mainApp = MainAppHolderSingleton.getInstance().getMainApp();
     	driver = mainApp.getDriver();
     	
-    	// Переходим на страницу с заводами и заполняем массив заводов контроллера
-    	getBreedingFarms();
-    	// Загружаем дерево из массива заводов
-    	loadFarmsTree();
+    	if(driver != null) {
+        	// Переходим на страницу с заводами и заполняем массив заводов контроллера
+        	getBreedingFarms();
+        	// Загружаем дерево из массива заводов
+        	loadFarmsTree();	
+    	}
     }
 	
 
@@ -55,7 +57,7 @@ public class ECTreeViewController extends AbstractController{
 		Sleeper.waitVisibility("//*[@id=\"tab-all-breeding\"]/li");
 		List<WebElement> farms = driver.findElements(By.xpath("//*[@id=\"tab-all-breeding\"]/li"));
 		int recordid = 0;
-		ECTreeViewController.farms.clear();
+		FarmsTreeViewController.farms.clear();
 		
 		Logger.getLogger("debug").debug("FARMS QTY: " + farms.size());	
 		
@@ -145,7 +147,7 @@ public class ECTreeViewController extends AbstractController{
 //			Logger.getLogger("debug").debug("FARM " + i + " : " + name);
 //			Logger.getLogger("debug").debug("FARM " + i + " : " + farmURL);
 			
-			ECTreeViewController.farms.add(record);	
+			FarmsTreeViewController.farms.add(record);	
 		}
 		
 //		Logger.getLogger("debug").debug(ECTreeViewController.getFarms().size());	
@@ -156,8 +158,8 @@ public class ECTreeViewController extends AbstractController{
     	TreeItem<RedirectingComboRecordExt> rootItem0 = new TreeItem<RedirectingComboRecordExt> (new RedirectingComboRecordExt(-1, "Farms", "", null));
     	rootItem0.setExpanded(true);
     	
-    	for(int i = 0; i < ECTreeViewController.getFarms().size(); ++i) {
-    		RedirectingComboRecordExt record = ECTreeViewController.getFarms().get(i);
+    	for(int i = 0; i < FarmsTreeViewController.getFarms().size(); ++i) {
+    		RedirectingComboRecordExt record = FarmsTreeViewController.getFarms().get(i);
             TreeItem<RedirectingComboRecordExt> farm = new TreeItem<RedirectingComboRecordExt> (record);
             System.out.println("FARM ID: " + record.getId());
             if(record.getData() != null) {

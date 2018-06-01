@@ -1,5 +1,7 @@
 package ru.teosa.GUI.view;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 
 import javafx.event.EventHandler;
@@ -7,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -22,25 +25,22 @@ public class AccountInfoPanelController extends AbstractController{
 
 	private MainApp mainApp;
 	
+	@FXML private MenuItem convertMoney;  // Модуль конвертации
+	@FXML private MenuItem exit;          // Выход
 	
-	
-	//Меню
-	@FXML
-	private MenuItem convertMoney;  // Модуль конвертации
-	@FXML
-	private MenuItem exit;          //Выход
-	
+	@FXML private MenuItem addProgram;   // Новая программа
+	@FXML private MenuItem editProgram;  // Редактировать/удалить программу
 	
 //	@FXML
 	// TODO флаг версии
 	
-	@FXML
-	private Text breederName;
-	@FXML
-	private Text moneyBallance;
+	@FXML private Text breederName;
+	@FXML private Text moneyBallance;
 	
-	
-	
+	private final static String ADD_PROGRAMM_WIN_HEADER  = "Новая программа";
+	private final static String EDIT_PROGRAMM_WIN_HEADER = "Редактировать/удалить программу";
+//************************************************************************************************************************************	
+//************************************************************************************************************************************	
     @FXML
     protected void initialize() {
     	mainApp = MainAppHolderSingleton.getInstance().getMainApp();
@@ -86,6 +86,34 @@ public class AccountInfoPanelController extends AbstractController{
     	
     	MainAppHolderSingleton.getMoneyConverterHandler().setConvertorWin(dialog);
     	
+    	dialog.showAndWait();
+    }
+    
+    //
+    @FXML
+    public void addProgramHandler() throws Exception{ showProgramDialog(ADD_PROGRAMM_WIN_HEADER, 0); }
+    
+    //
+    @FXML
+    public void editProgramHandler() throws Exception{ showProgramDialog(EDIT_PROGRAMM_WIN_HEADER, 1); }
+    
+    private void showProgramDialog(String dialogTitle, int mode) throws IOException {
+    	Stage dialog = new Stage();
+    	
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("view/ProgramWindow.fxml"));
+   
+        ProgramWindowController.setMode(mode);
+        
+        Scene scene = new Scene((BorderPane) loader.load());
+
+       
+//        dialog.setResizable(false);
+        dialog.setScene(scene);
+        dialog.setTitle(dialogTitle);
+    	dialog.initOwner(mainApp.getPrimaryStage());
+    	dialog.initModality(Modality.APPLICATION_MODAL);
+   	
     	dialog.showAndWait();
     }
 }

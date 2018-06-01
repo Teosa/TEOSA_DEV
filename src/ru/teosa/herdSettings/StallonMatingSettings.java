@@ -1,6 +1,8 @@
 package ru.teosa.herdSettings;
 
-public class StallonMatingSettings {
+import java.io.Serializable;
+
+public class StallonMatingSettings implements Serializable {
 
 	private int matingQty;
 	private int matingPrice;

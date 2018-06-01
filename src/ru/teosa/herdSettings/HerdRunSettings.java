@@ -35,9 +35,7 @@ public class HerdRunSettings implements Serializable{
 		this.mareMatingSettings    = new MareMatingSettings();
 		this.foalsSettings         = new FoalsSettings();
 	}
-	
-	
-	
+		
 	
 //*******************************************************************************************************************************
 //*******************************************************************************************************************************

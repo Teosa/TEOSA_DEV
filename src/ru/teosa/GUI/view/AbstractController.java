@@ -4,7 +4,10 @@ import javafx.fxml.FXML;
 
 public abstract class AbstractController {
 
-    @FXML
-    protected abstract void initialize();
+	
+	/** Основная инициализация и настройка элементов */
+    @FXML protected abstract void initialize();
+    
+    /** Дополнитеольные настройки для элементов, требующие полной отрисовки формы */
     public abstract void customizeContent();
 }

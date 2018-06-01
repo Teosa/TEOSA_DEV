@@ -73,7 +73,7 @@ UPDATE GAMEVERSIONS SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND ID <> N.ID;
 --18/05/18
 --Разбиение таблицы юзеров на USERS и ACCOUNTS со связочной таблицей USERTOACCOUNT.
 
--- Удаляем юолее не нужные триггеры
+-- Удаляем более не нужные триггеры
 DROP TRIGGER LASTUSED_USER;
 DROP TRIGGER LASTUSED_USER_UPD;
 
@@ -134,3 +134,15 @@ ALTER TABLE USERS DROP COLUMN VERSION;
 ALTER TABLE USERS ADD CONSTRAINT USERNAME_UQ UNIQUE (ALIAS);
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
+-- Таблица настроек прогона
+CREATE TABLE PROGRAMS (
+ ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+ NAME VARCHAR(255) NOT NULL,
+ SETTINGS BLOB NOT NULL,
+ CONSTRAINT NAME_UQ UNIQUE (NAME)
+);
+-- NAME      - название настроек
+-- SETTINGS  - блоб с настройками
+
+
+

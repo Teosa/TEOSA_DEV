@@ -54,7 +54,7 @@ public class ECTabController extends AbstractController{
 	
 	@Override
 	protected void initialize() {
-		MainAppHolderSingleton.getInstance().getMainApp().getController().getHerdRunSettingsTabController().setECTabController(this);
+		MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getHerdRunSettingsController().setECTabController(this);
 		
 		ECType = new ToggleGroup();
 		location = new ToggleGroup();
