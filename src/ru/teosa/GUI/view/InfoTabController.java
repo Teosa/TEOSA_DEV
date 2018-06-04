@@ -7,12 +7,13 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tab;
+import ru.teosa.herdSettings.CommonSettings;
+import ru.teosa.herdSettings.SettingTabsInterface;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
-public class InfoTabController extends AbstractController{
+public class InfoTabController extends AbstractController implements SettingTabsInterface<CommonSettings>{
 	
-
-    
+	@FXML private CheckBox baseActions;     // Базовые действия
 	@FXML private CheckBox ECRegistration;  // Запись в КСК
 	@FXML private CheckBox ECExtending;     // Продление постоя
 	@FXML private CheckBox breedingStallon; // Случки (жеребцы)
@@ -28,6 +29,7 @@ public class InfoTabController extends AbstractController{
 	@Override
 	public void customizeContent() {
 		// Хэндлеры для чекбоксов
+		setBaseActionsHandler();
 		setECRegistrationHandler();
 		setECExtendingHandler();
 		setBreedingStallonHandler();
@@ -35,9 +37,25 @@ public class InfoTabController extends AbstractController{
 		setBreedingFoalHandler();	
 	}
 	
+	@Override
+	public void loadSettings() {	
+		loadSettings(new CommonSettings());
+	}
+	
+	@Override
+	public void loadSettings(CommonSettings settings) {
+		baseActions    .setSelected(settings.isBaseActions());
+		ECRegistration .setSelected(settings.isRegisterInEC());
+		ECExtending    .setSelected(settings.isExtendEC());
+		breedingStallon.setSelected(settings.isStallionMating());
+		breedingMare   .setSelected(settings.isMareMating());
+		breedingFoal   .setSelected(settings.isFoals());
+	}
+	
 	/** Метод снимает все чекбоксы и дисаблит вссе элементы на вкладке "Основные настройки". */
 	public void disableTab(boolean disable) {
 		if(disable) {
+			baseActions    .setSelected(false);
 			ECRegistration .setSelected(false);
 			ECExtending    .setSelected(false);
 			breedingStallon.setSelected(false);
@@ -45,12 +63,23 @@ public class InfoTabController extends AbstractController{
 			breedingFoal   .setSelected(false);			
 		}
 
+		baseActions    .setSelected(disable);
 		ECRegistration .setDisable(disable);
 		ECExtending    .setDisable(disable);
 		breedingStallon.setDisable(disable);
 		breedingMare   .setDisable(disable);
 		breedingFoal   .setDisable(disable);
-		
+	}
+	
+	
+	
+	private void setBaseActionsHandler() {
+		baseActions.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				Tab baseActionsTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getBaseActionsTab();				
+				baseActionsTab.setDisable(!newValue );
+			}});
 	}
 	
 	private void setECRegistrationHandler() {

@@ -6,12 +6,14 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.InfoTabController">
    <children>
-      <CheckBox fx:id="ECRegistration" layoutX="15.0" layoutY="60.0" mnemonicParsing="false" text="Запись в КСК" />
-      <CheckBox fx:id="ECExtending" layoutX="15.0" layoutY="90.0" mnemonicParsing="false" text="Продление постоя" />
-      <CheckBox fx:id="breedingStallon" mnemonicParsing="false" text="Случки (жеребцы)" translateX="200.0" translateY="60.0" />
-      <CheckBox fx:id="breedingMare" layoutX="200.0" layoutY="90.0" mnemonicParsing="false" text="Случки (кобылы)" />
-      <CheckBox fx:id="breedingFoal" layoutX="200.0" layoutY="120.0" mnemonicParsing="false" text="Жеребята" />
-      <Label layoutX="15.0" layoutY="20.0" text="КСК" underline="true" />
-      <Label layoutX="200.0" layoutY="20.0" text="Разведение" underline="true" />
+      <CheckBox fx:id="ECRegistration" layoutX="200.0" layoutY="60.0" mnemonicParsing="false" text="Запись в КСК" />
+      <CheckBox fx:id="ECExtending" layoutX="200.0" layoutY="90.0" mnemonicParsing="false" text="Продление постоя" />
+      <CheckBox fx:id="breedingStallon" mnemonicParsing="false" text="Случки (жеребцы)" translateX="385.0" translateY="60.0" />
+      <CheckBox fx:id="breedingMare" layoutX="385.0" layoutY="90.0" mnemonicParsing="false" text="Случки (кобылы)" />
+      <CheckBox fx:id="breedingFoal" layoutX="385.0" layoutY="120.0" mnemonicParsing="false" text="Жеребята" />
+      <Label layoutX="200.0" layoutY="20.0" text="КСК" underline="true" />
+      <Label layoutX="385.0" layoutY="20.0" text="Разведение" underline="true" />
+      <CheckBox fx:id="baseActions" layoutX="15.0" layoutY="60.0" mnemonicParsing="false" text="Выполнение" />
+      <Label layoutX="15.0" layoutY="20.0" text="Базовые действия" underline="true" />
    </children>
 </AnchorPane>

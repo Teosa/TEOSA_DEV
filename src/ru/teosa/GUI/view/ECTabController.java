@@ -1,5 +1,7 @@
 package ru.teosa.GUI.view;
 
+import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -8,10 +10,13 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleGroup;
+import ru.teosa.herdSettings.EC_Settings;
+import ru.teosa.herdSettings.SettingTabsInterface;
 import ru.teosa.utils.ComboStores;
+import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
-public class ECTabController extends AbstractController{
+public class ECTabController extends AbstractController implements SettingTabsInterface<EC_Settings>{
 
 // *** ¡ÀŒ  «¿œ»—» ¬  —  ***
 	// “ËÔ  —  ‰Îˇ Á‡ÔËÒË
@@ -91,4 +96,21 @@ public class ECTabController extends AbstractController{
 		
 	}
 
+	@Override
+	public void loadSettings() {
+		loadSettings(new EC_Settings());
+	}
+	
+	@Override
+	public void loadSettings(EC_Settings settings) {
+	
+		Tools tools = new Tools();
+		
+		tools.setRadioButtonGroupValue(ECType, settings.getEC_type());
+		tools.setRadioButtonGroupValue(location, settings.getLocation());
+		tools.setRadioButtonGroupValue(specialization, settings.getSpecialization());
+		
+		registrationTerm.getSelectionModel().select(settings.getRegTerm());
+		
+	}
 }

@@ -4,15 +4,16 @@ import java.util.ArrayList;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
+import ru.teosa.herdSettings.BaseActionsSettings;
+import ru.teosa.herdSettings.SettingTabsInterface;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
-public class BaseActionTabController extends AbstractController{
+public class BaseActionTabController extends AbstractController implements SettingTabsInterface<BaseActionsSettings>{
 	
 	@FXML private CheckBox feed;                    // Кормить
 	@FXML private CheckBox drink;                   // Поить
@@ -49,13 +50,22 @@ public class BaseActionTabController extends AbstractController{
 		
 		// Вешаем хендлеры добавления/удаления из списка действий
 		setActionsHandlers();
-				
+		
 		manualActionsSeqSetting.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(!newValue) loadDefaultSeq();	
+				
+				actionsSeq.setDisable(!newValue);
+				up.setDisable(!newValue);
+				down.setDisable(!newValue);
 			}
 		});
+		
+		// По-умолчанию дисаблим список и кнопки действий
+		actionsSeq.setDisable(true);
+		up.setDisable(true);
+		down.setDisable(true);
 	}
 
 	@Override
@@ -63,20 +73,74 @@ public class BaseActionTabController extends AbstractController{
 	
 	@FXML
 	private void upButtonHandler() {
-		String selectedAction = actionsSeq.getSelectionModel().getSelectedItem();
+		int selectedIndex = actionsSeq.getSelectionModel().getSelectedIndex();
 		
-		System.out.println(selectedAction);
-		if(selectedAction != null) {}
+		String selectedAction = actionsSeq.getSelectionModel().getSelectedItem();
+		String prevIndex = actionsSeq.getItems().get(selectedIndex - 1);
+	
+		// Меняем местами выбраную запись и предыдущую
+		actionsSeq.getItems().set(selectedIndex - 1, selectedAction);
+		actionsSeq.getItems().set(selectedIndex, prevIndex);
+
+
+		// Устанавливаем перемещенную вверх запись выбранной
+		actionsSeq.getSelectionModel().select(selectedIndex - 1);
+		
+		handleMouseClick(null);
 	}
 	
 	@FXML
 	private void downButtonHandler() {
-		String selectedAction = actionsSeq.getSelectionModel().getSelectedItem();
+		int selectedIndex = actionsSeq.getSelectionModel().getSelectedIndex();
 		
-		System.out.println(selectedAction);
-		if(selectedAction != null) {}
+		String selectedAction = actionsSeq.getSelectionModel().getSelectedItem();
+		String nextAction = actionsSeq.getItems().get(selectedIndex + 1);
+	
+		// Меняем местами выбраную запись и последующую
+		actionsSeq.getItems().set(selectedIndex, nextAction);
+		actionsSeq.getItems().set(selectedIndex + 1, selectedAction);
+
+		// Устанавливаем перемещенную вниз запись выбранной
+		actionsSeq.getSelectionModel().select(selectedIndex + 1);
+		
+		handleMouseClick(null);
 	}
 
+	@FXML 
+	// Доступность кнопок Вверх и Вниз в зависимости от индекса выбранной записи
+	private void handleMouseClick(MouseEvent e) {
+	    int index = actionsSeq.getSelectionModel().getSelectedIndex();
+	    
+	    up.setDisable(index < 1);
+	    down.setDisable(index == -1 || index == actionsSeq.getItems().size() - 1);
+	}
+	
+	
+	@Override
+	public void loadSettings() {
+		loadSettings(new BaseActionsSettings());	
+	}
+
+	@Override
+	public void loadSettings(BaseActionsSettings settings) {		
+		feed      .setSelected(settings.isFeed());
+		drink     .setSelected(settings.isDrink());
+		stroke    .setSelected(settings.isStroke());
+		groom     .setSelected(settings.isGroom());
+		carrot    .setSelected(settings.isCarrot());
+		mash      .setSelected(settings.isMash());
+		mission   .setSelected(settings.isMission());
+		goToSleep .setSelected(settings.isGoToSleep());
+		
+		manualActionsSeqSetting.setSelected(settings.isManualActionsSeqSetting());
+		
+		if(manualActionsSeqSetting.isSelected()) {
+			actionsSeq.getItems().clear();
+			actionsSeq.getItems().addAll(settings.getActionsSeq());
+		}
+	}
+	
+	// Добавление обработчиков для чекбоксов действий
 	private void setActionsHandlers() {
 		feed.selectedProperty().addListener(setListener(feed.getText())); 
 		drink.selectedProperty().addListener(setListener(drink.getText())); 
@@ -107,6 +171,8 @@ public class BaseActionTabController extends AbstractController{
 			if(cb.isSelected()) actionsSeq.getItems().add(cb.getText());
 		}
 	}
+	
+	
 //***************************************************************************************************************************************	
 //***************************************************************************************************************************************	
 	public CheckBox getFeed() {

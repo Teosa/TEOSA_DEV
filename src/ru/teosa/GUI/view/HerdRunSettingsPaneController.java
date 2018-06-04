@@ -11,9 +11,11 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 
 import ru.teosa.GUI.MainApp;
+import ru.teosa.herdSettings.HerdRunSettings;
+import ru.teosa.herdSettings.SettingTabsInterface;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
-public class HerdRunSettingsPaneController extends AbstractController{
+public class HerdRunSettingsPaneController extends AbstractController implements SettingTabsInterface<HerdRunSettings>{
 
 	@FXML private TabPane tabPane;     // ѕанель вкдадок
 	@FXML private Tab mainInfoTab;     // ¬кладка основных настроек
@@ -47,6 +49,22 @@ public class HerdRunSettingsPaneController extends AbstractController{
 	@Override
 	public void customizeContent() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void loadSettings() {
+		loadSettings(new HerdRunSettings());
+		
+	}
+
+	@Override
+	public void loadSettings(HerdRunSettings settings) {
+		infoTabController.loadSettings();
+		baseActionTabController.loadSettings();
+		ECTabController.loadSettings();
+//		breedingTabController.loadSettings();
+
 		
 	}
     
@@ -133,6 +151,5 @@ public class HerdRunSettingsPaneController extends AbstractController{
 	}
 	public static void setBaseActionTabController(BaseActionTabController baseActionTabController) {
 		HerdRunSettingsPaneController.baseActionTabController = baseActionTabController;
-	}
-	
+	}	
 }

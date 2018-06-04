@@ -1,5 +1,7 @@
 package ru.teosa.GUI.view;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,7 +12,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.herdSettings.HerdRunSettings;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
+import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class ProgramWindowController extends AbstractController{
@@ -50,7 +54,17 @@ public class ProgramWindowController extends AbstractController{
 		
 		programNameCombo.setVisible(mode == 1);
 		editProgramName.setVisible(mode == 1);
-		delete.setVisible(mode == 1);
+		delete.setVisible(mode == 1);	
+		
+		programNameCombo.valueProperty().addListener(new ChangeListener<SimpleComboRecordExt>() {
+			@Override
+			public void changed(ObservableValue observable, SimpleComboRecordExt oldValue, SimpleComboRecordExt newValue) {
+				programNameTextField.setText(newValue.getName());
+				herdRunSettingsController.loadSettings((HerdRunSettings)newValue.getData());
+			}
+        });
+		
+		programNameCombo.getItems().add(new SimpleComboRecordExt(0, "xxx", new HerdRunSettings()));
 	}
 	
 	

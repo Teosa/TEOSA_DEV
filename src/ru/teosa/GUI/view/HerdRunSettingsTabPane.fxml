@@ -11,7 +11,7 @@
             <ScrollPane prefHeight="200.0" />
          </content>
       </Tab>
-      <Tab fx:id="baseActionsTab" text="Базовые действия">
+      <Tab fx:id="baseActionsTab" disable="true" text="Базовые действия">
          <content>
             <ScrollPane prefHeight="200.0" prefWidth="200.0" />
          </content>

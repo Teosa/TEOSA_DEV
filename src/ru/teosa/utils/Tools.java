@@ -1,5 +1,8 @@
 package ru.teosa.utils;
 
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 
 public class Tools {
 
@@ -65,4 +68,14 @@ public class Tools {
 	}
 	
 	
+	public void setRadioButtonGroupValue(ToggleGroup group, Object value) {
+		
+		if(group != null) {
+			for(Toggle button : group.getToggles()) {
+				System.out.println("RADIOBUTTON USERDATA: " + button.getUserData());
+				if(button.getUserData() == null) { if(value == null) button.setSelected(true); }
+				else if(button.getUserData().equals(value)) button.setSelected(true);
+			}
+		}
+	}
 }

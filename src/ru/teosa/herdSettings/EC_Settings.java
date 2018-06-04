@@ -1,13 +1,10 @@
 package ru.teosa.herdSettings;
 
-import java.io.Serializable;
-
-public class EC_registerSettings implements Serializable{
+public class EC_Settings {
 	
-	private static final long serialVersionUID = 1L;
-	
+	// ****** ЗАПИСЬ В КСК ******
 	private Character EC_type;          //Тип КСК для записи     Свой: "O"   Зарезервированные стойла: "R"   Любой: null
-	private int regTerm;
+	private Integer regTerm;
 	private Character location;         //Расположение           Лес: "F"        Горы: "M"      Пляж: "B"    Любое: null
 	private Character specialization;   //Специализация          Классика: "C"   Вестерн: "W"   Любая: null
 	
@@ -20,7 +17,14 @@ public class EC_registerSettings implements Serializable{
 	private boolean shower;
 	
 	
-	public EC_registerSettings() {
+	// ****** ПРОДЛЕНИЕ ПОСТОЯ ******
+	private int daysBeforeCheckout;
+	private int extendTerm;
+	private boolean onlyMyECExtend;
+	
+	
+	public EC_Settings() {
+		
 		this.EC_type = null;          
 		this.regTerm = 3;
 		this.location = null;        
@@ -32,20 +36,21 @@ public class EC_registerSettings implements Serializable{
 		this.mash    = false;
 		this.drinker = false;
 		this.shower  = false;
+		
+		
+		
+		this.daysBeforeCheckout = 1;
+		this.extendTerm = 3;
+		this.onlyMyECExtend = true;
+		
 	}
-	
-	
+
+
 	public Character getEC_type() {
 		return EC_type;
 	}
 	public void setEC_type(Character eC_type) {
 		EC_type = eC_type;
-	}
-	public int getRegTerm() {
-		return regTerm;
-	}
-	public void setRegTerm(int regTerm) {
-		this.regTerm = regTerm;
 	}
 	public Character getLocation() {
 		return location;
@@ -95,4 +100,29 @@ public class EC_registerSettings implements Serializable{
 	public void setShower(boolean shower) {
 		this.shower = shower;
 	}
+	public int getDaysBeforeCheckout() {
+		return daysBeforeCheckout;
+	}
+	public void setDaysBeforeCheckout(int daysBeforeCheckout) {
+		this.daysBeforeCheckout = daysBeforeCheckout;
+	}
+	public int getExtendTerm() {
+		return extendTerm;
+	}
+	public void setExtendTerm(int extendTerm) {
+		this.extendTerm = extendTerm;
+	}
+	public boolean isOnlyMyECExtend() {
+		return onlyMyECExtend;
+	}
+	public void setOnlyMyECExtend(boolean onlyMyECExtend) {
+		this.onlyMyECExtend = onlyMyECExtend;
+	}
+	public Integer getRegTerm() {
+		return regTerm;
+	}
+	public void setRegTerm(Integer regTerm) {
+		this.regTerm = regTerm;
+	}	
+	
 }

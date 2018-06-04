@@ -27,7 +27,6 @@ import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.view.LoginController;
 import ru.teosa.GUI.view.MainWindowController;
 import ru.teosa.account.Account;
-import ru.teosa.herdSettings.EC_registerSettings;
 import ru.teosa.herdSettings.HerdRunSettings;
 
 import java.sql.Connection;
@@ -66,116 +65,17 @@ public class TestClass extends Application{
 		    
 			  try {
 			  
-				BasicDataSource bdSource = new BasicDataSource();
-				bdSource.setUrl(connectionURL);
-				bdSource.getConnection();
-				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
+//				BasicDataSource bdSource = new BasicDataSource();
+//				bdSource.setUrl(connectionURL);
+//				bdSource.getConnection();
+//				NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
 
-				EC_registerSettings testclass = new EC_registerSettings();
-				testclass.setCarrot(true);
-				testclass.setLocation('F');
-				
-				HerdRunSettings settings = new HerdRunSettings();
-//				settings.setEC_registerSettings(testclass);
-				
-				
-//				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//				ObjectOutput out = null;
-//				
-//				try {
-//				  out = new ObjectOutputStream(bos);   
-//				  out.writeObject(testclass);
-//				  out.flush();
-//				  
-//				  byte[] yourBytes = bos.toByteArray();
-//				  
-//				  HashMap params = new HashMap();
-//
-//				  params.put("name", "testObject");
-//				  params.put("object", yourBytes);
-//				  
-//				  pstmt.update("INSERT INTO PROGRAMS VALUES (DEFAULT, :name, :object)", params);
-//				
-//				} finally {
-//				  try {
-//				    bos.close();
-//				  } catch (IOException ex) {}
-//				}
-				
-				byte[] bytes = SerializationUtils.serialize(settings);
-				
-				HashMap params = new HashMap();
-
-				params.put("name", "Стандартные настройки");
-				params.put("object", bytes);
-								  
-//				pstmt.update("INSERT INTO PROGRAMS VALUES (DEFAULT, :name, :object)", params);
-//							
-//				System.out.println("*************************");
-				
 
 				
-//				pstmt.queryForObject("SELECT * FROM PROGRAMS WHERE ID = 101", new HashMap(), new RowMapper() {
-//
-//					@Override
-//					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-//						byte[] bytes = rs.getBytes("settings");
-//						HerdRunSettings o  = SerializationUtils.deserialize(bytes);
-//
-//						  System.out.println(o);
-//						  System.out.println(o.getEC_registerSettings());
-//						  System.out.println(o.getEC_registerSettings().getLocation());
-//						  System.out.println(o.getEC_registerSettings().getTest());
-//						
-//						return null;
-//					}
-//				});
-				
-				
-//				pstmt.queryForObject("SELECT * FROM PROGRAMS WHERE ID = 1", new HashMap(), new RowMapper() {
-//					@Override
-//					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-//						 byte[] bytes = rs.getBytes("settings");
-//						 
-//						 try {
-//								ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-//								ObjectInput in = null;
-//								try {
-//								  in = new ObjectInputStream(bis);
-//								  EC_registerSettings o = (EC_registerSettings)in.readObject(); 
-//								  
-//								  System.out.println(o);
-//								  System.out.println(o.getLocation());
-//								  System.out.println(o.isCarrot());
-//								  
-//								} finally {
-//								  try {
-//								    if (in != null) {
-//								      in.close();
-//								    }
-//								  } catch (IOException ex) {
-//								    // ignore close exception
-//								  }
-//								}
-//						 }
-//						 catch(Exception e) {}
-//
-//						 
-//						 
-//						return null;
-//					}
-//				});
+				String s = "n";
+				whatClass(s);
 				
 
-				
-				
-				
-////			    FileOutputStream fos = new FileOutputStream("temp.out");
-//			    ObjectOutputStream oos = new ObjectOutputStream();
-//		
-//			    oos.writeObject(testclass);
-//			    oos.flush();
-//			    oos.close(); 
 				  
 				  
 				  
@@ -195,6 +95,10 @@ public class TestClass extends Application{
 //		}
 //		catch(SQLException e) {System.out.println(e.getMessage());}
 
+	}
+	
+	private static void whatClass(Object o) {
+		System.out.println(o.getClass().getSimpleName());		
 	}
 	
 	private static int getRandomNumberInRange(int min, int max) {
@@ -259,5 +163,120 @@ public class TestClass extends Application{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private void saveProgramtest() throws Exception{
+    	
+    	String connectionURL = "jdbc:derby:HBBDB;create=true;";
+		BasicDataSource bdSource = new BasicDataSource();
+		bdSource.setUrl(connectionURL);
+		bdSource.getConnection();
+		NamedParameterJdbcTemplate pstmt = new NamedParameterJdbcTemplate(bdSource);
+
+//		EC_registerSettings testclass = new EC_registerSettings();
+//		testclass.setCarrot(true);
+//		testclass.setLocation('F');
+		
+		HerdRunSettings settings = new HerdRunSettings();
+//		settings.setEC_registerSettings(testclass);
+		
+		
+//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//		ObjectOutput out = null;
+//		
+//		try {
+//		  out = new ObjectOutputStream(bos);   
+//		  out.writeObject(testclass);
+//		  out.flush();
+//		  
+//		  byte[] yourBytes = bos.toByteArray();
+//		  
+//		  HashMap params = new HashMap();
+//
+//		  params.put("name", "testObject");
+//		  params.put("object", yourBytes);
+//		  
+//		  pstmt.update("INSERT INTO PROGRAMS VALUES (DEFAULT, :name, :object)", params);
+//		
+//		} finally {
+//		  try {
+//		    bos.close();
+//		  } catch (IOException ex) {}
+//		}
+		
+		byte[] bytes = SerializationUtils.serialize(settings);
+		
+		HashMap params = new HashMap();
+
+		params.put("name", "Стандартные настройки");
+		params.put("object", bytes);
+						  
+//		pstmt.update("INSERT INTO PROGRAMS VALUES (DEFAULT, :name, :object)", params);
+//					
+//		System.out.println("*************************");
+		
+
+		
+//		pstmt.queryForObject("SELECT * FROM PROGRAMS WHERE ID = 101", new HashMap(), new RowMapper() {
+//
+//			@Override
+//			public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+//				byte[] bytes = rs.getBytes("settings");
+//				HerdRunSettings o  = SerializationUtils.deserialize(bytes);
+//
+//				  System.out.println(o);
+//				  System.out.println(o.getEC_registerSettings());
+//				  System.out.println(o.getEC_registerSettings().getLocation());
+//				  System.out.println(o.getEC_registerSettings().getTest());
+//				
+//				return null;
+//			}
+//		});
+		
+		
+//		pstmt.queryForObject("SELECT * FROM PROGRAMS WHERE ID = 1", new HashMap(), new RowMapper() {
+//			@Override
+//			public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+//				 byte[] bytes = rs.getBytes("settings");
+//				 
+//				 try {
+//						ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+//						ObjectInput in = null;
+//						try {
+//						  in = new ObjectInputStream(bis);
+//						  EC_registerSettings o = (EC_registerSettings)in.readObject(); 
+//						  
+//						  System.out.println(o);
+//						  System.out.println(o.getLocation());
+//						  System.out.println(o.isCarrot());
+//						  
+//						} finally {
+//						  try {
+//						    if (in != null) {
+//						      in.close();
+//						    }
+//						  } catch (IOException ex) {
+//						    // ignore close exception
+//						  }
+//						}
+//				 }
+//				 catch(Exception e) {}
+//
+//				 
+//				 
+//				return null;
+//			}
+//		});
+		
+
+		
+		
+		
+////	    FileOutputStream fos = new FileOutputStream("temp.out");
+//	    ObjectOutputStream oos = new ObjectOutputStream();
+//
+//	    oos.writeObject(testclass);
+//	    oos.flush();
+//	    oos.close(); 
     }
 }
