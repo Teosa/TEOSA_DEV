@@ -27,12 +27,21 @@ public class Queries {
 			+ "WHERE ac.VERSION = :versionid AND u.ID = :userid "
 			+ "ORDER BY ac.LASTUSED DESC";
 	
+	/** Получение аффиксов */
+	public final static String GET_AFFIXES = ""
+			+ "SELECT a.ID, a.NAME "
+			+ "FROM AFFIXTOACCOUNT ata "
+			+ "JOIN AFFIXES a ON a.ID = ata.AFFIXID "
+			+ "WHERE ata.ACCOUNTID = :accountid";
+	
 //***********************************************************************************************************************	
 //****************************            SAVE                 **********************************************************
 //***********************************************************************************************************************			
 	public final static String SAVE_ACCOUNT = "INSERT INTO ACCOUNTS VALUES (DEFAULT, :password, :gamever, 'Y')";
 	public final static String SAVE_USER = "INSERT INTO USERS VALUES (DEFAULT, :login)";
 	public final static String ATTACH_ACCOUNT_TO_USER = "INSERT INTO USERTOACCOUNT VALUES (:userid, :accid)";
+	public final static String SAVE_AFFIX = "INSERT INTO AFFIXES VALUES (DEFAULT, :name)";
+	public final static String ATTACH_AFFIX_TO_ACCOUNT = "INSERT INTO AFFIXTOACCOUNT VALUES (:accountid, :affixid)";
 //***********************************************************************************************************************	
 //****************************            UPDATE               **********************************************************
 //***********************************************************************************************************************
@@ -46,4 +55,13 @@ public class Queries {
 			+ "  JOIN ACCOUNTS ac ON ac.ID = uta.ACCOUNTID "
 			+ "  WHERE ac.VERSION = :versionid AND u.ID = :id " 
 			+ ")";
+	
+	public final static String UPD_AFFIX = "UPDATE AFFIXES SET NAME = :name WHERE ID = :affixid";
+//***********************************************************************************************************************	
+//****************************            REMOVE               **********************************************************
+//***********************************************************************************************************************
+	public final static String UNATTACH_AFFIX_FROM_ACCOUNT = ""
+			+ "DELETE FROM AFFIXTOACCOUNT WHERE ACCOUNTID = :accountid AND AFFIXID = :affixid";
+	public final static String REMOVE_AFFIX = ""
+			+ "DELETE FROM AFFIXES WHERE ID = :affixid";
 }

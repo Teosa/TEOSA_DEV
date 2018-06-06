@@ -11,6 +11,8 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -44,6 +46,7 @@ public class MainApp extends Application {
 		
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("HowrseHelperBot");
+        this.primaryStage.getIcons().add(new Image("/icons/app_icon.png"));
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {		
 			@Override

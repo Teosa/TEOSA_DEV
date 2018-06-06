@@ -63,9 +63,7 @@ public class HerdRunSettingsPaneController extends AbstractController implements
 		infoTabController.loadSettings();
 		baseActionTabController.loadSettings();
 		ECTabController.loadSettings();
-//		breedingTabController.loadSettings();
-
-		
+		breedingTabController.loadSettings();	
 	}
     
     // Загрузка вкладок в панель

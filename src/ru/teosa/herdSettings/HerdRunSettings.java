@@ -11,19 +11,16 @@ public class HerdRunSettings implements Serializable{
 	private CommonSettings        commonSettings;        // Общие настройки
 	private BaseActionsSettings   baseActionsSettings;   // Настройки базовых действий
 	private EC_Settings           EC_Settings;           // Настройки КСК
-	private StallonMatingSettings stallonMatingSettings; // Настройки случек для жеребцов
-	private MareMatingSettings    mareMatingSettings;    // Настройки случек для кобыл
-	private FoalsSettings         foalsSettings;         // Настройки рождения жеребят
+	private BreedingSettings      breedingSettings;      // Настройки случек
 	
 	
 	public HerdRunSettings() {
 		this.programName    = "Моя программа";
 		
+		this.commonSettings        = new CommonSettings();
 		this.baseActionsSettings   = new BaseActionsSettings();
 		this.EC_Settings           = new EC_Settings();
-		this.stallonMatingSettings = new StallonMatingSettings();
-		this.mareMatingSettings    = new MareMatingSettings();
-		this.foalsSettings         = new FoalsSettings();
+		this.breedingSettings      = new BreedingSettings(); 
 	}
 
 //*******************************************************************************************************************************
@@ -47,22 +44,16 @@ public class HerdRunSettings implements Serializable{
 	public void setBaseActionsSettings(BaseActionsSettings baseActionsSettings) {
 		this.baseActionsSettings = baseActionsSettings;
 	}
-	public StallonMatingSettings getStallonMatingSettings() {
-		return stallonMatingSettings;
+	public EC_Settings getEC_Settings() {
+		return EC_Settings;
 	}
-	public void setStallonMatingSettings(StallonMatingSettings stallonMatingSettings) {
-		this.stallonMatingSettings = stallonMatingSettings;
+	public void setEC_Settings(EC_Settings eC_Settings) {
+		EC_Settings = eC_Settings;
 	}
-	public MareMatingSettings getMareMatingSettings() {
-		return mareMatingSettings;
+	public BreedingSettings getBreedingSettings() {
+		return breedingSettings;
 	}
-	public void setMareMatingSettings(MareMatingSettings mareMatingSettings) {
-		this.mareMatingSettings = mareMatingSettings;
-	}
-	public FoalsSettings getFoalsSettings() {
-		return foalsSettings;
-	}
-	public void setFoalsSettings(FoalsSettings foalsSettings) {
-		this.foalsSettings = foalsSettings;
+	public void setBreedingSettings(BreedingSettings breedingSettings) {
+		this.breedingSettings = breedingSettings;
 	}
 }

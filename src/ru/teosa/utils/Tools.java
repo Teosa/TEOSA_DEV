@@ -67,15 +67,28 @@ public class Tools {
         return result;
 	}
 	
-	
+	/**
+	 * ”станавливает переданное значение в радиогруппе.<br> 
+	 * ѕоиск подход€щего значени€ осуществл€ет€ путем сравнени€ содержимого UserData каждой кнопки радиогруппы с переданным значением.
+	 * @param group радиогруппа
+	 * @param value значение дл€ выбора
+	 * */
 	public void setRadioButtonGroupValue(ToggleGroup group, Object value) {
 		
 		if(group != null) {
 			for(Toggle button : group.getToggles()) {
-				System.out.println("RADIOBUTTON USERDATA: " + button.getUserData());
 				if(button.getUserData() == null) { if(value == null) button.setSelected(true); }
 				else if(button.getUserData().equals(value)) button.setSelected(true);
 			}
 		}
 	}
+	
+	/**
+	 * ¬ыполн€ет проверку переданной строки на NULL.
+	 * @param val строка дл€ проверки
+	 * @return ≈сли параметр не NULL - строка с удаленными слева и справа пробелами, иначе - пуста€ строка
+	 * */
+	public String writeText(Object val){
+        return val != null? val.toString().trim() : "";
+    }
 }

@@ -81,7 +81,7 @@ public class LoginController {
 
     	saveSelectedVersion();
     	
-//    	if(!checkLogopas()) return;
+    	if(!checkLogopas()) return;
 //    	if(mainApp.getDriver() == null) runWithCrome();
 //    	if(accountLogin()) 
     		mainApp.showMainForm(); 
@@ -378,7 +378,7 @@ public class LoginController {
 			HashMap<String, Integer> params = new HashMap<String, Integer>();
 			params.put("userid", userid);
 			params.put("versionid", siteVersion.getValue().getId());
-			
+
 			MainAppHolderSingleton.getAccount().setUser
 			(
 			 (User)MainAppHolderSingleton.getInstance().getPstmt().queryForObject(Queries.GET_USER, params, new AutoMapper(User.class, null))	

@@ -112,5 +112,15 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 		
 		registrationTerm.getSelectionModel().select(settings.getRegTerm());
 		
+		hay.setSelected(settings.isHay());
+		oat.setSelected(settings.isOat());
+		carrot.setSelected(settings.isCarrot());
+		mash.setSelected(settings.isMash());
+		drinker.setSelected(settings.isDrinker());
+		shower.setSelected(settings.isShower());
+
+		daysBeforeExtend.getValueFactory().setValue(settings.getDaysBeforeCheckout());
+		extendTerm.getSelectionModel().select(settings.getExtendTerm());
+		onlyOwnerExtend.setSelected(settings.isOnlyMyECExtend());
 	}
 }

@@ -1,17 +1,39 @@
 package ru.teosa.GUI.view;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import ru.teosa.account.Resources;
+import ru.teosa.herdSettings.BreedingSettings;
+import ru.teosa.herdSettings.SettingTabsInterface;
+import ru.teosa.utils.AutoMapper;
 import ru.teosa.utils.ComboStores;
+import ru.teosa.utils.Queries;
+import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
-import ru.teosa.utils.objects.RedirectingComboRecordExt;
+import ru.teosa.utils.objects.SimpleComboRecord;
 
-public class BreedingTabController extends AbstractController{
+public class BreedingTabController extends AbstractController implements SettingTabsInterface<BreedingSettings>{
 
+	int gridRowHeight = 30;
+	
+	@FXML private GridPane breedingTabGreed ;
 	
 // *** БЛОК ЖЕРЕБЦЫ ***
 	// Количество случек
@@ -19,7 +41,7 @@ public class BreedingTabController extends AbstractController{
     @FXML private RadioButton matingQty_one;           // 1 
     @FXML private RadioButton matingQty_two;           // 2
     @FXML private RadioButton matingQty_three;         // 3
-	
+	@FXML private Spinner<Integer> maxMatingQty;       // Максимальное количество активных случек 
 	@FXML private ComboBox<Integer> matingPrice;       // Цена за случку
 	
 	
@@ -40,43 +62,139 @@ public class BreedingTabController extends AbstractController{
     // ГП жеребца
           private ToggleGroup stallonGP;
 	@FXML private RadioButton stallonGP_likeMare;     // Как у кобылы 
+	@FXML private RadioButton stallonGP_custom;       // Указать
 	@FXML private RadioButton stallonGP_any;          // Любое
+	
+	@FXML private RowConstraints GPRow;               // Ряд в гриде с полями ГП жеребца
+	@FXML private TextField minStallonGP;             // Минимальный ГП жеребца
+	@FXML private TextField maxStallonGP;             // Максимальный ГП жеребца
+	@FXML private Label     maxStallonGPLabel;
+	@FXML private Label     minStallonGPLabel;
 
 
 // *** БЛОК ЖЕРЕБЯТА ***
-	@FXML private TextField stallonNames;             // Кличка (жеребцы)
-	@FXML private TextField mareNames;                // Кличка (кобылы)
-	@FXML private ComboBox foalsAffix;                // Аффикс
-	@FXML private ComboBox<RedirectingComboRecordExt> foalsFarm; // Завод
+	@FXML private TextField stallonNames;                 // Кличка (жеребцы)
+	@FXML private TextField mareNames;                    // Кличка (кобылы)
+	@FXML private ComboBox<SimpleComboRecord> foalsAffix; // Аффикс
+	@FXML private ComboBox<SimpleComboRecord> foalsFarm;  // Завод
 	
 	
 	@Override
 	protected void initialize() {
 		MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getHerdRunSettingsController().setBreedingTabController(this);
 		
-		matingQty = new ToggleGroup();
-		coverBy = new ToggleGroup();
+		matingQty    = new ToggleGroup();
+		coverBy      = new ToggleGroup();
 		stallonBreed = new ToggleGroup();
-		stallonGP = new ToggleGroup();
+		stallonGP    = new ToggleGroup();
+		
+		matingQty_one        .setUserData(1);
+		matingQty_two        .setUserData(2);
+		matingQty_three      .setUserData(3);
+		coverBy_owner        .setUserData('O');
+		stallonBreed_likeMare.setUserData('M');
+		stallonGP_likeMare   .setUserData('M');
+		stallonGP_custom     .setUserData('C');
 		
 		// Объединяем радиобатоны в группы
-		matingQty.getToggles().addAll(matingQty_one, matingQty_two, matingQty_three);
-		coverBy.getToggles().addAll(coverBy_owner, coverBy_any);
+		matingQty   .getToggles().addAll(matingQty_one, matingQty_two, matingQty_three);
+		coverBy     .getToggles().addAll(coverBy_owner, coverBy_any);
 		stallonBreed.getToggles().addAll(stallonBreed_likeMare, stallonBreed_any);
-		stallonGP.getToggles().addAll(stallonGP_likeMare, stallonGP_any);
+		stallonGP   .getToggles().addAll(stallonGP_likeMare, stallonGP_custom, stallonGP_any);
 		
 		// Загрузка сторов цен за случки
 		matingPrice.getItems().addAll(ComboStores.STALLON_MATING_PRICE);
 		maxCoverPrice.getItems().addAll(ComboStores.STALLON_MATING_PRICE);
+				
+		// Инициализация спинера Количество активных случек
+		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
+		maxMatingQty.setValueFactory(svf);
 		
+		// Загрузка списка заводов
 		foalsFarm.getItems().addAll(MainAppHolderSingleton.getInstance().getMainApp().getController().getFarmsTreeController().getFarms());
 		
+		// Загрузка списка аффиксов
+		foalsAffix.getItems().addAll(loadAffixesList());
 	}
 
 	@Override
 	public void customizeContent() {
-		// TODO Auto-generated method stub
+		// Хендлер выбора ручного ввода ГП жеребца
+		stallonGP_custom.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				
+				minStallonGPLabel.setVisible(newValue);
+				minStallonGP.setVisible(newValue);
+				maxStallonGPLabel.setVisible(newValue);
+				maxStallonGP.setVisible(newValue);
+				
+				GPRow.setPrefHeight(newValue ? gridRowHeight : 0);
+			}
+		});
+		
+		// Ограничиваем ввод в поле Мин. ГП только цифрами
+		minStallonGP.textProperty().addListener(new ChangeListener<String>() {
+    	    @Override
+    	    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) 
+    	    {
+    	    	// Удаляем все символы, которые не являются цифрой
+    	        if (!newValue.matches("\\d*")) minStallonGP.setText(newValue.replaceAll("[^\\d]", ""));
+    	    }
+    	});
+		
+		// Ограничиваем ввод в поле Макс. ГП только цифрами
+		maxStallonGP.textProperty().addListener(new ChangeListener<String>() {
+    	    @Override
+    	    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) 
+    	    {
+    	    	// Удаляем все символы, которые не являются цифрой
+    	        if (!newValue.matches("\\d*")) maxStallonGP.setText(newValue.replaceAll("[^\\d]", ""));
+    	    }
+    	});
 		
 	}
+
+	@Override
+	public void loadSettings() {
+		loadSettings(new BreedingSettings());	
+	}
+
+	@Override
+	public void loadSettings(BreedingSettings settings) {
+		Tools tools = new Tools();
+
+		tools.setRadioButtonGroupValue(matingQty, settings.getMatingQty());
+		matingPrice.getSelectionModel().select(settings.getMatingPrice());
+		
+		tools.setRadioButtonGroupValue(coverBy, settings.getCoverBy());
+		maxCoverPrice.getSelectionModel().select(settings.getMaxCoverPrice());
+		
+		tools.setRadioButtonGroupValue(stallonBreed, settings.getStallonBreed());
+		tools.setRadioButtonGroupValue(stallonGP, settings.getStallonGP());
+		
+		minStallonGP.setText(tools.writeText(settings.getMinStallonGP()));
+		maxStallonGP.setText(tools.writeText(settings.getMaxStallonGP()));
+		
+		stallonNames.setText(settings.getName_M());
+		mareNames.setText(settings.getName_F());
+		foalsAffix.getSelectionModel().select(settings.getAffixid());
+		foalsFarm.getSelectionModel().select(settings.getECID());
+	}
+	
+	private List<SimpleComboRecord> loadAffixesList() {
+		NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+		HashMap params = new HashMap();
+		params.put("accountid", MainAppHolderSingleton.getAccount().getUser().getAccountid());
+		
+		try {
+			return pstmt.query(Queries.GET_AFFIXES, params, new AutoMapper(SimpleComboRecord.class, null));
+		}
+		catch (EmptyResultDataAccessException e) { return new ArrayList<SimpleComboRecord>(); }
+		catch(Exception e) {
+			e.printStackTrace();
+			return new ArrayList<SimpleComboRecord>();
+		}
+	};
 
 }

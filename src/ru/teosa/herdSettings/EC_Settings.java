@@ -18,8 +18,8 @@ public class EC_Settings {
 	
 	
 	// ****** опндкемхе онярнъ ******
-	private int daysBeforeCheckout;
-	private int extendTerm;
+	private Integer daysBeforeCheckout;
+	private Integer extendTerm;
 	private boolean onlyMyECExtend;
 	
 	
@@ -42,7 +42,6 @@ public class EC_Settings {
 		this.daysBeforeCheckout = 1;
 		this.extendTerm = 3;
 		this.onlyMyECExtend = true;
-		
 	}
 
 
@@ -100,18 +99,6 @@ public class EC_Settings {
 	public void setShower(boolean shower) {
 		this.shower = shower;
 	}
-	public int getDaysBeforeCheckout() {
-		return daysBeforeCheckout;
-	}
-	public void setDaysBeforeCheckout(int daysBeforeCheckout) {
-		this.daysBeforeCheckout = daysBeforeCheckout;
-	}
-	public int getExtendTerm() {
-		return extendTerm;
-	}
-	public void setExtendTerm(int extendTerm) {
-		this.extendTerm = extendTerm;
-	}
 	public boolean isOnlyMyECExtend() {
 		return onlyMyECExtend;
 	}
@@ -123,6 +110,17 @@ public class EC_Settings {
 	}
 	public void setRegTerm(Integer regTerm) {
 		this.regTerm = regTerm;
+	}
+	public Integer getDaysBeforeCheckout() {
+		return daysBeforeCheckout;
+	}
+	public void setDaysBeforeCheckout(Integer daysBeforeCheckout) {
+		this.daysBeforeCheckout = daysBeforeCheckout;
+	}
+	public Integer getExtendTerm() {
+		return extendTerm;
+	}
+	public void setExtendTerm(Integer extendTerm) {
+		this.extendTerm = extendTerm;
 	}	
-	
 }

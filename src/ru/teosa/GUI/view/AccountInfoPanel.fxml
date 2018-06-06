@@ -15,8 +15,9 @@
             <Menu mnemonicParsing="false" text="Меню">
                <items>
                   <MenuItem fx:id="convertMoney" mnemonicParsing="false" onAction="#convertMoneyHandler" text="Конвертация" />
+                  <MenuItem fx:id="affixes" mnemonicParsing="false" onAction="#affixesHandler" text="Аффиксы" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Сменить пользователя" />
+                  <MenuItem fx:id="switchUser" mnemonicParsing="false" text="Сменить пользователя" />
                   <MenuItem fx:id="exit" mnemonicParsing="false" text="Выход" />
                </items>
             </Menu>

@@ -1,5 +1,8 @@
 package ru.teosa.GUI.view;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -14,7 +17,6 @@ import javafx.scene.layout.BorderPane;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.herdSettings.HerdRunSettings;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
-import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class ProgramWindowController extends AbstractController{
@@ -43,8 +45,11 @@ public class ProgramWindowController extends AbstractController{
 		try {
 			loadHerdRunSettingsTabPane();	
 			customizeContent();
+			loadProgramSettings();
 		}
-		catch(Exception e) {}
+		catch(Exception e) {
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+		}
 	}
 
 	@Override
@@ -63,10 +68,13 @@ public class ProgramWindowController extends AbstractController{
 				herdRunSettingsController.loadSettings((HerdRunSettings)newValue.getData());
 			}
         });
-		
-		programNameCombo.getItems().add(new SimpleComboRecordExt(0, "xxx", new HerdRunSettings()));
 	}
 	
+	public void loadProgramSettings() {
+		// FOR TEST
+		programNameCombo.getItems().add(new SimpleComboRecordExt(0, "Стандартная программа", new HerdRunSettings()));
+//		programNameCombo.getSelectionModel().select(0);
+	}
 	
     // Загрузка панели с настройками прогона
     private void loadHerdRunSettingsTabPane() throws Exception{

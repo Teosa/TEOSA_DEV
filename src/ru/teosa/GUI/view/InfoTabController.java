@@ -44,6 +44,13 @@ public class InfoTabController extends AbstractController implements SettingTabs
 	
 	@Override
 	public void loadSettings(CommonSettings settings) {
+		baseActions.setSelected(true);
+		ECRegistration.setSelected(true);
+		ECExtending.setSelected(true);
+		breedingStallon.setSelected(true);
+		breedingMare.setSelected(true);
+		breedingFoal.setSelected(true);
+		
 		baseActions    .setSelected(settings.isBaseActions());
 		ECRegistration .setSelected(settings.isRegisterInEC());
 		ECExtending    .setSelected(settings.isExtendEC());
@@ -133,7 +140,13 @@ public class InfoTabController extends AbstractController implements SettingTabs
 				
 				CheckBox breedingMare = (CheckBox) scene.lookup("#breedingMare");
 				CheckBox breedingFoal = (CheckBox) scene.lookup("#breedingFoal");
-				breedingTab.setDisable(!newValue && !breedingMare.isSelected() && !breedingFoal.isSelected());								
+				breedingTab.setDisable(!newValue && !breedingMare.isSelected() && !breedingFoal.isSelected());	
+				
+				// Доступность полей для настройки 
+				String[] fields = {"matingQty_one", "matingQty_two", "matingQty_three", "maxMatingQty", "matingPrice"};
+				for(int i = 0; i < fields.length; ++i) {
+					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
+				}
 			}});
 	}
 	
@@ -147,6 +160,15 @@ public class InfoTabController extends AbstractController implements SettingTabs
 				CheckBox breedingStallon = (CheckBox) scene.lookup("#breedingStallon");
 				CheckBox breedingFoal = (CheckBox) scene.lookup("#breedingFoal");
 				breedingTab.setDisable(!newValue && !breedingStallon.isSelected() && !breedingFoal.isSelected());
+				
+				// Доступность полей для настройки 
+				String[] fields = {  
+						"coverBy_owner", "coverBy_any", "maxCoverPrice", "stallonBreed_likeMare", "stallonBreed_any", 
+						"stallonGP_likeMare", "stallonGP_custom", "stallonGP_any", "minStallonGP", "maxStallonGP"
+						};
+				for(int i = 0; i < fields.length; ++i) {
+					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
+				}
 			}});
 	}
 	
@@ -159,7 +181,13 @@ public class InfoTabController extends AbstractController implements SettingTabs
 				
 				CheckBox breedingStallon = (CheckBox) scene.lookup("#breedingStallon");
 				CheckBox breedingMare = (CheckBox) scene.lookup("#breedingMare");
-				breedingTab.setDisable(!newValue && !breedingStallon.isSelected() && !breedingMare.isSelected());				
+				breedingTab.setDisable(!newValue && !breedingStallon.isSelected() && !breedingMare.isSelected());		
+				
+				// Доступность полей для настройки 
+				String[] fields = {"stallonNames", "mareNames", "foalsAffix", "foalsFarm"};
+				for(int i = 0; i < fields.length; ++i) {
+					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
+				}
 			}});
 	}
 //*****************************************************************************************************************************
