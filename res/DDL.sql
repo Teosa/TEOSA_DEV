@@ -152,20 +152,14 @@ CONSTRAINT AFFIX_IDS_UQ UNIQUE (ACCOUNTID, AFFIXID)
 -- AFFIXID   - идентификатор аффикса
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
+-- 1.2.3
 -- Таблица настроек прогона
 CREATE TABLE PROGRAMS (
- ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
- NAME VARCHAR(255) NOT NULL,
- SETTINGS BLOB NOT NULL,
- CONSTRAINT NAME_UQ UNIQUE (NAME)
+	ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+	NAME VARCHAR(255) NOT NULL,
+	SETTINGS BLOB NOT NULL,
+	CONSTRAINT PROGRAMS_PK PRIMARY KEY (ID),
+	CONSTRAINT NAME_UQ UNIQUE (NAME)
 );
 -- NAME      - название настроек
 -- SETTINGS  - блоб с настройками

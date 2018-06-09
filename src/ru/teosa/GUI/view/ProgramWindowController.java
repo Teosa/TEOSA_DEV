@@ -33,7 +33,7 @@ public class ProgramWindowController extends AbstractController{
 	@FXML private Button delete;          // Удалить программу
 	@FXML private Button cancel;          // Закрыть окно без сохранения изменений
 	
-	private HerdRunSettingsPaneController herdRunSettingsController;
+	private static HerdRunSettingsPaneController herdRunSettingsController;
 	
 //*********************************************************************************************************************************	
 //*********************************************************************************************************************************	
@@ -82,6 +82,25 @@ public class ProgramWindowController extends AbstractController{
         loader.setLocation(MainApp.class.getResource("view/HerdRunSettingsTabPane.fxml"));
         window.setCenter((TabPane) loader.load());
     }
+    
+    @FXML
+    private void saveButtonHandler() {
+    	// Выполняем проверку данных перед сохранением
+    	if(!makeChecks()) {
+    		//TODO showErrorMsg()
+    		return;
+    	}
+    	
+    	// Собираем данные с формы и сохраняем в БД
+    	final HerdRunSettings settings = new HerdRunSettings();
+    	settings.setProgramName(programNameTextField.getText());
+    	herdRunSettingsController.getTabSettings(settings).save();
+    }
+    
+    private boolean makeChecks() {
+    	
+    	return true;
+    }
 //*********************************************************************************************************************************	
 //*********************************************************************************************************************************	
 	public Label getProgramNamelabel() {
@@ -123,9 +142,6 @@ public class ProgramWindowController extends AbstractController{
 	public HerdRunSettingsPaneController getHerdRunSettingsController() {
 		return herdRunSettingsController;
 	}
-	public void setHerdRunSettingsController(HerdRunSettingsPaneController herdRunSettingsController) {
-		this.herdRunSettingsController = herdRunSettingsController;
-	}
 	public ComboBox<SimpleComboRecordExt> getProgramNameCombo() {
 		return programNameCombo;
 	}
@@ -140,6 +156,9 @@ public class ProgramWindowController extends AbstractController{
 	}
 	public Scene getScene() {
 		return window.getScene();
+	}
+	public static void setHerdRunSettingsController(HerdRunSettingsPaneController herdRunSettingsController) {
+		ProgramWindowController.herdRunSettingsController = herdRunSettingsController;
 	}
 	
 }

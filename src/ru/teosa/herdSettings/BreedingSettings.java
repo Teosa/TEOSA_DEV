@@ -38,8 +38,25 @@ public class BreedingSettings {
 		name_F        = "Кобыла";
 		affixid       = -1;
 		ECID          = -1;
+		ECName        = null;
 	}
 	
+	@Override
+	public String toString() {
+		return ""
+				+ "MATING QTY: "       + matingQty     + "; "
+				+ "MAXMATING QTY: "    + maxMatingQty  + "; "
+				+ "MATING PRICE: "     + matingPrice   + "; "
+				+ "COVER BY: "         + coverBy       + "; "
+				+ "MAX COVER PRICE: "  + maxCoverPrice + "; "
+				+ "STALLON BREED: "    + stallonBreed  + "; "
+				+ "STALLONS  NAME: "   + name_M        + "; "
+				+ "MARES NAME: "       + name_F        + "; "
+				+ "AFFIX ID: "         + affixid       + "; "
+				+ "EC ID: "            + ECID          + "; "
+				+ "EC NAME: "          + ECName        + "; "	
+			;
+	}
 	
 	public Integer getMatingQty() {
 		return matingQty;

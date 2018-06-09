@@ -3,8 +3,6 @@ package ru.teosa.GUI.view;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tab;
 import ru.teosa.herdSettings.CommonSettings;
@@ -78,7 +76,17 @@ public class InfoTabController extends AbstractController implements SettingTabs
 		breedingFoal   .setDisable(disable);
 	}
 	
-	
+	@Override
+	public CommonSettings getTabSettings(CommonSettings settings) {
+		settings.setBaseActions(baseActions.isSelected());
+		settings.setRegisterInEC(ECRegistration.isSelected());
+		settings.setExtendEC(ECExtending.isSelected());
+		settings.setStallionMating(breedingStallon.isSelected());
+		settings.setMareMating(breedingMare.isSelected());
+		settings.setFoals(breedingFoal.isSelected());
+		
+		return settings;
+	}
 	
 	private void setBaseActionsHandler() {
 		baseActions.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -94,22 +102,12 @@ public class InfoTabController extends AbstractController implements SettingTabs
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				Tab ECTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getECTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
 				
-				CheckBox ECExt = (CheckBox) scene.lookup("#ECExtending");
-				ECTab.setDisable(!newValue && !ECExt.isSelected());
+				ECTab.setDisable(!newValue && !ECExtending.isSelected());
 				
 				// Доступность полей для настройки регистрации в КСК
-				String[] fields = {
-						"ECType_owner", "ECType_reserved", "ECType_any",
-						"registrationTerm", "registrationTermLabel",
-						"location_forest", "location_mountains", "location_beach", "location_any",
-						"specialization_classic", "specialization_western", "specialization_any",
-						"hay", "oat", "carrot", "mash", "drinker", "shower"
-				};
-				for(int i = 0; i < fields.length; ++i) {
-					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
-				}
+				MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController()
+				.getHerdRunSettingsController().getECTabController().setECRegisterBlockDisabled(!newValue);
 			}});
 	}
 	
@@ -118,16 +116,12 @@ public class InfoTabController extends AbstractController implements SettingTabs
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				Tab ECTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getECTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
-				
-				CheckBox ECReg = (CheckBox) scene.lookup("#ECRegistration");
-				ECTab.setDisable(!newValue && !ECReg.isSelected());
+
+				ECTab.setDisable(!newValue && !ECRegistration.isSelected());
 				
 				// Доступность полей для настройки продления постоя в КСК
-				String[] fields = {"daysBeforeExtend", "extendTerm", "extendTermLabel", "onlyOwnerExtend"};
-				for(int i = 0; i < fields.length; ++i) {
-					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
-				}
+				MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController()
+				.getHerdRunSettingsController().getECTabController().setECExtendingBlockDisabled(!newValue);
 			}});
 	}
 	
@@ -136,17 +130,12 @@ public class InfoTabController extends AbstractController implements SettingTabs
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				Tab breedingTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getBreedingTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
-				
-				CheckBox breedingMare = (CheckBox) scene.lookup("#breedingMare");
-				CheckBox breedingFoal = (CheckBox) scene.lookup("#breedingFoal");
+
 				breedingTab.setDisable(!newValue && !breedingMare.isSelected() && !breedingFoal.isSelected());	
 				
-				// Доступность полей для настройки 
-				String[] fields = {"matingQty_one", "matingQty_two", "matingQty_three", "maxMatingQty", "matingPrice"};
-				for(int i = 0; i < fields.length; ++i) {
-					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
-				}
+				// Доступность полей для настройки случек жеребцов
+				MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController()
+				.getHerdRunSettingsController().getBreedingTabController().setStallonBreedingBlockDisabled(!newValue);
 			}});
 	}
 	
@@ -155,20 +144,12 @@ public class InfoTabController extends AbstractController implements SettingTabs
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				Tab breedingTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getBreedingTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
-				
-				CheckBox breedingStallon = (CheckBox) scene.lookup("#breedingStallon");
-				CheckBox breedingFoal = (CheckBox) scene.lookup("#breedingFoal");
+
 				breedingTab.setDisable(!newValue && !breedingStallon.isSelected() && !breedingFoal.isSelected());
 				
-				// Доступность полей для настройки 
-				String[] fields = {  
-						"coverBy_owner", "coverBy_any", "maxCoverPrice", "stallonBreed_likeMare", "stallonBreed_any", 
-						"stallonGP_likeMare", "stallonGP_custom", "stallonGP_any", "minStallonGP", "maxStallonGP"
-						};
-				for(int i = 0; i < fields.length; ++i) {
-					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
-				}
+				// Доступность полей для настройки случек кобыл
+				MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController()
+				.getHerdRunSettingsController().getBreedingTabController().setMareBreedingBlockDisabled(!newValue);
 			}});
 	}
 	
@@ -177,17 +158,12 @@ public class InfoTabController extends AbstractController implements SettingTabs
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				Tab breedingTab = MainWindowController.getProgramWindowController().getHerdRunSettingsController().getBreedingTab();
-				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getScene();
-				
-				CheckBox breedingStallon = (CheckBox) scene.lookup("#breedingStallon");
-				CheckBox breedingMare = (CheckBox) scene.lookup("#breedingMare");
+
 				breedingTab.setDisable(!newValue && !breedingStallon.isSelected() && !breedingMare.isSelected());		
 				
-				// Доступность полей для настройки 
-				String[] fields = {"stallonNames", "mareNames", "foalsAffix", "foalsFarm"};
-				for(int i = 0; i < fields.length; ++i) {
-					((Node) scene.lookup("#" + fields[i])).setDisable(!newValue);
-				}
+				// Доступность полей для настройки приема родов
+				MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController()
+				.getHerdRunSettingsController().getBreedingTabController().setFoalsBlockDisabled(!newValue);
 			}});
 	}
 //*****************************************************************************************************************************

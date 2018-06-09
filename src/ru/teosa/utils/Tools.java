@@ -1,6 +1,5 @@
 package ru.teosa.utils;
 
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 
@@ -73,14 +72,44 @@ public class Tools {
 	 * @param group радиогруппа
 	 * @param value значение для выбора
 	 * */
-	public void setRadioButtonGroupValue(ToggleGroup group, Object value) {
+	public static void setRadioButtonGroupValue(ToggleGroup group, Object value) {
 		
-		if(group != null) {
-			for(Toggle button : group.getToggles()) {
-				if(button.getUserData() == null) { if(value == null) button.setSelected(true); }
+		if(group != null) 
+		{
+			for(Toggle button : group.getToggles()) 
+			{
+				if(button.getUserData() == null) 
+				{ 
+					if(value == null) button.setSelected(true); 
+				}
 				else if(button.getUserData().equals(value)) button.setSelected(true);
 			}
 		}
+	}
+	
+	/**
+	 * Получение выбранного значения из радиогруппы.<br>
+	 * Метод возвращает значение, хранимое в UserData выбранной кнопки радиогруппы.<br>
+	 * Если в группе нет выбранных кнопок - функция вернет null.
+	 * @param group радиогруппа
+	 * @return найденное значение
+	 * */
+	public static Object getRadioButtonGroupValue(ToggleGroup group) {
+		Object result = null;
+		
+		if(group != null) 
+		{
+			for(Toggle button : group.getToggles()) 
+			{
+				if(button.isSelected()) 
+				{
+					result = button.getUserData(); 
+					break;	
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -88,7 +117,26 @@ public class Tools {
 	 * @param val строка для проверки
 	 * @return Если параметр не NULL - строка с удаленными слева и справа пробелами, иначе - пустая строка
 	 * */
-	public String writeText(Object val){
+	public static String writeText(Object val){
         return val != null? val.toString().trim() : "";
     }
+	
+	/**
+	 * -
+	 * @param val
+	 * @return -
+	 * */
+	public static Integer writeInteger(Object val){
+		Integer result = null;
+		
+		try { result = Integer.parseInt(val.toString()); }
+		catch(Exception e) { System.out.println("WRITE INTEGER: " + e.getMessage()); }
+		
+		return result;
+    }
+	
+	public static Integer findSimpleComboRecordById() {
+		
+		return 0;
+	}
 }

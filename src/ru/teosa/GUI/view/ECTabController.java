@@ -1,7 +1,5 @@
 package ru.teosa.GUI.view;
 
-import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -59,7 +57,8 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 	
 	@Override
 	protected void initialize() {
-		MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getHerdRunSettingsController().setECTabController(this);
+		MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController()
+		.getHerdRunSettingsController().setECTabController(this);
 		
 		ECType = new ToggleGroup();
 		location = new ToggleGroup();
@@ -103,12 +102,10 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 	
 	@Override
 	public void loadSettings(EC_Settings settings) {
-	
-		Tools tools = new Tools();
 		
-		tools.setRadioButtonGroupValue(ECType, settings.getEC_type());
-		tools.setRadioButtonGroupValue(location, settings.getLocation());
-		tools.setRadioButtonGroupValue(specialization, settings.getSpecialization());
+		Tools.setRadioButtonGroupValue(ECType, settings.getEC_type());
+		Tools.setRadioButtonGroupValue(location, settings.getLocation());
+		Tools.setRadioButtonGroupValue(specialization, settings.getSpecialization());
 		
 		registrationTerm.getSelectionModel().select(settings.getRegTerm());
 		
@@ -122,5 +119,62 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 		daysBeforeExtend.getValueFactory().setValue(settings.getDaysBeforeCheckout());
 		extendTerm.getSelectionModel().select(settings.getExtendTerm());
 		onlyOwnerExtend.setSelected(settings.isOnlyMyECExtend());
+	}
+	
+	@Override
+	public EC_Settings getTabSettings(EC_Settings settings) {
+
+		settings.setEC_type((Character)Tools.getRadioButtonGroupValue(ECType));
+		settings.setRegTerm(registrationTerm.getSelectionModel().getSelectedItem());
+		settings.setLocation((Character)Tools.getRadioButtonGroupValue(location));
+		settings.setSpecialization((Character)Tools.getRadioButtonGroupValue(specialization));
+		
+		settings.setHay(hay.isSelected());
+		settings.setOat(oat.isSelected());
+		settings.setCarrot(carrot.isSelected());
+		settings.setMash(mash.isSelected());
+		settings.setDrinker(drinker.isSelected());
+		settings.setShower(shower.isSelected());
+		
+		settings.setDaysBeforeCheckout(daysBeforeExtend.getValue());
+		settings.setExtendTerm(extendTerm.getSelectionModel().getSelectedItem());
+		settings.setOnlyMyECExtend(onlyOwnerExtend.isSelected());
+		
+		return settings;
+	}
+	
+	/**
+	 * Установка доступности полей блока записи в КСК
+	 * @param disable признак доступности
+	 * */
+	public void setECRegisterBlockDisabled(boolean disable) {		
+		ECType_owner          .setDisable(disable);
+		ECType_reserved       .setDisable(disable);
+		ECType_any            .setDisable(disable);
+		registrationTerm      .setDisable(disable);
+		location_forest       .setDisable(disable);
+		location_mountains    .setDisable(disable);
+		location_beach        .setDisable(disable);
+		location_any          .setDisable(disable);
+		specialization_classic.setDisable(disable);
+		specialization_western.setDisable(disable);
+		specialization_any    .setDisable(disable);
+		hay                   .setDisable(disable);
+		oat                   .setDisable(disable);
+		carrot                .setDisable(disable);
+		mash                  .setDisable(disable);
+		drinker               .setDisable(disable);
+		shower                .setDisable(disable);		
+	}
+	
+	/**
+	 * Установка доступности полей блока продления постоя в КСК
+	 * @param disable признак доступности
+	 * */
+	public void setECExtendingBlockDisabled(boolean disable) {
+		daysBeforeExtend.setDisable(disable);
+		extendTerm      .setDisable(disable);
+		extendTermLabel .setDisable(disable);
+		onlyOwnerExtend .setDisable(disable);
 	}
 }

@@ -20,6 +20,17 @@ public class CommonSettings implements Serializable{
 		this.foals          = false;
 	}
 	
+	@Override
+	public String toString() {
+		return ""
+				+ "BASE ACTIONS: "    + baseActions    + "; "
+				+ "REGISTER IN EC: "  + registerInEC   + "; "
+				+ "EXTEND EC: "       + extendEC       + "; "
+				+ "STALLION MATING: " + stallionMating + "; "
+				+ "MARE MATING: "     + mareMating     + "; "
+				+ "FOALS: "           + foals          + "; ";
+	}
+	
 	public boolean isBaseActions() {
 		return baseActions;
 	}

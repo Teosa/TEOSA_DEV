@@ -37,14 +37,30 @@ public class EC_Settings {
 		this.drinker = false;
 		this.shower  = false;
 		
-		
-		
 		this.daysBeforeCheckout = 1;
 		this.extendTerm = 3;
 		this.onlyMyECExtend = true;
 	}
 
-
+	@Override
+	public String toString() {
+		return ""
+			+ "EC_TYPE: "            + EC_type            + "; " 
+			+ "REGTERM: "            + regTerm            + "; "
+			+ "LOCATION: "           + location           + "; "
+			+ "SPECIALIZATION: "     + specialization     + "; "
+			+ "HAY: "                + hay                + "; "
+			+ "OAT: "                + oat                + "; "
+			+ "CARROT: "             + carrot             + "; "
+			+ "MASH: "               + mash               + "; "
+			+ "DRINKER: "            + drinker            + "; "
+			+ "SHOWER: "             + shower             + "; "
+			+ "DAYSBEFORECHECKOUT: " + daysBeforeCheckout + "; "
+			+ "EXTENDTERM: "         + extendTerm         + "; "
+			+ "ONLYMYECEXTEND: "     + onlyMyECExtend     + "; "   
+		;
+	}
+	
 	public Character getEC_type() {
 		return EC_type;
 	}

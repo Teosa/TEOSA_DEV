@@ -6,17 +6,17 @@ import java.util.List;
 
 public class BaseActionsSettings implements Serializable{
 	
-	private boolean feed;      // 
-	private boolean drink;     // 
-	private boolean stroke;    // 
-	private boolean groom;     // 
-	private boolean carrot;    // 
-	private boolean mash;      // 
-	private boolean mission;   // 
-	private boolean goToSleep; // 
+	private boolean feed;      // Кормить
+	private boolean drink;     // Поить
+	private boolean stroke;    // Ласка
+	private boolean groom;     // Чистить
+	private boolean carrot;    // Морковь
+	private boolean mash;      // Комбикорм
+	private boolean mission;   // Миссия
+	private boolean goToSleep; // Отправить спать
 	
-	private boolean manualActionsSeqSetting; // 
-    private List<String> actionsSeq;         // 
+	private boolean manualActionsSeqSetting; // Ручная настройка порядка действий
+    private List<Character> actionsSeq;         // Порядок действий
 	
 	
     public BaseActionsSettings() {
@@ -30,9 +30,24 @@ public class BaseActionsSettings implements Serializable{
     	goToSleep = true;
     	
     	manualActionsSeqSetting = false;
-    	actionsSeq =  new ArrayList<String>();
+    	actionsSeq =  new ArrayList<Character>();
     }
     
+    @Override
+    public String toString() {
+    	return ""
+    		+ "FEED: "             + feed                    + "; "
+    		+ "DRINK: "            + drink                   + "; "
+    		+ "STROKE: "           + stroke                  + "; "
+    		+ "GROOM: "            + groom                   + "; "
+    		+ "CARROT: "           + carrot                  + "; "
+    		+ "MASH: "             + mash                    + "; "
+    		+ "MISSION: "          + mission                 + "; "
+    		+ "GOTOSLEEP: "        + goToSleep               + "; "
+    		+ "MANUALACTIONSSEQ: " + manualActionsSeqSetting + "; "
+    	    + "ACTIONSSEQ: "       + actionsSeq.toString()   + "; "
+		;
+    }
     
 	public boolean isFeed() {
 		return feed;
@@ -88,10 +103,10 @@ public class BaseActionsSettings implements Serializable{
 	public void setManualActionsSeqSetting(boolean manualActionsSeqSetting) {
 		this.manualActionsSeqSetting = manualActionsSeqSetting;
 	}
-	public List<String> getActionsSeq() {
+	public List<Character> getActionsSeq() {
 		return actionsSeq;
 	}
-	public void setActionsSeq(List<String> actionsSeq) {
+	public void setActionsSeq(List<Character> actionsSeq) {
 		this.actionsSeq = actionsSeq;
-	}	
+	}
 }

@@ -23,6 +23,25 @@ public class HerdRunSettings implements Serializable{
 		this.breedingSettings      = new BreedingSettings(); 
 	}
 
+	
+	public void save() {
+		
+		System.out.println("SAVE SETTINGS");
+		
+		System.out.println(this.toString());
+		
+		
+	};
+	
+	@Override
+	public String toString() {
+		return ""
+				+ "PROGRAM NAME: "          + programName + ";\n"
+				+ "COMMON SETTINGS: "       + commonSettings.toString() + "\n"
+				+ "BASE ACTIONS SETTINGS: " + baseActionsSettings.toString() + "\n"
+				+ "EC SETTINGS: "           + EC_Settings.toString() + "\n"
+				+ "BREEDING SETTINGS: "     + breedingSettings.toString(); 
+	}
 //*******************************************************************************************************************************
 //*******************************************************************************************************************************
 //*******************************************************************************************************************************

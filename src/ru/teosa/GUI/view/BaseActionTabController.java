@@ -1,9 +1,13 @@
 package ru.teosa.GUI.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -15,14 +19,14 @@ import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 public class BaseActionTabController extends AbstractController implements SettingTabsInterface<BaseActionsSettings>{
 	
-	@FXML private CheckBox feed;                    // Кормить
-	@FXML private CheckBox drink;                   // Поить
-	@FXML private CheckBox stroke;                  // Ласка
-	@FXML private CheckBox groom;                   // Чистить
-	@FXML private CheckBox carrot;                  // Морковь
-	@FXML private CheckBox mash;                    // Комбикорм
-	@FXML private CheckBox mission;                 // Миссия
-	@FXML private CheckBox goToSleep;               // Отправить спать
+	@FXML private CheckBox feed;       private static final char FEED_CHAR    = 'F';          // Кормить
+	@FXML private CheckBox drink;      private static final char DRINK_CHAR   = 'D';          // Поить
+	@FXML private CheckBox stroke;     private static final char STROKE_CHAR  = 'S';          // Ласка
+	@FXML private CheckBox groom;      private static final char GROOM_CHAR   = 'G';          // Чистить
+	@FXML private CheckBox carrot;     private static final char CARROT_CHAR  = 'C';          // Морковь
+	@FXML private CheckBox mash;       private static final char MASH_CHAR    = 'M';          // Комбикорм
+	@FXML private CheckBox mission;    private static final char MISSION_CHAR = 'A';          // Миссия
+	@FXML private CheckBox goToSleep;  private static final char SLEEP_CHAR   = 'B';          // Отправить спать
 	
 	@FXML private CheckBox manualActionsSeqSetting; // Ручная настройка порядка действий
 	@FXML private ListView<String> actionsSeq;      // Список порядка действий
@@ -31,22 +35,42 @@ public class BaseActionTabController extends AbstractController implements Setti
 	@FXML private Button down;
 	
 	// Порядок действий по-умолчанию
-	private static ArrayList<CheckBox> defaultSeq = new ArrayList<CheckBox>();
+	private static ArrayList<Character> defaultSeq = new ArrayList<Character>();
+	
+	private static HashMap<Character, String> actionsValuesMapping = new HashMap<Character, String>();
 
-
+	static {
+		defaultSeq.add(SLEEP_CHAR); 
+		defaultSeq.add(GROOM_CHAR); 
+		defaultSeq.add(DRINK_CHAR); 
+		defaultSeq.add(MASH_CHAR); 
+		defaultSeq.add(MISSION_CHAR); 
+		defaultSeq.add(STROKE_CHAR); 
+		defaultSeq.add(CARROT_CHAR); 
+		defaultSeq.add(FEED_CHAR); 
+		
+		actionsValuesMapping.put(FEED_CHAR,    "Кормить");
+		actionsValuesMapping.put(DRINK_CHAR,   "Поить");
+		actionsValuesMapping.put(STROKE_CHAR,  "Ласка");
+		actionsValuesMapping.put(GROOM_CHAR,   "Чистить");
+		actionsValuesMapping.put(CARROT_CHAR,  "Морковь");
+		actionsValuesMapping.put(MASH_CHAR,    "Комбикорм");
+		actionsValuesMapping.put(MISSION_CHAR, "Миссия");
+		actionsValuesMapping.put(SLEEP_CHAR,   "Отправить спать");
+	}
+	
 	@Override
 	protected void initialize() {
 		MainAppHolderSingleton.getInstance().getMainApp().getController().getProgramWindowController().getHerdRunSettingsController().setBaseActionTabController(this);;
-	
-		// Заполняем массив порядка действий по-умолчанию
-		defaultSeq.add(goToSleep);
-		defaultSeq.add(groom);
-		defaultSeq.add(drink);
-		defaultSeq.add(mash);
-		defaultSeq.add(mission);
-		defaultSeq.add(stroke);
-		defaultSeq.add(carrot);
-		defaultSeq.add(feed);		
+		
+		feed     .setUserData(FEED_CHAR);
+		drink    .setUserData(DRINK_CHAR);
+		stroke   .setUserData(STROKE_CHAR);
+		groom    .setUserData(GROOM_CHAR);
+		carrot   .setUserData(CARROT_CHAR);
+		mash     .setUserData(MASH_CHAR);
+		mission  .setUserData(MISSION_CHAR);
+		goToSleep.setUserData(SLEEP_CHAR);
 		
 		// Вешаем хендлеры добавления/удаления из списка действий
 		setActionsHandlers();
@@ -136,8 +160,24 @@ public class BaseActionTabController extends AbstractController implements Setti
 		
 		if(manualActionsSeqSetting.isSelected()) {
 			actionsSeq.getItems().clear();
-			actionsSeq.getItems().addAll(settings.getActionsSeq());
+			loadCustomActionsSeq(settings.getActionsSeq());
 		}
+	}
+	
+	@Override
+	public BaseActionsSettings getTabSettings(BaseActionsSettings settings) {
+		settings.setFeed(feed.isSelected());
+		settings.setDrink(drink.isSelected());
+		settings.setStroke(stroke.isSelected());
+		settings.setGroom(groom.isSelected());
+		settings.setCarrot(carrot.isSelected());
+		settings.setMash(mash.isSelected());
+		settings.setMission(mission.isSelected());
+		settings.setGoToSleep(goToSleep.isSelected());
+		settings.setManualActionsSeqSetting(manualActionsSeqSetting.isSelected());		
+		settings.setActionsSeq(actionsSeq);
+		
+		return settings;
 	}
 	
 	// Добавление обработчиков для чекбоксов действий
@@ -167,12 +207,35 @@ public class BaseActionTabController extends AbstractController implements Setti
 
 	private void loadDefaultSeq() {
 		actionsSeq.getItems().clear();
-		for(CheckBox cb : defaultSeq) {
+		CheckBox cb = null;
+		
+		for(Character value : defaultSeq) {
+			cb = getCheckboxByValue(value);
 			if(cb.isSelected()) actionsSeq.getItems().add(cb.getText());
 		}
 	}
 	
+	private CheckBox getCheckboxByValue(Character value) 
+	{	
+		switch(value) 
+		{	
+		  case FEED_CHAR:    return feed;   
+		  case DRINK_CHAR:   return drink;
+		  case STROKE_CHAR:  return stroke;
+		  case GROOM_CHAR:   return groom;
+		  case CARROT_CHAR:  return carrot;
+		  case MASH_CHAR:    return mash;
+		  case MISSION_CHAR: return mission;
+		  case SLEEP_CHAR:   return goToSleep;
+		  default:           return null;
+		}
+	}
 	
+	private void loadCustomActionsSeq(List<Character> customSeq) {
+		for(Character actionChar : customSeq) {
+			actionsSeq.getItems().add(getCheckboxByValue(actionChar).getText());
+		}
+	}
 //***************************************************************************************************************************************	
 //***************************************************************************************************************************************	
 	public CheckBox getFeed() {

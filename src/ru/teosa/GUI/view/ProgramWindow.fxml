@@ -14,7 +14,7 @@
         <items>
           <Button fx:id="cancel" mnemonicParsing="false" text="Отмена" />
             <Button fx:id="delete" mnemonicParsing="false" text="Удалить" />
-            <Button fx:id="save" mnemonicParsing="false" text="Сохранить" />
+            <Button fx:id="save" mnemonicParsing="false" onAction="#saveButtonHandler" text="Сохранить" />
         </items>
       </ToolBar>
    </bottom>

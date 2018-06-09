@@ -40,6 +40,7 @@ public class HerdRunSettingsPaneController extends AbstractController implements
         	ECTabController.customizeContent();
         	breedingTabController.customizeContent();	
     		
+        	loadSettings();
     	}
     	catch(Exception e) {
     		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
@@ -47,23 +48,31 @@ public class HerdRunSettingsPaneController extends AbstractController implements
     }
 	
 	@Override
-	public void customizeContent() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void customizeContent() {}
 	
 	@Override
 	public void loadSettings() {
 		loadSettings(new HerdRunSettings());
-		
 	}
 
 	@Override
-	public void loadSettings(HerdRunSettings settings) {
+	public void loadSettings(HerdRunSettings settings) 
+	{
 		infoTabController.loadSettings();
 		baseActionTabController.loadSettings();
 		ECTabController.loadSettings();
 		breedingTabController.loadSettings();	
+	}
+	
+	@Override
+	public HerdRunSettings getTabSettings(HerdRunSettings settings) 
+	{	
+		infoTabController.getTabSettings(settings.getCommonSettings());
+		baseActionTabController.getTabSettings(settings.getBaseActionsSettings());
+		ECTabController.getTabSettings(settings.getEC_Settings());
+		breedingTabController.getTabSettings(settings.getBreedingSettings());
+
+		return settings;
 	}
     
     // Загрузка вкладок в панель

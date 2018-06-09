@@ -72,10 +72,8 @@ public class TestClass extends Application{
 
 
 				
-				String s = "n";
-				whatClass(s);
-				
 
+				  System.out.println(new HerdRunSettings());
 				  
 				  
 				  
