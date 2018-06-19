@@ -34,6 +34,9 @@ public class Queries {
 			+ "JOIN AFFIXES a ON a.ID = ata.AFFIXID "
 			+ "WHERE ata.ACCOUNTID = :accountid";
 	
+	/** Получение программ прогона */
+	public final static String GET_HERD_RUN_PROGRAMS = "SELECT ID, NAME, SETTINGS FROM PROGRAMS";
+	
 //***********************************************************************************************************************	
 //****************************            SAVE                 **********************************************************
 //***********************************************************************************************************************			
@@ -42,6 +45,7 @@ public class Queries {
 	public final static String ATTACH_ACCOUNT_TO_USER = "INSERT INTO USERTOACCOUNT VALUES (:userid, :accid)";
 	public final static String SAVE_AFFIX = "INSERT INTO AFFIXES VALUES (DEFAULT, :name)";
 	public final static String ATTACH_AFFIX_TO_ACCOUNT = "INSERT INTO AFFIXTOACCOUNT VALUES (:accountid, :affixid)";
+	public final static String SAVE_HERD_RUN_PROGRAM = "INSERT INTO PROGRAMS VALUES (DEFAULT, :name, :settings)";
 //***********************************************************************************************************************	
 //****************************            UPDATE               **********************************************************
 //***********************************************************************************************************************
@@ -57,6 +61,8 @@ public class Queries {
 			+ ")";
 	
 	public final static String UPD_AFFIX = "UPDATE AFFIXES SET NAME = :name WHERE ID = :affixid";
+	
+	public final static String UPD_HERD_RUN_PROGRAM = "";
 //***********************************************************************************************************************	
 //****************************            REMOVE               **********************************************************
 //***********************************************************************************************************************

@@ -7,8 +7,6 @@ import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Set;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -175,6 +173,8 @@ public class BreedingTabController extends AbstractController implements Setting
 	{
 		Tools.setRadioButtonGroupValue(matingQty, settings.getMatingQty());
 		matingPrice.getSelectionModel().select(settings.getMatingPrice());
+		
+		maxMatingQty.getValueFactory().setValue(settings.getMatingQty());
 		
 		Tools.setRadioButtonGroupValue(coverBy, settings.getCoverBy());
 		maxCoverPrice.getSelectionModel().select(settings.getMaxCoverPrice());

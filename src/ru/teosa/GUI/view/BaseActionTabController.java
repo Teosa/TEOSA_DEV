@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,6 +40,10 @@ public class BaseActionTabController extends AbstractController implements Setti
 	// Порядок действий по-умолчанию
 	private static ArrayList<Character> defaultSeq = new ArrayList<Character>();
 	
+	// Ручной порядок действий
+	private static ArrayList<Character> customSeq = new ArrayList<Character>();
+	
+	// Мапинг значений и названий действий
 	private static HashMap<Character, String> actionsValuesMapping = new HashMap<Character, String>();
 
 	static {
@@ -175,7 +182,9 @@ public class BaseActionTabController extends AbstractController implements Setti
 		settings.setMission(mission.isSelected());
 		settings.setGoToSleep(goToSleep.isSelected());
 		settings.setManualActionsSeqSetting(manualActionsSeqSetting.isSelected());		
-		settings.setActionsSeq(actionsSeq);
+		
+		collectActionsValues();
+		settings.setActionsSeq(customSeq);
 		
 		return settings;
 	}
@@ -234,6 +243,17 @@ public class BaseActionTabController extends AbstractController implements Setti
 	private void loadCustomActionsSeq(List<Character> customSeq) {
 		for(Character actionChar : customSeq) {
 			actionsSeq.getItems().add(getCheckboxByValue(actionChar).getText());
+		}
+	}
+	
+	private void collectActionsValues() 
+	{		
+		customSeq.clear();
+		
+		for(String actionName : actionsSeq.getItems()) {
+			for (Map.Entry<Character, String> el : actionsValuesMapping.entrySet()) {
+				if(el.getValue().equalsIgnoreCase(actionName)) customSeq.add(el.getKey());
+			}
 		}
 	}
 //***************************************************************************************************************************************	
@@ -297,5 +317,11 @@ public class BaseActionTabController extends AbstractController implements Setti
 	}
 	public void setManualActionsSeqSetting(CheckBox manualActionsSeqSetting) {
 		this.manualActionsSeqSetting = manualActionsSeqSetting;
+	}
+	public static ArrayList<Character> getCustomSeq() {
+		return customSeq;
+	}
+	public static void setCustomSeq(ArrayList<Character> customSeq) {
+		BaseActionTabController.customSeq = customSeq;
 	}
 }

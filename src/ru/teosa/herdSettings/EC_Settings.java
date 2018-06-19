@@ -1,6 +1,8 @@
 package ru.teosa.herdSettings;
 
-public class EC_Settings {
+import java.io.Serializable;
+
+public class EC_Settings implements Serializable{
 	
 	// ****** ЗАПИСЬ В КСК ******
 	private Character EC_type;          //Тип КСК для записи     Свой: "O"   Зарезервированные стойла: "R"   Любой: null

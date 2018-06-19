@@ -1,5 +1,10 @@
 package ru.teosa.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 
@@ -135,8 +140,37 @@ public class Tools {
 		return result;
     }
 	
+	/***/
 	public static Integer findSimpleComboRecordById() {
 		
 		return 0;
+	}
+	
+	/**
+	 * ‘ункци€ дл€ вывода на консоль содержимого HashMap.<br>
+	 * ‘ормат вывода: KEY: <ключ>  VALUE:  <значение>
+	 * @param params - HashMap с параметрами
+	 * @return void
+	 * */
+	public void printParamMap(HashMap params) {
+		for (Map.Entry el : ((HashMap<String, Object>) params).entrySet()) {
+			System.out.println("KEY:  " + el.getKey() + "    VALUE:  " + el.getValue());
+			Logger.getLogger("file").debug("KEY:  " + el.getKey() + "    VALUE:  " + el.getValue());
+		}
+	}
+	
+	/**
+	 * ‘ункци€ дл€ преобразовани€ пустой строки в null.<br>
+	 * ≈сли длинна переданной в качесве параметра строки после удалени€ пробелов равна нулю, функци€ вернет null, 
+	 * иначе - переданный параметр с удаленными слева и справа пробелами.
+	 * @param value строка дл€ проверки
+	 * @return переданна€ строка без дополнительных пробелов или null
+	 * */
+	public static String replaceEmtyText(Object value) 
+	{	
+		String result = null;
+		
+		if(value != null) return value.toString().trim().length() == 0 ? result : value.toString().trim();
+		else return result;
 	}
 }

@@ -58,10 +58,10 @@ public class HerdRunSettingsPaneController extends AbstractController implements
 	@Override
 	public void loadSettings(HerdRunSettings settings) 
 	{
-		infoTabController.loadSettings();
-		baseActionTabController.loadSettings();
-		ECTabController.loadSettings();
-		breedingTabController.loadSettings();	
+		infoTabController.loadSettings(settings.getCommonSettings());
+		baseActionTabController.loadSettings(settings.getBaseActionsSettings());
+		ECTabController.loadSettings(settings.getEC_Settings());
+		breedingTabController.loadSettings(settings.getBreedingSettings());	
 	}
 	
 	@Override

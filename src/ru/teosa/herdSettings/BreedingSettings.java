@@ -1,8 +1,8 @@
 package ru.teosa.herdSettings;
 
+import java.io.Serializable;
 
-
-public class BreedingSettings {
+public class BreedingSettings implements Serializable{
 
 	// ****** ЖЕРЕБЦЫ ******
 	private Integer matingQty;        // Количество случек  1/2/3

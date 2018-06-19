@@ -12,7 +12,7 @@
    <bottom>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="cancel" mnemonicParsing="false" text="Отмена" />
+          <Button fx:id="cancel" mnemonicParsing="false" onAction="#closeButtonHandler" text="Отмена" />
             <Button fx:id="delete" mnemonicParsing="false" text="Удалить" />
             <Button fx:id="save" mnemonicParsing="false" onAction="#saveButtonHandler" text="Сохранить" />
         </items>

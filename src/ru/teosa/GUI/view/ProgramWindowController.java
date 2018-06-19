@@ -1,7 +1,15 @@
 package ru.teosa.GUI.view;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,8 +22,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.GUI.MsgWindow;
 import ru.teosa.herdSettings.HerdRunSettings;
+import ru.teosa.utils.Queries;
+import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
@@ -70,10 +82,41 @@ public class ProgramWindowController extends AbstractController{
         });
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void loadProgramSettings() {
-		// FOR TEST
-		programNameCombo.getItems().add(new SimpleComboRecordExt(0, "Стандартная программа", new HerdRunSettings()));
-//		programNameCombo.getSelectionModel().select(0);
+		// Если модуль открыт в режиме редактирования - подгружаем список сохраненных программ в комбобокс
+		if(mode == 1) {
+			NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+			final ArrayList<SimpleComboRecordExt> programs = new ArrayList<SimpleComboRecordExt>();
+			
+			try 
+			{
+				pstmt.query(Queries.GET_HERD_RUN_PROGRAMS, new HashMap(), new RowMapper() 
+				{			
+					@Override
+					public Object mapRow(ResultSet rs, int rowNum) throws SQLException 
+					{
+						byte[] bytes = rs.getBytes("settings");
+						HerdRunSettings settings  = SerializationUtils.deserialize(bytes);
+						
+						settings.setProgramID(rs.getInt("id"));
+						settings.setProgramName(rs.getString("name"));
+						System.out.println(settings.toString());
+						SimpleComboRecordExt record = new SimpleComboRecordExt(settings.getProgramID(), settings.getProgramName(), settings);
+						
+						programs.add(record);
+						return null;
+					}
+				});
+			}
+			catch(Exception e) 
+			{
+				e.printStackTrace();
+				Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+			}
+			
+			programNameCombo.getItems().addAll(programs);
+		}
 	}
 	
     // Загрузка панели с настройками прогона
@@ -91,13 +134,24 @@ public class ProgramWindowController extends AbstractController{
     		return;
     	}
     	
-    	// Собираем данные с формы и сохраняем в БД
+    	// Собираем данные с формы и сохраняем в БД.
+    	// Если сохранение прошло успешно - закрываем окно, иначе - поднимаем окно с ошибкой
     	final HerdRunSettings settings = new HerdRunSettings();
-    	settings.setProgramName(programNameTextField.getText());
-    	herdRunSettingsController.getTabSettings(settings).save();
+    	settings.setProgramName(Tools.replaceEmtyText(programNameTextField.getText()));
+    	
+    	if(herdRunSettingsController.getTabSettings(settings).save()) closeButtonHandler();
+    	else MsgWindow.showErrorWindow("Ошибка сохранения настроек.\n" + MsgWindow.getErrorMsg());
+    }
+    
+    @FXML
+    private void closeButtonHandler() 
+    {
+    	((Stage)window.getScene().getWindow()).close();
     }
     
     private boolean makeChecks() {
+    	
+//    	ValidationSupport validationSupport = new ValidationSupport();
     	
     	return true;
     }
