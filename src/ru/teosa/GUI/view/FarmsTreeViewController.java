@@ -75,10 +75,10 @@ public class FarmsTreeViewController extends AbstractController{
 
 			// ≈сли мы не находимс€ на последней вкладке заводов, то продолжаем заполнение списка
 			if(i != farms.size() -1) {
-				Sleeper.turnOffImplicitWaits();
+				Sleeper.turnOffImplicitlyWait();
 				List<WebElement> subFarms = farm.findElements(By.tagName("li"));
 //				Logger.getLogger("debug").debug("SUB FARMS QTY: " + subFarms.size());
-				Sleeper.turnOnImplicitWaits();
+				Sleeper.setStandartImplicitlyWait();
 				
 				// ≈сли у завода есть подзаводы, получаем их список
 				if(subFarms.size() > 0) {
@@ -181,7 +181,7 @@ public class FarmsTreeViewController extends AbstractController{
       
 	private  void goToBreedingFarm(){	
 		Logger.getLogger("debug").debug("goToBreedingFarm");
-		Sleeper.waitVisibility("//*[@id=\"header-menu\"]/div[1]/ul/li[1]");
+//		Sleeper.waitVisibility("//*[@id=\"header-menu\"]/div[1]/ul/li[1]");
 		WebElement breedingFarmMenu = driver.findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]"));
 
 		Actions builder = new Actions(driver);

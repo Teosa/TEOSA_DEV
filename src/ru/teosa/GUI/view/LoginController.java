@@ -11,6 +11,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -25,6 +27,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.lang.Lang;
 import ru.teosa.mainapp.pojo.User;
 import ru.teosa.utils.AutoMapper;
 import ru.teosa.utils.Customizer;
@@ -82,8 +85,8 @@ public class LoginController {
     	saveSelectedVersion();
     	
     	if(!checkLogopas()) return;
-//    	if(mainApp.getDriver() == null) runWithCrome();
-//    	if(accountLogin()) 
+    	if(mainApp.getDriver() == null) runWithCrome();
+    	if(accountLogin()) 
     		mainApp.showMainForm(); 
     	
     	MainAppHolderSingleton.getInstance().setMainApp(mainApp);
@@ -171,13 +174,13 @@ public class LoginController {
 	    mainApp.setDriver(new ChromeDriver());
 
     	mainApp.getDriver().get(siteVersion.getValue().getUrl());
-
-    	mainApp.getDriver().manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
-    	mainApp.getDriver().manage().timeouts().setScriptTimeout(30, TimeUnit.SECONDS);
-    	mainApp.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     	
     	MainAppHolderSingleton.getInstance().setDriver(mainApp.getDriver()); 	
     	MainAppHolderSingleton.setGameURL(siteVersion.getValue().getUrl());
+    	
+    	Sleeper.setStandartPageLoadTimeout();
+    	Sleeper.setStandartScriptTimeout();
+    	Sleeper.setStandartImplicitlyWait();
     } 
      
     private void runWithHeadlessBrowser(){}
@@ -207,22 +210,35 @@ public class LoginController {
 	    	//Сабмитим
 	    	mainApp.getDriver().findElement(By.id("authentificationSubmit")).click();
 	    	
-	    	//Ждем загрузки страницы
-			Thread.sleep(2000);
+	    	// Увеличиваем время ожидания загрузки страницы 
+//			mainApp.getDriver().manage().timeouts().pageLoadTimeout(1, TimeUnit.MINUTES);
+	    	Sleeper.setStandartPageLoadTimeout(60);
+		
+			// Ждем появления кнопки Коневодство на панели кнопок главной страницы игры
+			WebDriverWait wait = (WebDriverWait) new WebDriverWait(MainAppHolderSingleton.getInstance().getDriver(), 60);
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]")));
+		
+			// Получаем кнопку Коневодство
+			WebElement el = mainApp.getDriver().findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]"));
 
-			//Если не авторизовались, выводим ошибку в приложение
-			try {
-				WebElement el = Sleeper.waitVisibility("//*[@id=\"fieldError-invalidUser\"]");
+			// Возвращаем время ожидания загрузки  страницы к стандартному значению
+			Sleeper.setStandartPageLoadTimeout();
+			
+			if(el != null) {
+				// Загружаем языковой мапинг в зависимости от выбранной версии игры
+				Lang.loadMap();
 				
-	    		loginErrorMsg.setText(el.getText());
-	    		return false;
-			}
-			catch(NoSuchElementException | TimeoutException ex) {
 	    		loginErrorMsg.setText("");  		
 	    		return true;
 			}
+			else {
+				// TODO реализовать в этом блоке вывод текста ошибки авторизации из браузера
+	    		loginErrorMsg.setText("Ошибка авторизации1");
+	    		return false;
+			}
 		} catch (Exception e) {
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+			e.printStackTrace();
 			loginErrorMsg.setText("Ошибка авторизации");
 			return false;
 		}
@@ -388,4 +404,5 @@ public class LoginController {
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
 		}
 	}
+	
 }

@@ -4,18 +4,28 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<ScrollPane prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.FarmProgramPanelController">
-   <content>
-      <AnchorPane prefHeight="300.0" prefWidth="650.0">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.FarmProgramPanelController">
+   <top>
+      <AnchorPane minHeight="120.0" minWidth="500.0" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="24.0" layoutY="24.0" text="Выбранный завод:" />
-            <Label fx:id="selectedFarmName" layoutX="147.0" layoutY="24.0" text="&lt;название завода&gt;" />
-            <Label layoutX="290.0" layoutY="24.0" text="Настройки" />
-            <ComboBox fx:id="programs" layoutX="358.0" layoutY="20.0" prefWidth="150.0" />
-            <Button fx:id="addProgramToRun" layoutX="566.0" layoutY="20.0" mnemonicParsing="false" text="Добавить в прогон" />
+            <Label text="Выбранный завод" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="20.0" />
+            <Label fx:id="selectedFarmName" text="&lt;название завода&gt;" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="20.0" />
+            <Label text="Программа" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="55.0" />
+            <ComboBox fx:id="programsCombo" prefWidth="150.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="50.0" />
+            <Button fx:id="addProgramToRun" mnemonicParsing="false" text="Добавить в прогон" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+            <Separator layoutX="25.0" layoutY="13.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-   </content>
-</ScrollPane>
+   </top>
+   <center>
+      <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+        </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

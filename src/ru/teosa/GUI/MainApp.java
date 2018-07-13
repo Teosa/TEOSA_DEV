@@ -12,7 +12,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -110,7 +109,9 @@ public class MainApp extends Application {
             BorderPane mainForm = (BorderPane) loader.load();
             
             // Позиционирование и размеры
-            rootLayout.setCenter(mainForm);           
+            rootLayout.setCenter(mainForm);     
+            primaryStage.setMinHeight(550);
+            primaryStage.setMinWidth(800);
             this.getPrimaryStage().sizeToScene();
         	this.getPrimaryStage().centerOnScreen();
         } 

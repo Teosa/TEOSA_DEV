@@ -47,6 +47,9 @@ public class ProgramWindowController extends AbstractController{
 	
 	private static HerdRunSettingsPaneController herdRunSettingsController;
 	
+	private final static int EDIT_NAME_ON  = 1;
+	private final static int EDIT_NAME_OFF = 0;
+	
 //*********************************************************************************************************************************	
 //*********************************************************************************************************************************	
 	@Override
@@ -71,6 +74,8 @@ public class ProgramWindowController extends AbstractController{
 		
 		programNameCombo.setVisible(mode == 1);
 		editProgramName.setVisible(mode == 1);
+		
+		delete.setUserData(EDIT_NAME_OFF);
 		delete.setVisible(mode == 1);	
 		
 		programNameCombo.valueProperty().addListener(new ChangeListener<SimpleComboRecordExt>() {
@@ -139,6 +144,8 @@ public class ProgramWindowController extends AbstractController{
     	final HerdRunSettings settings = new HerdRunSettings();
     	settings.setProgramName(Tools.replaceEmtyText(programNameTextField.getText()));
     	
+    	if(mode == 1) settings.setProgramID(programNameCombo.getSelectionModel().getSelectedItem().getId());
+    	
     	if(herdRunSettingsController.getTabSettings(settings).save()) closeButtonHandler();
     	else MsgWindow.showErrorWindow("Ошибка сохранения настроек.\n" + MsgWindow.getErrorMsg());
     }
@@ -147,6 +154,44 @@ public class ProgramWindowController extends AbstractController{
     private void closeButtonHandler() 
     {
     	((Stage)window.getScene().getWindow()).close();
+    }
+    
+    @FXML
+    private void removeButton() {
+    	final HerdRunSettings settings = new HerdRunSettings();
+    	
+    	if(mode == 1) settings.setProgramID(programNameCombo.getSelectionModel().getSelectedItem().getId());
+    	
+    	if(herdRunSettingsController.getTabSettings(settings).remove()) closeButtonHandler();
+    	else MsgWindow.showErrorWindow("Ошибка удаления настроек.\n" + MsgWindow.getErrorMsg());
+    }
+    
+    @FXML
+    private void changeProgramNameButtonHandler() {
+    	
+    	switch(Integer.parseInt(delete.getUserData().toString())) {
+	    	case EDIT_NAME_ON: 
+	    		delete.setUserData(EDIT_NAME_OFF);
+	    		
+	    		programNameCombo.setVisible(true);
+	    		programNameTextField.setVisible(false);
+	    		
+	    		int index = programNameCombo.getSelectionModel().getSelectedIndex();
+	    		SimpleComboRecordExt item = programNameCombo.getSelectionModel().getSelectedItem();
+	    		item.setName(programNameTextField.getText());
+	    			    		
+	    		programNameCombo.getItems().set(index, item);
+	    		break;
+	    		
+	    	case EDIT_NAME_OFF: 
+	    		delete.setUserData(EDIT_NAME_ON);
+	    		
+	    		programNameCombo.setVisible(false);
+	    		programNameTextField.setVisible(true);
+	    		break;
+    	}
+    	
+    	
     }
     
     private boolean makeChecks() {

@@ -62,12 +62,19 @@ public class Queries {
 	
 	public final static String UPD_AFFIX = "UPDATE AFFIXES SET NAME = :name WHERE ID = :affixid";
 	
-	public final static String UPD_HERD_RUN_PROGRAM = "";
+	public final static String UPD_HERD_RUN_PROGRAM = ""
+			+ "UPDATE PROGRAMS SET "
+			+ " NAME     = :name "
+			+ ",SETTINGS = :settings "
+			+ "WHERE ID  = :id";
 //***********************************************************************************************************************	
 //****************************            REMOVE               **********************************************************
 //***********************************************************************************************************************
 	public final static String UNATTACH_AFFIX_FROM_ACCOUNT = ""
 			+ "DELETE FROM AFFIXTOACCOUNT WHERE ACCOUNTID = :accountid AND AFFIXID = :affixid";
+	
 	public final static String REMOVE_AFFIX = ""
 			+ "DELETE FROM AFFIXES WHERE ID = :affixid";
+	
+	public final static String REMOVE_HERD_RUN_PROGRAM = "DELETE FROM PROGRAMS WHERE ID = :id";
 }

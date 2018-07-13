@@ -22,12 +22,14 @@
                   </ToolBar>
                </bottom>
                <center>
-                  <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <ScrollPane fitToWidth="true" minHeight="200.0" minWidth="200.0" prefHeight="200.0" BorderPane.alignment="CENTER">
                      <content>
-                        <TableView prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="table" editable="true" minHeight="200.0" minWidth="200.0" tableMenuButtonVisible="true">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="C1" />
-                            <TableColumn prefWidth="75.0" text="C2" />
+                            <TableColumn fx:id="numCol" editable="false" maxWidth="-Infinity" minWidth="40.0" prefWidth="-1.0" resizable="false" text="№" />
+                            <TableColumn fx:id="farmNameCol" editable="false" maxWidth="400.0" minWidth="200.0" prefWidth="-1.0" text="Название завода" />
+                              <TableColumn fx:id="programCol" maxWidth="400.0" minWidth="200.0" prefWidth="-1.0" text="Программа" />
+                              <TableColumn fx:id="statusCol" editable="false" maxWidth="-Infinity" minWidth="100.0" prefWidth="-1.0" resizable="false" text="Статус" />
                           </columns>
                         </TableView>
                      </content>

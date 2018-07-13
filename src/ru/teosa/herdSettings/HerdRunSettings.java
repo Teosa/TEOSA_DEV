@@ -67,6 +67,27 @@ public class HerdRunSettings implements Serializable{
 		}
 	};
 	
+	public boolean remove() {
+		try {
+			System.out.println("REMOVE SETTINGS");
+			System.out.println(this.toString());
+				
+			NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+			HashMap params = new HashMap();
+			params.put("id",       programID);
+								
+			pstmt.update(Queries.REMOVE_HERD_RUN_PROGRAM, params);
+			
+			return true;
+		}		
+		catch(Exception e) {
+			e.printStackTrace();
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+			MsgWindow.setErrorMsg(e.getMessage());
+			return false;
+		}
+	};
+	
 	@Override
 	public String toString() {
 		return ""

@@ -16,7 +16,6 @@ public class MsgWindow {
 	public static boolean showErrorWindow(String msg) 
 	{
 		Button button = new Button("OK");
-//		button.setLayoutX(190);
 		button.setTranslateX(190);
 		
 		Text text = new Text(msg);

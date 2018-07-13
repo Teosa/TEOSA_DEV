@@ -67,7 +67,7 @@ public class MainWindowController {
     private void loadFramProgramPanel() throws Exception{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/FarmProgramInfoPanel.fxml"));
-        mainForm.setCenter((ScrollPane) loader.load());
+        mainForm.setCenter((BorderPane) loader.load());
     }
     
     // Загрузка панели Прогон

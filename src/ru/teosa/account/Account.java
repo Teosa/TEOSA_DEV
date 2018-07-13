@@ -4,15 +4,16 @@ import ru.teosa.mainapp.pojo.User;
 
 public class Account {
 
-	private static User user;
-	private static Resources resources;
+	private static User user;             // Информация о пользователе
+	private static Resources resources;   // Информация о ресурсах на аккаунте
 	
 	static {
 		user = new User();
 		resources = new Resources();
 	}
 	
-	
+//************************************************************************************************	
+//************************************************************************************************	
 	public static User getUser() {
 		return user;
 	}
