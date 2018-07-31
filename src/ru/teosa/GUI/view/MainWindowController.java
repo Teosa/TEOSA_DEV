@@ -40,7 +40,9 @@ public class MainWindowController {
         	loadRunProgrammPanel();       
         	     	
         	MainApp.getController().getFarmsTreeController().customizeContent();
-        	MainApp.getController().getFarmsTreeController().getTree().getSelectionModel().select(0);;
+        	MainApp.getController().getFarmsTreeController().getTree().getSelectionModel().select(0);
+        	
+        	MainApp.getController().getFarmProgramPanelController().customizeContent();
     	}
     	catch (Exception e) {
 			e.printStackTrace();

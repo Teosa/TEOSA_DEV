@@ -22,7 +22,7 @@ import javafx.scene.layout.RowConstraints;
 import ru.teosa.herdSettings.BreedingSettings;
 import ru.teosa.herdSettings.SettingTabsInterface;
 import ru.teosa.utils.AutoMapper;
-import ru.teosa.utils.ComboStores;
+import ru.teosa.utils.Tokens;
 import ru.teosa.utils.Queries;
 import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
@@ -104,8 +104,8 @@ public class BreedingTabController extends AbstractController implements Setting
 		stallonGP   .getToggles().addAll(stallonGP_likeMare, stallonGP_custom, stallonGP_any);
 		
 		// Загрузка сторов цен за случки
-		matingPrice.getItems().addAll(ComboStores.STALLON_MATING_PRICE);
-		maxCoverPrice.getItems().addAll(ComboStores.STALLON_MATING_PRICE);
+		matingPrice.getItems().addAll(Tokens.STALLON_MATING_PRICE);
+		maxCoverPrice.getItems().addAll(Tokens.STALLON_MATING_PRICE);
 				
 		// Инициализация спинера Количество активных случек
 		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);

@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import ru.teosa.GUI.view.MoneyConvertorController;
 import ru.teosa.account.Account;
 import ru.teosa.account.Resources;
-import ru.teosa.utils.ComboStores;
+import ru.teosa.utils.Tokens;
 import ru.teosa.utils.Msgs;
 import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.Tools;
@@ -114,9 +114,9 @@ public class MoneyConverterSercice extends Service<String>{
 		Integer mcb = Resources.getMoneyBalFromForm();
 		
 		//Находим максимально возможное количество зерна для покупки и селектим в комбобоксе
-		for(int i = ComboStores.WHEAT_STORE.length -1; i >= 0; --i ) {		
-			if(mcb - ComboStores.WHEAT_STORE[i] >= targetMoneyBallance) {
-				combo.selectByValue(ComboStores.WHEAT_STORE[i] + "");
+		for(int i = Tokens.WHEAT_STORE.length -1; i >= 0; --i ) {		
+			if(mcb - Tokens.WHEAT_STORE[i] >= targetMoneyBallance) {
+				combo.selectByValue(Tokens.WHEAT_STORE[i] + "");
 				break;
 			}
 		}

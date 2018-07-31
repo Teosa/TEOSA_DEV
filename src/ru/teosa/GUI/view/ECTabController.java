@@ -10,7 +10,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleGroup;
 import ru.teosa.herdSettings.EC_Settings;
 import ru.teosa.herdSettings.SettingTabsInterface;
-import ru.teosa.utils.ComboStores;
+import ru.teosa.utils.Tokens;
 import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
@@ -79,14 +79,14 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 		specialization.getToggles().addAll(specialization_classic, specialization_western, specialization_any);
 		
 		// Загрузка стора длительности записи 
-		registrationTerm.getItems().addAll(ComboStores.EC_REGISTRATION_TERM);
+		registrationTerm.getItems().addAll(Tokens.EC_REGISTRATION_TERM);
 		
 		// Инициализация спинера Оставшиеся дни
 		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 14, 3);
 		daysBeforeExtend.setValueFactory(svf);
 		
 		// Загрузка стора длительности продления 
-		extendTerm.getItems().addAll(ComboStores.EC_EXTEND_TERM);
+		extendTerm.getItems().addAll(Tokens.EC_EXTEND_TERM);
 	}
 
 	@Override

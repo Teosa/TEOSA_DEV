@@ -19,18 +19,12 @@ import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 public class MoneyConvertorController  {
 
-	@FXML
-	private Text moneyCurBalText;       // Текущий баланс, экю
-	@FXML                           
-	private Text wheatCurBalText;       // Текущий баланс, зерно
-	@FXML                          
-	private TextField moneyExpBalField; // Ожидаемый баланс, экю
-	@FXML                          
-	private Text wheatExpBalText;       // Ожидаемый баланс, зерно
-	@FXML  
-	private Button convertBtn;
-	@FXML  
-	private Button copyMoneyCurBal;
+	@FXML private Text moneyCurBalText;       // Текущий баланс, экю
+	@FXML private Text wheatCurBalText;       // Текущий баланс, зерно
+	@FXML private TextField moneyExpBalField; // Ожидаемый баланс, экю
+	@FXML private Text wheatExpBalText;       // Ожидаемый баланс, зерно
+	@FXML private Button convertBtn;
+	@FXML private Button copyMoneyCurBal;
 	
 	public static final String BUY_STORE_URL  = "marche/boutique";
 	public static final String SELL_STORE_URL = "marche/boutiqueVendre";

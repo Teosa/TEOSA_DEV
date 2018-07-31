@@ -11,13 +11,17 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import ru.teosa.GUI.MainApp;
 import ru.teosa.herdSettings.HerdRunSettings;
 import ru.teosa.utils.Queries;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
+import ru.teosa.utils.objects.RunProgramRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
 public class FarmProgramPanelController extends AbstractController{
@@ -42,10 +46,36 @@ public class FarmProgramPanelController extends AbstractController{
 
 	@Override
 	public void customizeContent() {
-		// TODO Auto-generated method stub
+
+		// Слушатель изменений в комбобоксе 'Программа'
+		programsCombo.valueProperty().addListener(new ChangeListener<SimpleComboRecordExt>() {
+			@Override
+			public void changed(ObservableValue observable, SimpleComboRecordExt oldValue, SimpleComboRecordExt newValue) {
+				System.out.println("PROGRAM CHANGE LISTENER");
+				setAddProgramToRunButtonAvalibity();
+			}
+        });
 		
 	}
 
+	@FXML private void addProgramToRunHandler() 
+	{
+		System.out.println("addProgramToRun PRESSED");
+		
+		RunProgrammController runProgramController = MainApp.getController().getRunProgramPanelController();
+		FarmsTreeViewController treeViewController = MainApp.getController().getFarmsTreeController();
+		
+		RunProgramRecord newRecord = new RunProgramRecord();
+		newRecord.setFarmID(treeViewController.getTree().getSelectionModel().getSelectedItem().getValue().getId());
+		newRecord.setFarmName(treeViewController.getTree().getSelectionModel().getSelectedItem().getValue().getName());
+		newRecord.setProgramID(programsCombo.getSelectionModel().getSelectedItem().getId());
+		newRecord.setProgramName(programsCombo.getSelectionModel().getSelectedItem().getName());
+		newRecord.setProgram((HerdRunSettings)programsCombo.getSelectionModel().getSelectedItem().getData());
+		newRecord.setStatus("STATUS");
+
+		runProgramController.addRecord(newRecord);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void loadProgramSettings() {
 		
@@ -80,6 +110,21 @@ public class FarmProgramPanelController extends AbstractController{
 
 		programsCombo.getItems().addAll(programs);
 	}	
+	
+	/** Установка доступности кнопки 'Добавить в прогон', в зависимости от условий */
+	public void setAddProgramToRunButtonAvalibity() 
+	{
+		FarmsTreeViewController treeViewController = MainApp.getController().getFarmsTreeController();
+
+		Boolean isFarmSelectrd = false;
+		Boolean isProgramSelected = false;
+		
+		isFarmSelectrd = treeViewController.getTree().getSelectionModel().getSelectedItem().getValue().getId() > -1;
+
+		isProgramSelected = programsCombo.getSelectionModel().getSelectedItem() != null;
+
+		addProgramToRun.setDisable(!(isFarmSelectrd && isProgramSelected));
+	}
 //*********************************************************************************************************************************	
 //*********************************************************************************************************************************	
 	public Label getSelectedFarmName() {

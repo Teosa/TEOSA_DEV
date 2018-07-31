@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,6 +41,8 @@ public class AccountInfoPanelController extends AbstractController{
 	
 	@FXML private Text breederName;
 	@FXML private Text moneyBallance;
+	
+	@FXML private Button homeButton;     // Кнопка домой
 	
 	private final static String ADD_PROGRAMM_WIN_HEADER  = "Новая программа";
 	private final static String EDIT_PROGRAMM_WIN_HEADER = "Редактировать/удалить программу";
@@ -126,13 +129,21 @@ public class AccountInfoPanelController extends AbstractController{
     }
     
     // Поднятие диалога создания новой программы прогона
-    @FXML
-    public void addProgramHandler() throws Exception{ showProgramDialog(ADD_PROGRAMM_WIN_HEADER, 0); }
+    @FXML public void addProgramHandler() throws Exception
+    { 
+    	showProgramDialog(ADD_PROGRAMM_WIN_HEADER, 0); 
+    }
     
     // Поднятие диалога редактирования программ прогона
-    @FXML
-    public void editProgramHandler() throws Exception{ showProgramDialog(EDIT_PROGRAMM_WIN_HEADER, 1); }
+    @FXML public void editProgramHandler() throws Exception
+    { 
+    	showProgramDialog(EDIT_PROGRAMM_WIN_HEADER, 1); 
+    }
     
+    // Переход на главную страницу игры
+    @FXML private void homeButtonHandler() {
+    	// TODO realization
+    }
     
     private void showProgramDialog(String dialogTitle, int mode) throws IOException {
     	Stage dialog = new Stage();

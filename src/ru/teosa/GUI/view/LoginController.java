@@ -33,6 +33,7 @@ import ru.teosa.utils.AutoMapper;
 import ru.teosa.utils.Customizer;
 import ru.teosa.utils.Queries;
 import ru.teosa.utils.Sleeper;
+import ru.teosa.utils.XPathConstants;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecord;
@@ -216,10 +217,11 @@ public class LoginController {
 		
 			// Ждем появления кнопки Коневодство на панели кнопок главной страницы игры
 			WebDriverWait wait = (WebDriverWait) new WebDriverWait(MainAppHolderSingleton.getInstance().getDriver(), 60);
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]")));
+//			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]")));
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(XPathConstants.MAIN_HEADER)));
 		
 			// Получаем кнопку Коневодство
-			WebElement el = mainApp.getDriver().findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]"));
+			WebElement el = mainApp.getDriver().findElement(By.xpath(XPathConstants.MAIN_HEADER_BREEDING_FARM));
 
 			// Возвращаем время ожидания загрузки  страницы к стандартному значению
 			Sleeper.setStandartPageLoadTimeout();

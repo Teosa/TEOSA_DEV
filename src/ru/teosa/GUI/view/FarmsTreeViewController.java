@@ -9,14 +9,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.herdSettings.HerdRunSettings;
 import ru.teosa.mainapp.pojo.BreedingFarm;
-import ru.teosa.utils.Customizer;
 import ru.teosa.utils.Sleeper;
+import ru.teosa.utils.XPathConstants;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
@@ -46,12 +48,32 @@ public class FarmsTreeViewController extends AbstractController{
 	
 
 	@Override
-	public void customizeContent() {
-		new Customizer().customizeTree(tree);
+	public void customizeContent() {		
+		// Конфигурируем слушатель выбора ноды
+		tree.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<TreeItem<RedirectingComboRecordExt>>() {
+			@Override
+			public void changed(ObservableValue<? extends TreeItem<RedirectingComboRecordExt>> observable,
+					TreeItem<RedirectingComboRecordExt> oldValue, TreeItem<RedirectingComboRecordExt> newValue) {
+
+				FarmProgramPanelController controller = MainApp.getController().getFarmProgramPanelController();
+
+				if(newValue.getValue().getId() > -1) {
+					controller.getSelectedFarmName().setText(newValue.getValue().getName());	
+
+				}
+				else {
+					controller.getSelectedFarmName().setText("<не выбрано>");
+
+				}
+				
+				// Контролируем доступность кнопки добавления в прогон
+				controller.setAddProgramToRunButtonAvalibity();
+			}
+		   });
 	}
 
-	private void getBreedingFarms(){
-		
+	private void getBreedingFarms()
+	{
 		goToBreedingFarm();
 
 		Sleeper.waitVisibility("//*[@id=\"tab-all-breeding\"]/li");
@@ -180,14 +202,19 @@ public class FarmsTreeViewController extends AbstractController{
     }
       
 	private  void goToBreedingFarm(){	
-		Logger.getLogger("debug").debug("goToBreedingFarm");
-//		Sleeper.waitVisibility("//*[@id=\"header-menu\"]/div[1]/ul/li[1]");
-		WebElement breedingFarmMenu = driver.findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]"));
+		try {
+			WebElement breedingFarmMenu = driver.findElement(By.xpath(XPathConstants.MAIN_HEADER_BREEDING_FARM));
 
-		Actions builder = new Actions(driver);
-		builder.moveToElement(breedingFarmMenu).build().perform();
-	
-		driver.findElement(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]/ul/li[2]/a")).click();
+			Actions builder = new Actions(driver);
+			builder.moveToElement(breedingFarmMenu).build().perform();
+		
+			driver.findElement(By.xpath(XPathConstants.MAIN_HEADER_BREEDING_FARM_HORSES)).click();
+		}
+		catch(Exception e) { 
+			// По какой то непонятной причине, после установки хендлеров для контроля доступности кнопки 'Добавить в прогон',
+			// данный метод после выполнения выбрасывает TimeOutException. Поэтому код обернут в try/catch.
+			System.out.println("COUGHT EXCEPTION"); 
+			}
 	}
 	
 //*****************************************************************************************************************************	

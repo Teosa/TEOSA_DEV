@@ -153,27 +153,27 @@ public class Customizer{
     	});   	
 	}
 	
-	/***/
-	public  void customizeTree(TreeView<RedirectingComboRecordExt> treeView) {
-		 treeView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<TreeItem<RedirectingComboRecordExt>>() {
-			@Override
-			public void changed(ObservableValue<? extends TreeItem<RedirectingComboRecordExt>> observable,
-					TreeItem<RedirectingComboRecordExt> oldValue, TreeItem<RedirectingComboRecordExt> newValue) {
-
-				FarmProgramPanelController controller = MainApp.getController().getFarmProgramPanelController();
-				
-				if(newValue.getValue().getId() > -1) {
-					controller.getSelectedFarmName().setText(newValue.getValue().getName());	
-
-				}
-				else {
-					controller.getSelectedFarmName().setText("<не выбрано>");
-
-				}
-
-			}
-		   });
-	}
+//	/***/
+//	public  void customizeTree(TreeView<RedirectingComboRecordExt> treeView) {
+//		 treeView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<TreeItem<RedirectingComboRecordExt>>() {
+//			@Override
+//			public void changed(ObservableValue<? extends TreeItem<RedirectingComboRecordExt>> observable,
+//					TreeItem<RedirectingComboRecordExt> oldValue, TreeItem<RedirectingComboRecordExt> newValue) {
+//
+//				FarmProgramPanelController controller = MainApp.getController().getFarmProgramPanelController();
+//				
+//				if(newValue.getValue().getId() > -1) {
+//					controller.getSelectedFarmName().setText(newValue.getValue().getName());	
+//
+//				}
+//				else {
+//					controller.getSelectedFarmName().setText("<не выбрано>");
+//
+//				}
+//
+//			}
+//		   });
+//	}
 //*********************************************************************************
 //*********************************************************************************
 

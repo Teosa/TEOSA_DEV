@@ -17,14 +17,14 @@
                <bottom>
                   <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <items>
-                      <Button mnemonicParsing="false" text="Начать прогон" />
+                      <Button fx:id="startProgram" mnemonicParsing="false" onAction="#startProgramHandler" text="Начать прогон" />
                     </items>
                   </ToolBar>
                </bottom>
                <center>
                   <ScrollPane fitToWidth="true" minHeight="200.0" minWidth="200.0" prefHeight="200.0" BorderPane.alignment="CENTER">
                      <content>
-                        <TableView fx:id="table" editable="true" minHeight="200.0" minWidth="200.0" tableMenuButtonVisible="true">
+                        <TableView fx:id="table" editable="true" maxHeight="198.0" minHeight="198.0" minWidth="200.0" tableMenuButtonVisible="true">
                           <columns>
                             <TableColumn fx:id="numCol" editable="false" maxWidth="-Infinity" minWidth="40.0" prefWidth="-1.0" resizable="false" text="№" />
                             <TableColumn fx:id="farmNameCol" editable="false" maxWidth="400.0" minWidth="200.0" prefWidth="-1.0" text="Название завода" />
