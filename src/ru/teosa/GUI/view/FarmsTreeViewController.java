@@ -22,6 +22,7 @@ import ru.teosa.utils.XPathConstants;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
+/** Основное окно; Контроллер панели дерева заводов */
 public class FarmsTreeViewController extends AbstractController{
 
 	private MainApp mainApp;

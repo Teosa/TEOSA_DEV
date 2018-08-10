@@ -5,10 +5,13 @@ import org.apache.log4j.Logger;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.stage.Stage;
 import ru.teosa.utils.Sleeper;
 
 public class HerdRunService extends Service<String>{
-
+	
+	private Stage window;          
+	
 	@Override
 	protected Task<String> createTask() {
 		return new Task<String>() {
@@ -36,5 +39,16 @@ public class HerdRunService extends Service<String>{
 				return null;
 			}
 		};
+	}
+
+	
+	
+	
+	public Stage getWindow() {
+		return window;
+	}
+
+	public void setWindow(Stage window) {
+		this.window = window;
 	}
 }

@@ -3,7 +3,6 @@ package ru.teosa.GUI.view;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Accordion;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -11,7 +10,7 @@ import ru.teosa.GUI.MainApp;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecordExt;
 
-
+/** Контроллер главного окна */
 public class MainWindowController {
 	
 	private static AccountInfoPanelController   accountInfoController;

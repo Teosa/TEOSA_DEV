@@ -15,6 +15,7 @@ import ru.teosa.herdSettings.HerdRunSettings;
 import ru.teosa.herdSettings.SettingTabsInterface;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
+/** Модуль Программы; Вкладка Основные настройки */
 public class HerdRunSettingsPaneController extends AbstractController implements SettingTabsInterface<HerdRunSettings>{
 
 	@FXML private TabPane tabPane;     // Панель вкдадок

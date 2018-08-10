@@ -64,8 +64,8 @@ public class MsgWindow {
 		return errorMsg;
 	}
 
-	public static void setErrorMsg(String errorMsg) {
-		
+	public static void setErrorMsg(String errorMsg) 
+	{		
 		MsgWindow.errorMsg = "\n-------------------------------------\n" + errorMsg;
 	}
 	

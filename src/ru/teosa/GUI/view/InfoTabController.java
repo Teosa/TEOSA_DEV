@@ -9,6 +9,7 @@ import ru.teosa.herdSettings.CommonSettings;
 import ru.teosa.herdSettings.SettingTabsInterface;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
+/** Модуль Программы; Вкладка Основные опции */
 public class InfoTabController extends AbstractController implements SettingTabsInterface<CommonSettings>{
 	
 	@FXML private CheckBox baseActions;     // Базовые действия

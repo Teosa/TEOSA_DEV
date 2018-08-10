@@ -7,6 +7,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.account.Account;
 import ru.teosa.threads.HerdRunService;
+import ru.teosa.threads.LoadingService;
+import ru.teosa.threads.LoginService;
 import ru.teosa.threads.MoneyConverterSercice;
 
 public class MainAppHolderSingleton {
@@ -22,6 +24,8 @@ public class MainAppHolderSingleton {
     // Треды
     private static MoneyConverterSercice moneyConverterService = new MoneyConverterSercice();
     private static HerdRunService herdRunService = new HerdRunService();
+    private static LoadingService loadingService = new LoadingService();
+    private static LoginService loginService = new LoginService();
     
     NamedParameterJdbcTemplate pstmt;
     TransactionTemplate tmpl;
@@ -75,5 +79,11 @@ public class MainAppHolderSingleton {
 	}
 	public static HerdRunService getHerdRunService() {
 		return herdRunService;
+	}
+	public static LoadingService getLoadingService() {
+		return loadingService;
+	}
+	public static LoginService getLoginService() {
+		return loginService;
 	}
 }

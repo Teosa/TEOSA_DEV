@@ -14,6 +14,7 @@ import ru.teosa.utils.Tokens;
 import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
+/** Модуль Программы; Вкладка КСК */
 public class ECTabController extends AbstractController implements SettingTabsInterface<EC_Settings>{
 
 // *** БЛОК ЗАПИСИ В КСК ***

@@ -24,16 +24,13 @@ import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RunProgramRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
+/** Основное окно; Контроллер панели добавления записей в программу прогона */
 public class FarmProgramPanelController extends AbstractController{
 
 	
 	@FXML private ComboBox<SimpleComboRecordExt> programsCombo; // Программы
 	@FXML private Label selectedFarmName;                  		// Выбранный завод
 	@FXML private Button addProgramToRun;                  		// Добавить в прогон
-	
-	
-	
-	
 	
 	
 	@Override
@@ -51,17 +48,14 @@ public class FarmProgramPanelController extends AbstractController{
 		programsCombo.valueProperty().addListener(new ChangeListener<SimpleComboRecordExt>() {
 			@Override
 			public void changed(ObservableValue observable, SimpleComboRecordExt oldValue, SimpleComboRecordExt newValue) {
-				System.out.println("PROGRAM CHANGE LISTENER");
 				setAddProgramToRunButtonAvalibity();
 			}
         });
-		
 	}
 
+	// Добавление выбранной пары завод-программа в план прогона
 	@FXML private void addProgramToRunHandler() 
 	{
-		System.out.println("addProgramToRun PRESSED");
-		
 		RunProgrammController runProgramController = MainApp.getController().getRunProgramPanelController();
 		FarmsTreeViewController treeViewController = MainApp.getController().getFarmsTreeController();
 		
@@ -75,6 +69,7 @@ public class FarmProgramPanelController extends AbstractController{
 
 		runProgramController.addRecord(newRecord);
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public void loadProgramSettings() {
@@ -119,8 +114,10 @@ public class FarmProgramPanelController extends AbstractController{
 		Boolean isFarmSelectrd = false;
 		Boolean isProgramSelected = false;
 		
+		// Выбран завод
 		isFarmSelectrd = treeViewController.getTree().getSelectionModel().getSelectedItem().getValue().getId() > -1;
 
+		//Выбрана программа
 		isProgramSelected = programsCombo.getSelectionModel().getSelectedItem() != null;
 
 		addProgramToRun.setDisable(!(isFarmSelectrd && isProgramSelected));

@@ -11,7 +11,7 @@
 
 <Accordion fx:id="accordion" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.RunProgrammController">
    <panes>
-      <TitledPane animated="false" text="Прогон">
+      <TitledPane animated="false" text="План прогона">
          <content>
             <BorderPane maxHeight="250.0" minHeight="250.0" prefHeight="250.0">
                <bottom>

@@ -1,8 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.TextFlow?>
 
-
-<BorderPane prefHeight="250.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
-	<!-- TODO Add Nodes -->
+<BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="460.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.teosa.GUI.view.HerdRunProgressWindowController">
+   <bottom>
+      <ButtonBar buttonOrder="%key.unspecified" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <buttons>
+          <Button fx:id="startRun" mnemonicParsing="false" onAction="#startRunHandler" />
+        </buttons>
+      </ButtonBar>
+   </bottom>
+   <center>
+      <TextFlow maxHeight="-Infinity" minHeight="200.0" prefHeight="300.0" styleClass="background" stylesheets="@NewFile.css" BorderPane.alignment="CENTER" />
+   </center>
+   <top>
+      <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="115.0" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressIndicator layoutX="350.0" layoutY="32.0" prefHeight="101.0" prefWidth="50.0" progress="1.0" AnchorPane.bottomAnchor="32.0" AnchorPane.topAnchor="30.0" />
+            <Label layoutX="20.0" layoutY="20.0" text="План" />
+            <Label layoutX="19.0" layoutY="50.0" text="Завод" />
+            <Label layoutX="20.0" layoutY="80.0" text="Программа" />
+            <Label layoutX="110.0" layoutY="20.0" text="0/0" />
+            <Label layoutX="110.0" layoutY="50.0" text="Label" />
+            <Label layoutX="110.0" layoutY="80.0" text="Label" />
+            <Separator layoutX="95.0" layoutY="115.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </top>
 </BorderPane>

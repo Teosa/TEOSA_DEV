@@ -17,6 +17,7 @@ import ru.teosa.utils.Msgs;
 import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
+/** Контроллер модуля Конвертация */
 public class MoneyConvertorController  {
 
 	@FXML private Text moneyCurBalText;       // Текущий баланс, экю

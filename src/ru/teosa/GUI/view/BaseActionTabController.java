@@ -1,7 +1,6 @@
 package ru.teosa.GUI.view;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -20,6 +18,7 @@ import ru.teosa.herdSettings.BaseActionsSettings;
 import ru.teosa.herdSettings.SettingTabsInterface;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
+/** Модуль Программы; Вкладка Базовые действия */
 public class BaseActionTabController extends AbstractController implements SettingTabsInterface<BaseActionsSettings>{
 	
 	@FXML private CheckBox feed;       private static final char FEED_CHAR    = 'F';          // Кормить

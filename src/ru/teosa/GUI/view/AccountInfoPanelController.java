@@ -24,6 +24,7 @@ import ru.teosa.account.Resources;
 import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
+/** Основное окно; Контроллер панели информации об аккаунте и меню */
 public class AccountInfoPanelController extends AbstractController{
 
 	private MainApp mainApp;
@@ -68,8 +69,8 @@ public class AccountInfoPanelController extends AbstractController{
 	
     //Поднятие диалога конвертации
     @FXML
-    public void convertMoneyHandler() throws Exception{ 	
-
+    public void convertMoneyHandler() throws Exception
+    { 	
     	Stage dialog = new Stage();
     	
         FXMLLoader loader = new FXMLLoader();

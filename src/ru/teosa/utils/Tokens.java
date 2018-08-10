@@ -4,8 +4,9 @@ import java.util.HashMap;
 
 public class Tokens {
 	
-	
+	/** Статусы прогона RU */
 	public static final HashMap<Integer, String> HERD_RUN_STATUSES_RU;
+	/**  Статусы прогона EN */
 	public static final HashMap<Integer, String> HERD_RUN_STATUSES_EN;
 	
 	static

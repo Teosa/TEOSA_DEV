@@ -28,6 +28,7 @@ import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.SimpleComboRecord;
 
+/** Модуль Программы; Вкладка Разведение */
 public class BreedingTabController extends AbstractController implements SettingTabsInterface<BreedingSettings>{
 
 	private int gridRowHeight = 30;

@@ -2,7 +2,6 @@ package ru.teosa.GUI.view;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -21,14 +20,19 @@ import org.springframework.transaction.support.TransactionTemplate;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import ru.teosa.GUI.LoadingWindow;
 import ru.teosa.GUI.MainApp;
+import ru.teosa.GUI.MsgWindow;
 import ru.teosa.lang.Lang;
 import ru.teosa.mainapp.pojo.User;
+import ru.teosa.threads.ServiceStarter;
 import ru.teosa.utils.AutoMapper;
 import ru.teosa.utils.Customizer;
 import ru.teosa.utils.Queries;
@@ -36,9 +40,11 @@ import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.XPathConstants;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
+import ru.teosa.utils.objects.ResultObject;
 import ru.teosa.utils.objects.SimpleComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
+/** Контроллер окна авторизации */
 public class LoginController {
 	
 	@FXML private ComboBox<RedirectingComboRecord>  siteVersion;
@@ -81,16 +87,29 @@ public class LoginController {
      * 4. Инициализация MainAppHolderSingleton.
      * */
     @FXML
-    public void login(){
+    public void login()
+    {
 
-    	saveSelectedVersion();
-    	
-    	if(!checkLogopas()) return;
-    	if(mainApp.getDriver() == null) runWithCrome();
-    	if(accountLogin()) 
-    		mainApp.showMainForm(); 
-    	
-    	MainAppHolderSingleton.getInstance().setMainApp(mainApp);
+       saveSelectedVersion();
+       
+       // Проверяем логин и пароль
+       if(checkLogopas()) 
+       {
+    	   MainAppHolderSingleton.getInstance().setMainApp(mainApp);
+
+    	   startBrowserAndLogin();
+       }
+        	
+        	// Запускаем браузер
+//        	if(mainApp.getDriver() == null) runWithCrome();
+        	
+//        	// Пытаемся авторизоваться с введенным логином и паролем
+//        	if(accountLogin()) 
+//        		mainApp.showMainForm(); 
+//        	else LoadingWindow.hide();
+//        	
+//        	MainAppHolderSingleton.getInstance().setMainApp(mainApp);
+
     }
         
     private void initGameVersionsCombo() {
@@ -168,23 +187,27 @@ public class LoginController {
     	//Если список не пустой, выбираем из него первого пользователя
     	if(username.getItems().size() > 0) username.setValue(username.getItems().get(0));
     }
-    
-    private void runWithCrome(){
-	    System.setProperty("webdriver.chrome.driver", this.getClass().getResource("/chromedriver.exe").getPath());
-	    
-	    mainApp.setDriver(new ChromeDriver());
 
-    	mainApp.getDriver().get(siteVersion.getValue().getUrl());
+    
+    private boolean startBrowserAndLogin() 
+    {
+    	MainAppHolderSingleton.getLoginService().setLoginController(this);	
+    	MainAppHolderSingleton.getLoginService().addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+    		    new EventHandler<WorkerStateEvent>() {
+    		    @Override
+    		    public void handle(WorkerStateEvent t) {
+    		        String result = MainAppHolderSingleton.getLoginService().getValue();
+    		        System.out.println("TASK RESULT " + result);
+    		        LoadingWindow.hide();
+    		    }
+    		});
+
+    	ServiceStarter.start(MainAppHolderSingleton.getLoginService());
     	
-    	MainAppHolderSingleton.getInstance().setDriver(mainApp.getDriver()); 	
-    	MainAppHolderSingleton.setGameURL(siteVersion.getValue().getUrl());
+    	LoadingWindow.show();
     	
-    	Sleeper.setStandartPageLoadTimeout();
-    	Sleeper.setStandartScriptTimeout();
-    	Sleeper.setStandartImplicitlyWait();
-    } 
-     
-    private void runWithHeadlessBrowser(){}
+    	return true;
+    }
  
     private boolean accountLogin(){
     	try {
@@ -377,18 +400,14 @@ public class LoginController {
     	}
     }
     
-    private void saveSelectedVersion() {
-    	try {
+    private void saveSelectedVersion()
+    {
     		NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
     		
     		HashMap<String, Integer> params = new HashMap<String, Integer>();
     		params.put("id", siteVersion.getValue().getId());
 
-    		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'Y' WHERE ID = :id", params);
-    	}
-    	catch(Exception e) {
-    		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
-    	}
+    		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'Y' WHERE ID = :id", params);   	
     }
 	
 	private void initAccount(Integer userid) {
@@ -406,5 +425,42 @@ public class LoginController {
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
 		}
 	}
-	
+//*******************************************************************************************************************************************
+//*******************************************************************************************************************************************
+	public ComboBox<RedirectingComboRecord> getSiteVersion() {
+		return siteVersion;
+	}
+	public void setSiteVersion(ComboBox<RedirectingComboRecord> siteVersion) {
+		this.siteVersion = siteVersion;
+	}
+	public ComboBox<SimpleComboRecordExt> getUsername() {
+		return username;
+	}
+	public void setUsername(ComboBox<SimpleComboRecordExt> username) {
+		this.username = username;
+	}
+	public TextField getPassword() {
+		return password;
+	}
+	public void setPassword(TextField password) {
+		this.password = password;
+	}
+	public Button getLoginButton() {
+		return loginButton;
+	}
+	public void setLoginButton(Button loginButton) {
+		this.loginButton = loginButton;
+	}
+	public Text getLoginErrorMsg() {
+		return loginErrorMsg;
+	}
+	public void setLoginErrorMsg(Text loginErrorMsg) {
+		this.loginErrorMsg = loginErrorMsg;
+	}
+	public Text getVersion() {
+		return version;
+	}
+	public void setVersion(Text version) {
+		this.version = version;
+	}	
 }

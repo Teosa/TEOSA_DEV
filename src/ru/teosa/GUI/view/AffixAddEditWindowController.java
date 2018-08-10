@@ -20,6 +20,7 @@ import ru.teosa.utils.Queries;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.SimpleComboRecord;
 
+/** Модуль Аффиксы; Контроллер окна добавления нового аффикса */
 public class AffixAddEditWindowController extends AbstractController{
 
 	private static int MODE;

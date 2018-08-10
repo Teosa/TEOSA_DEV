@@ -31,6 +31,7 @@ import ru.teosa.utils.Tools;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
+/** Контроллер модуля Программы прогона */
 public class ProgramWindowController extends AbstractController{
 
 	@FXML private BorderPane window;

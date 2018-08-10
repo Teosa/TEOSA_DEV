@@ -23,6 +23,7 @@ import ru.teosa.utils.Queries;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.SimpleComboRecord;
 
+/** Контроллер модуля Аффиксы */
 public class AffixesWindowController extends AbstractController{
 
 	private static Stage thisWindow;

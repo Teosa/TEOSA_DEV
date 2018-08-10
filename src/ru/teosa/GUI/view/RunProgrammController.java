@@ -1,26 +1,32 @@
 package ru.teosa.GUI.view;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.MsgWindow;
 import ru.teosa.utils.Msgs;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RunProgramRecord;
 
-
+/** Основное окно; Панель плана прогона */
 public class RunProgrammController extends AbstractController{
 
 	
@@ -60,22 +66,36 @@ public class RunProgrammController extends AbstractController{
 		
 	}
 
-	@FXML private void startProgramHandler() {
-//    	//Если тред запущен - останавливаем его и делаем ресет для установки состояния READY( необходимо для повторного запуска )
-//    	if(MainAppHolderSingleton.getHerdRunService().isRunning()) 
-//    	{
-//    		MainAppHolderSingleton.getHerdRunService().cancel();
-//    		MainAppHolderSingleton.getHerdRunService().reset();
-//    	}
-//    	//Иначе - запускаем тред	
-//    	else 
-//    	{
-    		if(MainAppHolderSingleton.getHerdRunService().getState().toString() == "SUCCEEDED") 
-    			MainAppHolderSingleton.getHerdRunService().restart();
-    		else MainAppHolderSingleton.getHerdRunService().start();
-    		
-    		startProgram.setDisable(true);
-//    	}
+	@FXML private void startProgramHandler() throws Exception 
+	{	
+    	Stage dialog = new Stage();
+    	
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("view/HerdRunProgressWindow.fxml"));
+        
+        Scene scene = new Scene((BorderPane) loader.load());
+       
+        dialog.setResizable(false);
+        dialog.setScene(scene);
+        dialog.setTitle(Msgs.HERD_RUN_WINDOW_TITLE);
+    	dialog.initOwner(MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage());
+    	dialog.initModality(Modality.APPLICATION_MODAL);
+//    	dialog.getIcons().add(new Image("/icons/convertation.png"));
+    	
+    	dialog.setOnCloseRequest(new EventHandler<WindowEvent>() {		
+			@Override
+			public void handle(WindowEvent event) {
+				if (MainAppHolderSingleton.getHerdRunService().isRunning()) 		
+				{   
+		    		MainAppHolderSingleton.getHerdRunService().cancel();
+		    		MainAppHolderSingleton.getHerdRunService().reset();
+		    	}
+			}
+		});
+    	
+    	MainAppHolderSingleton.getHerdRunService().setWindow(dialog);
+    	
+    	dialog.showAndWait();
 	}
 	
 	private void addContextMenu() {
@@ -107,7 +127,7 @@ public class RunProgrammController extends AbstractController{
 		}
 		else 
 		{
-			MsgWindow.showErrorWindow("Данная программа для выбранного завода уже добавлена в прогон.");
+			MsgWindow.showErrorWindow(Msgs.HERD_RUN_ADD_RECORD_ERROR_MSG);
 		}
 	}
 	
