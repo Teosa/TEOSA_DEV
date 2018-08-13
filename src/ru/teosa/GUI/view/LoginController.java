@@ -99,17 +99,6 @@ public class LoginController {
 
     	   startBrowserAndLogin();
        }
-        	
-        	// Запускаем браузер
-//        	if(mainApp.getDriver() == null) runWithCrome();
-        	
-//        	// Пытаемся авторизоваться с введенным логином и паролем
-//        	if(accountLogin()) 
-//        		mainApp.showMainForm(); 
-//        	else LoadingWindow.hide();
-//        	
-//        	MainAppHolderSingleton.getInstance().setMainApp(mainApp);
-
     }
         
     private void initGameVersionsCombo() {
@@ -192,24 +181,32 @@ public class LoginController {
     private boolean startBrowserAndLogin() 
     {
     	MainAppHolderSingleton.getLoginService().setLoginController(this);	
-    	MainAppHolderSingleton.getLoginService().addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-    		    new EventHandler<WorkerStateEvent>() {
+    	
+    	// Вещаем слушатель, который по завершению таска прячет окно загрузки и отображает форму
+    	MainAppHolderSingleton.getLoginService().addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() 
+    		{
     		    @Override
-    		    public void handle(WorkerStateEvent t) {
-    		        String result = MainAppHolderSingleton.getLoginService().getValue();
-    		        System.out.println("TASK RESULT " + result);
+    		    public void handle(WorkerStateEvent t) 
+    		    {
     		        LoadingWindow.hide();
+    		        
+    		        if(t.getSource().getValue() == null)
+						// Отображаем основную форму приложения
+						MainAppHolderSingleton.getInstance().getMainApp().showMainForm();
     		    }
-    		});
+    		}
+    	);
 
+    	// Запуск таска: открытие браузера и попытка авторизации с введенными на форме данными
     	ServiceStarter.start(MainAppHolderSingleton.getLoginService());
     	
+    	// Поднимаем окно загрузки
     	LoadingWindow.show();
     	
     	return true;
     }
  
-    private boolean accountLogin(){
+    public boolean accountLogin(){
     	try {
     		//Если на странице отсутствует поле Логин, ждем появления кнопки Войти для отображения формы авторизации
     		if(!mainApp.getDriver().findElement(By.id("login")).isDisplayed()) {
@@ -235,12 +232,10 @@ public class LoginController {
 	    	mainApp.getDriver().findElement(By.id("authentificationSubmit")).click();
 	    	
 	    	// Увеличиваем время ожидания загрузки страницы 
-//			mainApp.getDriver().manage().timeouts().pageLoadTimeout(1, TimeUnit.MINUTES);
 	    	Sleeper.setStandartPageLoadTimeout(60);
 		
 			// Ждем появления кнопки Коневодство на панели кнопок главной страницы игры
 			WebDriverWait wait = (WebDriverWait) new WebDriverWait(MainAppHolderSingleton.getInstance().getDriver(), 60);
-//			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"header-menu\"]/div[1]/ul/li[1]")));
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(XPathConstants.MAIN_HEADER)));
 		
 			// Получаем кнопку Коневодство

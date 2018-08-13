@@ -13,6 +13,7 @@ import ru.teosa.utils.objects.MainAppHolderSingleton;
 public class LoginService extends Service<String>{
 
 	private LoginController loginController;
+
 	
 	
 	
@@ -20,24 +21,26 @@ public class LoginService extends Service<String>{
 	protected Task<String> createTask() {
 		return new Task<String>() {
 			@Override
-			protected String call() throws Exception {
-				
-//				Button btn = (Button) convertorWin.getScene().lookup("#convertBtn");
-
-//				while (true) 
-//				{
-					try {
-						runWithCrome();
-
-
-//						if(isCancelled()) break;
-						
-					} catch (Exception e) {
-						Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
-					}
-//				}
-
-				return "LOGIN SERVICE: work is done";
+			protected String call() throws Exception 
+			{
+				String result = null;
+				try {
+					// Запускаем браузер и переходим на страницу игры выбранной версии
+					runWithCrome();
+				  	// Устанавливаем ожидания
+					System.out.println("driver " + MainAppHolderSingleton.getInstance().getDriver());
+					setWaits();
+					// Пытаемся авторизоваться  с введенным логопасом
+					if(!loginController.accountLogin()) 
+						result = "AUTH ERROR";
+				} 
+				catch (Exception e) {
+					Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+					e.printStackTrace();
+					result = e.getMessage();
+				}
+			
+				return result;
 			}
 		};
 	}
@@ -46,32 +49,34 @@ public class LoginService extends Service<String>{
   {
 	System.setProperty("webdriver.chrome.driver", this.getClass().getResource("/chromedriver.exe").getPath());
 	
-	// Устанавливаем драйвер
-	MainAppHolderSingleton.getInstance().getMainApp().setDriver(new ChromeDriver());
-	
+//	this.mainApp = MainAppHolderSingleton.getInstance().getMainApp();
 	String versionURL = loginController.getSiteVersion().getValue().getUrl();
+	
+	// Устанавливаем драйвер
+	MainAppHolderSingleton.getInstance().setDriver(new ChromeDriver());
+	
 	// Переход по ссылке выбранной версии
-	MainAppHolderSingleton.getInstance().getMainApp().getDriver().get(versionURL);
+	MainAppHolderSingleton.getInstance().getDriver().get(versionURL);
 	
   	MainAppHolderSingleton.setGameURL(versionURL);
-  	
-  	// Устанавливаем ожидания
-  	Sleeper.setStandartPageLoadTimeout();
-  	Sleeper.setStandartScriptTimeout();
-  	Sleeper.setStandartImplicitlyWait();
+
   } 
    
   private void runWithHeadlessBrowser(){}
-
-public LoginController getLoginController() {
-	return loginController;
-}
-
-public void setLoginController(LoginController loginController) {
-	this.loginController = loginController;
-}
   
-  
-  
-  
+  private void setWaits() 
+  {
+	  	Sleeper.setStandartPageLoadTimeout();
+	  	Sleeper.setStandartScriptTimeout();
+	  	Sleeper.setStandartImplicitlyWait();
+  }
+// *******************************************************************************************************************************
+//*******************************************************************************************************************************
+	public LoginController getLoginController() {
+		return loginController;
+	}
+	
+	public void setLoginController(LoginController loginController) {
+		this.loginController = loginController;
+	}
 }

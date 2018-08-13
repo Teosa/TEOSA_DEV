@@ -14,8 +14,8 @@ import ru.teosa.threads.MoneyConverterSercice;
 public class MainAppHolderSingleton {
     private static MainAppHolderSingleton _instance = null;
     
-    private MainApp mainApp;                               //Ссылка на 
-    private WebDriver driver;                              //Драйвер
+    private volatile  MainApp mainApp;                     //Ссылка на 
+    private volatile  WebDriver driver;                    //Драйвер
     
     private static final Account account = new Account();  // Информация о юзере, аккаунте и т.д
     private static final String VER = "Version 1.4.0";     // Версия приложения
@@ -41,6 +41,8 @@ public class MainAppHolderSingleton {
 		return driver;
 	}
 	public void setDriver(WebDriver driver) {
+		if(this.mainApp != null) 
+			this.mainApp.setDriver(driver);
 		this.driver = driver;
 	}
 	private MainAppHolderSingleton() {}
