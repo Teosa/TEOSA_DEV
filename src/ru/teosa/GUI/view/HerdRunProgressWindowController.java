@@ -19,12 +19,15 @@ public class HerdRunProgressWindowController extends AbstractController{
 	@FXML private TextFlow logArea;
 	
 	@FXML private Button startRun;
+	@FXML private Button pauseRun;
+	@FXML private Button stopRun; 
 	
 	
 	@Override
-	protected void initialize() {
-		// TODO Auto-generated method stub
-		
+	protected void initialize() 
+	{
+    	pauseRun.setDisable(true);
+    	stopRun.setDisable(true);
 	}
 
 	@Override
@@ -35,18 +38,44 @@ public class HerdRunProgressWindowController extends AbstractController{
 	
 	@FXML private void startRunHandler() 
 	{
+    	if(MainAppHolderSingleton.getHerdRunService().getState().toString() == "SUCCEEDED") 
+    		MainAppHolderSingleton.getHerdRunService().restart();
+    	else MainAppHolderSingleton.getHerdRunService().start();
+    	
+    	MainAppHolderSingleton.getHerdRunService().setStopped(false);
+    	
+    	startRun.setDisable(true);
+    	pauseRun.setDisable(false);
+    	stopRun.setDisable(false);
+	}
+	
+	@FXML private void pauseRunHandler() 
+	{/*
     	//≈сли тред запущен - останавливаем его и делаем ресет дл€ установки состо€ни€ READY( необходимо дл€ повторного запуска )
     	if(MainAppHolderSingleton.getHerdRunService().isRunning()) 
     	{
     		MainAppHolderSingleton.getHerdRunService().cancel();
     		MainAppHolderSingleton.getHerdRunService().reset();
     	}
-    	//»наче - запускаем тред	
-    	else 
+    	
+    	startRun.setDisable(false);
+    	pauseRun.setDisable(true);
+    	stopRun.setDisable(false);*/
+	}
+	
+	@FXML private void stopRunHandler() 
+	{
+    	//≈сли тред запущен - останавливаем его и делаем ресет дл€ установки состо€ни€ READY( необходимо дл€ повторного запуска )
+    	if(MainAppHolderSingleton.getHerdRunService().isRunning()) 
     	{
-    		if(MainAppHolderSingleton.getHerdRunService().getState().toString() == "SUCCEEDED") 
-    			MainAppHolderSingleton.getHerdRunService().restart();
-    		else MainAppHolderSingleton.getHerdRunService().start();
+    		MainAppHolderSingleton.getHerdRunService().cancel();
+    		MainAppHolderSingleton.getHerdRunService().reset();
     	}
+    	
+    	MainAppHolderSingleton.getHerdRunService().setStopped(true);
+    	
+    	startRun.setDisable(false);
+    	pauseRun.setDisable(true);
+    	stopRun.setDisable(true);
 	}
 }

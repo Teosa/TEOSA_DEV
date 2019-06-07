@@ -28,6 +28,15 @@ public class Sleeper {
 		}
 	}
 	
+	/**  Остановка треда на промежуток мсек. */
+	public static void pause(long time){	
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+		}
+	}
+	
 	/**  Остановка треда на рандомный промежуток от 1 до 2 сек. */
 	public static void longPause(){	
 		try {

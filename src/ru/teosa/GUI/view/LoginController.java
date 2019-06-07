@@ -1,5 +1,6 @@
 package ru.teosa.GUI.view;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,10 +24,16 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import ru.teosa.GUI.LoadingWindow;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.GUI.MsgWindow;
@@ -35,12 +42,12 @@ import ru.teosa.mainapp.pojo.User;
 import ru.teosa.threads.ServiceStarter;
 import ru.teosa.utils.AutoMapper;
 import ru.teosa.utils.Customizer;
+import ru.teosa.utils.Msgs;
 import ru.teosa.utils.Queries;
 import ru.teosa.utils.Sleeper;
 import ru.teosa.utils.XPathConstants;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RedirectingComboRecord;
-import ru.teosa.utils.objects.ResultObject;
 import ru.teosa.utils.objects.SimpleComboRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
 
@@ -89,7 +96,6 @@ public class LoginController {
     @FXML
     public void login()
     {
-
        saveSelectedVersion();
        
        // Проверяем логин и пароль
@@ -206,7 +212,7 @@ public class LoginController {
     	return true;
     }
  
-    public boolean accountLogin(){
+	public boolean accountLogin(){
     	try {
     		//Если на странице отсутствует поле Логин, ждем появления кнопки Войти для отображения формы авторизации
     		if(!mainApp.getDriver().findElement(By.id("login")).isDisplayed()) {
@@ -287,9 +293,26 @@ public class LoginController {
     	else {
     		loginErrorMsg.setText("");
     		//Если был введен новый юзер, сохраняем его в БД
-    		if(userid == -1) userid = saveLogopas(usernameVal.trim());
-    		//Иначе - выставляем признак последнего исрльзования выбранному аккаунту юзера
-    		else changeLastusedProp();
+    		if(userid == -1) 
+    		{
+    			userid = saveLogopas(usernameVal.trim());
+    			if( userid == -1 ) 
+    			{
+    				MsgWindow.showErrorWindow(Msgs.LOGIN_ACCOUNT_ADD_ERROR_MSG);
+    				return false;
+    			}
+    		}
+    		//Иначе
+    		else 
+    		{
+    			// Проверяем не поменялся ли пароль, и если да - то сохраняем его в БД
+    			// выставляем признак последнего использования выбранному аккаунту юзера
+    			if( !updatePassword() || !changeLastusedProp() ) 
+    			{
+    				MsgWindow.showErrorWindow(Msgs.LOGIN_ACCOUNT_UPD_ERROR_MSG);
+    				return false;
+    			}
+    		}
     		
     		//Заполняем объект информацией об авторизовавшемся пользователе
     		initAccount(userid);
@@ -316,13 +339,18 @@ public class LoginController {
     	//Проверяем существование алиаса в БД
     	for(SimpleComboRecord user : aliases) if(alias.equalsIgnoreCase(user.getName())) existingAlias = user.getId();
     	
-    	try {
+    	try 
+    	{
     		//Если алиас существует, то создаем новый аккаунт и привязываем его к алиасу
-    		if(existingAlias != null) {
+    		if(existingAlias != null) 
+    		{
 	    		final Integer existingAlias_ = existingAlias;
-    			tmpl.execute(new TransactionCallback(){
-	    		    public Object doInTransaction(TransactionStatus ts){
-	    		        try{
+    			tmpl.execute(new TransactionCallback()
+    			{
+	    		    public Object doInTransaction(TransactionStatus ts)
+	    		    {
+	    		        try
+	    		        {
 	    		    		pstmt.update(Queries.SAVE_ACCOUNT, params);
 	    		    		Integer newAccountID = pstmt.queryForObject("SELECT MAX(ID) FROM ACCOUNTS", params, Integer.class);
 	    		    			
@@ -331,7 +359,8 @@ public class LoginController {
 	    		    			
 	    		    		pstmt.update(Queries.ATTACH_ACCOUNT_TO_USER, params);	
 	    		        }
-	    		        catch(Exception ex){
+	    		        catch(Exception ex)
+	    		        {
 	    		            ts.setRollbackOnly(); 
 	    		            Logger.getLogger("error").error(ExceptionUtils.getStackTrace(ex));
 	    		        }
@@ -342,7 +371,8 @@ public class LoginController {
         		userID = existingAlias_;
     		}
     		//Иначе создаем нового юзера и аккаунт
-    		else {
+    		else 
+    		{
     			tmpl.execute(new TransactionCallback(){
 	    		    public Object doInTransaction(TransactionStatus ts){
 	    		        try{
@@ -368,16 +398,59 @@ public class LoginController {
     			userID = pstmt.queryForObject("SELECT MAX(ID) FROM USERS", params, Integer.class);
     		} 
     	}
-    	catch(Exception e) {
+    	catch(Exception e) 
+    	{
     		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+    		return -1;
     	}
     	
 		return userID;
     }
+
+    private boolean updatePassword() 
+    {
+    	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
+    	
+    	Integer userid = username.getValue().getId();
+    	Integer gameVer = siteVersion.getValue().getId();
+    	String pwd = null;
+    	String newPwd = password.getText().trim();
+    	
+    	HashMap params = new HashMap();
+    	params.put("userid", userid);
+    	params.put("gamever", gameVer);
+    	
+    	try 
+    	{
+    		Logger.getLogger("debug").debug("TRY TO GET CURRENT PASSWORD FOR USERID " + userid);
+        	pwd = pstmt.queryForObject(Queries.GET_CURRENT_PASSWORD, params, String.class);
+    	}
+    	catch(Exception e) {
+    		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+    		return false;
+    	}
+    	
+    	// Если в БД нет пароля или он не совпадает с введенным на форме, то апдейтим
+    	if( pwd == null || ( pwd != null && !pwd.equalsIgnoreCase(newPwd) ) ) 
+    	{
+    		params.put("newPwd", newPwd);
+        	try 
+        	{
+        		Logger.getLogger("debug").debug("TRY TO UPDATE CURRENT PASSWORD FOR USERID " + userid);
+        		pstmt.update(Queries.UPD_ACCOUNT_PASSWORD, params);
+        	}
+        	catch(Exception e) {
+        		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+        		return false;
+        	}
+    	}   
+    	
+    	return true;
+    }
     
     //
-    private void changeLastusedProp() {
-
+    private boolean changeLastusedProp() 
+    {
     	if(((User)username.getValue().getData()).getLastused().isLetterOrDigit('N')) {
         	NamedParameterJdbcTemplate pstmt = MainAppHolderSingleton.getInstance().getPstmt();
         	
@@ -391,8 +464,11 @@ public class LoginController {
         	}
         	catch(Exception e) {
         		Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+        		return false;
         	}
     	}
+    	
+    	return true;
     }
     
     private void saveSelectedVersion()
@@ -405,7 +481,8 @@ public class LoginController {
     		pstmt.update("UPDATE GAMEVERSIONS SET LASTUSED = 'Y' WHERE ID = :id", params);   	
     }
 	
-	private void initAccount(Integer userid) {
+	private void initAccount(Integer userid) 
+	{
 		try {
 			HashMap<String, Integer> params = new HashMap<String, Integer>();
 			params.put("userid", userid);

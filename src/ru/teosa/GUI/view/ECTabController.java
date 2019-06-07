@@ -1,5 +1,7 @@
 package ru.teosa.GUI.view;
 
+import java.util.ArrayList;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -7,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import ru.teosa.herdSettings.EC_Settings;
 import ru.teosa.herdSettings.SettingTabsInterface;
@@ -47,6 +50,9 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 	@FXML private CheckBox mash;                         // Комбикорм
 	@FXML private CheckBox drinker;                      // Поилка
 	@FXML private CheckBox shower;                       // Душ
+	
+	@FXML private ComboBox<Integer> maxTariffCombo;      // Максимальный тариф за день постоя
+	@FXML private TextField         maxPayEntry;         // Максимальная сумма за весь срок постоя ( длительность * тариф )
 
 	      
 // *** БЛОК ПРОДЛЕНИЯ ПОСТОЯ ***
@@ -88,6 +94,15 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 		
 		// Загрузка стора длительности продления 
 		extendTerm.getItems().addAll(Tokens.EC_EXTEND_TERM);
+		
+		// Загрузка стора максимального тарифа за день постоя
+		ArrayList<Integer> tariff = new ArrayList<Integer>();
+		tariff.add(0);
+		for( int i = 0; i < 181; ++i ) 
+		{
+			tariff.add(i + 20);
+		}
+		maxTariffCombo.getItems().addAll(tariff);
 	}
 
 	@Override
@@ -116,6 +131,8 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 		mash.setSelected(settings.isMash());
 		drinker.setSelected(settings.isDrinker());
 		shower.setSelected(settings.isShower());
+		
+		maxTariffCombo.getSelectionModel().select(settings.getMaxTariff());
 
 		daysBeforeExtend.getValueFactory().setValue(settings.getDaysBeforeCheckout());
 		extendTerm.getSelectionModel().select(settings.getExtendTerm());
@@ -136,6 +153,8 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 		settings.setMash(mash.isSelected());
 		settings.setDrinker(drinker.isSelected());
 		settings.setShower(shower.isSelected());
+		
+		settings.setMaxTariff(maxTariffCombo.getSelectionModel().getSelectedItem());
 		
 		settings.setDaysBeforeCheckout(daysBeforeExtend.getValue());
 		settings.setExtendTerm(extendTerm.getSelectionModel().getSelectedItem());
@@ -166,6 +185,7 @@ public class ECTabController extends AbstractController implements SettingTabsIn
 		mash                  .setDisable(disable);
 		drinker               .setDisable(disable);
 		shower                .setDisable(disable);		
+		maxTariffCombo        .setDisable(disable);	
 	}
 	
 	/**

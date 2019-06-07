@@ -1,25 +1,37 @@
 package ru.teosa.site.model;
 
+import java.security.Timestamp;
 import java.util.List;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
+import ru.teosa.herdSettings.EC_Settings;
+import ru.teosa.herdSettings.HerdRunSettings;
+import ru.teosa.utils.JSScriptsConstants;
+import ru.teosa.utils.Msgs;
+import ru.teosa.utils.ResultObject;
 import ru.teosa.utils.Sleeper;
+import ru.teosa.utils.XPathConstants;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 
 public class HorsePage {
 	private WebDriver driver;
 	private Horse horse;
+	private String URL;
+	private HerdRunSettings programm;
 	
 //	private WebElement carePanel;
 //	private WebElement nightPanel;
-//	private WebElement equestrianCenterPanel;
+
 	private WebElement ridesPanel;
 	private WebElement trainingPanel;
 	private WebElement competitionsPanel;
@@ -37,16 +49,16 @@ public class HorsePage {
 	private WebElement prevHorseButton;
 
 	
-	//Ufo_0  -> //*[@id="agi-10950100001514048813"]  class - close-popup
+
 	
-	public HorsePage(Horse horse) {
+	public HorsePage() {
 		driver = MainAppHolderSingleton.getInstance().getDriver();
-		this.horse = horse;
+		setURL(driver.getCurrentUrl());
+		this.horse = new Horse( this );
 		
 		try {
 //			 carePanel 				= driver.findElement(By.xpath("//*[@id=\"care\"]")); 
 //			 nightPanel 			= driver.findElement(By.xpath("//*[@id=\"night\"]"));
-//			 equestrianCenterPanel 	= driver.findElement(By.xpath("//*[@id=\"col-left\"]/div[3]/div/div/div/div"));
 			 ridesPanel 			= driver.findElement(By.xpath("//*[@id=\"col-right\"]/div[1]/div/div"));
 			 trainingPanel 			= driver.findElement(By.xpath("//*[@id=\"training\"]"));
 			 competitionsPanel 		= driver.findElement(By.xpath("//*[@id=\"competition\"]"));
@@ -67,7 +79,45 @@ public class HorsePage {
 		}
 	}
 	
+	/**
+	 * Начать выполнение программы для текущей лошади
+	 * @param programm Программа для выполнения
+	 * @param result Объект, результирующий выполнение функции
+	 * */
+	public void startProgramm( HerdRunSettings programm, ResultObject result ) 
+	{
+		this.programm = programm;
+		
+		Logger.getLogger("debug").debug("HORSE " + horse.getName() + " WITH URL " + getURL());
+		
+		// Регистрация в КСК
+		if( programm.getCommonSettings().isRegisterInEC() ) 
+		{
+			registerInAnEquestrianCenter( result );
+			if( !result.isSuccess() ) return;
+		}
+		
+		if( MainAppHolderSingleton.getHerdRunService().isStopped() ) return;
+		
+		
+		return;
+	}
 	
+	// Пропустить лошадь
+	public boolean skipPage() 
+	{
+		try 
+		{
+			switchToNextHorse();	
+		}
+		catch (Exception e) 
+		{
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+			return false;
+		}
+		
+		return true;
+	}
 	
 	public boolean isHorseProcessed(){		
 		return 
@@ -176,29 +226,377 @@ public class HorsePage {
 			Sleeper.pause();
 		}
 	}
-	
-	public void switchToNextHorse(){
+//*****************************************************************************************************************	
+//*****************************************************************************************************************	
+//*****************************************************************************************************************		
+	private void switchToNextHorse(){
 		Sleeper.waitForClickAndClick("//*[@id=\"nav-next\"]");
 	}
 	
-	public void registerInAnEquestrianCenter() {
+/*****************************************************************
+ *                     Регистрация в КСК                        *
+ *****************************************************************/
+	private void registerInAnEquestrianCenter( ResultObject result ) 
+	{
 		Logger.getLogger("debug").debug("registerInAnEquestrianCenter");
+		Logger.getLogger("debug").debug(horse.getAge());
 		
-		try {
-			Sleeper.pause();
-			Sleeper.waitForClickAndClick("//*[@id=\"cheval-inscription\"]/a/span[1]");
-//			WebElement searchECPanel = Sleeper.waitVisibility("//*[@id=\"cheval-centre-inscription\"]");
-//			List<WebElement> buttons = searchECPanel.findElements(By.tagName("button-inner-0"));
-//			buttons.get(1).click();
+		if( horse.getAge() < 1.6 ) return;
+		
+		// Нажимаем кнопку "Зарегестрировать в КСК"
+		try 
+		{
+			Sleeper.setStandartImplicitlyWait(3);
+			WebElement registerECButton = driver.findElement(By.xpath(XPathConstants.HORSE_PAGE_REGISTER_IN_EC_BUTTON));
+			Sleeper.setStandartImplicitlyWait();
+			String registerURL = registerECButton.findElement(By.tagName("a")).getAttribute("href");
+			driver.navigate().to(registerURL);
+			Sleeper.longPause();
 		}
-		catch(TimeoutException e) {
+		catch(TimeoutException | NoSuchElementException e) 
+		{
+			result.setInfoMsg(Msgs.EC_REGISTER_HORSE_ALREADY_REGISTERED_MSG);
+			return;
+		}
+		catch(Exception e)
+		{
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+			result.setErrMsg(Msgs.EC_REGISTER_ERROR_MSG);
+			result.setSuccess(false);
+			return;
 		}
+		
+		
+		// Так как страница записи в КСК не хочет нормально работать со стандартными средствами Selenium, пользуемся JavascriptExecutor.
+		try 
+		{			
+			JavascriptExecutor executor = (JavascriptExecutor)driver;
+			EC_Settings settings = programm.getEC_Settings();
+			
+			if( settings.getEC_type() != null ) 
+			{
+				// Зарезервированные стойла
+				if( settings.getEC_type() == 'R' ) 
+				{
+					// Кликаем на вкладку Зарезервированные стойла
+					executor.executeScript(JSScriptsConstants.EC_PAGE_RESERVED_TAB);
+				
+					Sleeper.pause();
+											
+					WebElement stallListTable = driver.findElement(By.xpath(XPathConstants.EC_PAGE_RESERVED_TABLE));
+					List<WebElement> stallList = stallListTable.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+					
+					// Если зарезервированных стойл нет, возвращаемся на страницу лошади
+					if( stallList.size() == 0 ) 
+					{
+						result.setInfoMsg(Msgs.EC_REGISTER_NO_RESERVED_STALLS_MSG);
+						result.setSuccess(false);
+						driver.navigate().to(URL);
+						return;
+					}
+					
+					// Сортируем по длительности записи				
+					switch( settings.getRegTerm() ) 
+					{
+						case 3: 
+							executor.executeScript(JSScriptsConstants.EC_PAGE_RESERVED_TABLE_DAYS_SORT_3);
+						break;
+						case 10:
+							executor.executeScript(JSScriptsConstants.EC_PAGE_RESERVED_TABLE_DAYS_SORT_10);
+						break;
+						case 30: 
+							executor.executeScript(JSScriptsConstants.EC_PAGE_RESERVED_TABLE_DAYS_SORT_30);
+						break;
+						case 60:
+							executor.executeScript(JSScriptsConstants.EC_PAGE_RESERVED_TABLE_DAYS_SORT_60);
+						break;				
+					}
+					
+					Sleeper.pause();
+					
+					// Т.к страница обновилась после сортировки, заново получаем строки списка
+					stallList = stallListTable.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+					
+					List<WebElement> registerButtons = stallList.get(0).findElements(By.className("button"));
+					
+					try 
+					{
+						switch( settings.getRegTerm() )
+						{
+							case 3: 
+								registerButtons.get(1).click();
+							break;
+							case 10:
+								registerButtons.get(2).click();
+							break;
+							case 30: 
+								registerButtons.get(3).click();
+							break;
+							case 60:
+								registerButtons.get(4).click();
+							break;	
+						}					
+					}
+					catch(Exception e) 
+					{
+						Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+						result.setInfoMsg(Msgs.EC_REGISTER_NO_STALLS_MSG);
+						result.setSuccess(false);
+						driver.navigate().to(URL);
+						return ;
+					}
+
+				}
+				// Свой КСК
+				else if( settings.getEC_type() == 'O' ) 
+				{
+					// Переключаемся на свой КСК
+					WebElement filtersPanel = driver.findElement(By.xpath(XPathConstants.EC_PAGE_FILTERS_PANEL));
+					filtersPanel.findElements(By.className("button")).get(1).click();
+					
+					Sleeper.pause();
+					
+					WebElement ECTable = driver.findElement(By.xpath(XPathConstants.EC_PAGE_EC_TABLE));
+					List<WebElement> stallList = ECTable.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+					
+					// Если стойл нет, возвращаемся на страницу лошади
+					if( stallList.size() == 0 ) 
+					{
+						result.setInfoMsg(Msgs.EC_REGISTER_NO_STALLS_MSG);
+						result.setSuccess(false);
+						driver.navigate().to(URL);
+						return;
+					}
+					
+					List<WebElement> registerButtons = stallList.get(0).findElements(By.className("button"));
+					try 
+					{
+						// Кнопки записи не кликабельны, скроллим страницу к ним, чтобы нажать
+						switch( settings.getRegTerm() )
+						{
+							case 3: 
+								executor.executeScript("arguments[0].scrollIntoView(true);", registerButtons.get(1));
+								registerButtons.get(1).click();
+							break;
+							case 10:
+								executor.executeScript("arguments[0].scrollIntoView(true);", registerButtons.get(2));
+								registerButtons.get(2).click();
+							break;
+							case 30: 
+								executor.executeScript("arguments[0].scrollIntoView(true);", registerButtons.get(3));
+								registerButtons.get(3).click();
+							break;
+							case 60:
+								executor.executeScript("arguments[0].scrollIntoView(true);", registerButtons.get(4));
+								registerButtons.get(4).click();
+							break;	
+						}					
+					}
+					catch(Exception e) 
+					{
+						Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+						result.setInfoMsg(Msgs.EC_REGISTER_NO_STALLS_MSG);
+						result.setSuccess(false);
+						driver.navigate().to(URL);
+						return;
+					}
+				}
+			}
+			// Любой КСК
+			else 
+			{	
+				// Устанавливаем фильтры
+				try 
+				{
+					WebElement filtersPanel = driver.findElement(By.xpath(XPathConstants.EC_PAGE_FILTERS_PANEL));
+					Boolean haveFilters = false;
+					
+					//Расположение
+					if( settings.getLocation() != null ) 
+					{
+						switch( settings.getLocation() ) 
+						{
+							case 'F': 
+								filtersPanel.findElement(By.id("foretCheckbox")).click();
+							break;
+							case 'M': 
+								filtersPanel.findElement(By.id("montagneCheckbox")).click();
+							break;
+							case 'B': 
+								filtersPanel.findElement(By.id("plageCheckbox")).click();
+							break;
+						}
+						
+						haveFilters = true;
+					}
+					
+					//Специализация
+					if( settings.getSpecialization() != null ) 
+					{
+						switch( settings.getSpecialization() ) 
+						{
+							case 'C': 
+								filtersPanel.findElement(By.id("classiqueCheckbox")).click();
+							break;
+							case 'W':
+								filtersPanel.findElement(By.id("westernCheckbox")).click();
+							break;
+						}
+						
+						haveFilters = true;
+					}
+					
+					// Фураж
+					if( settings.isHay() ) 
+					{
+						filtersPanel.findElement(By.id("fourrageCheckbox")).click();
+						haveFilters = true;
+					}
+					
+					// Овес
+					if( settings.isOat() ) 
+					{
+						filtersPanel.findElement(By.id("avoineCheckbox")).click();
+						haveFilters = true;
+					}
+					
+					// Морковь
+					if( settings.isCarrot() ) 
+					{
+						filtersPanel.findElement(By.id("carotteCheckbox")).click();
+						haveFilters = true;
+					}
+					
+					// Комбикорм
+					if( settings.isMash() ) 
+					{
+						filtersPanel.findElement(By.id("mashCheckbox")).click();
+						haveFilters = true;
+					}
+					
+					// Поилка
+					if( settings.isDrinker() ) 
+					{
+						filtersPanel.findElement(By.id("abreuvoirCheckbox")).click();
+						haveFilters = true;
+					}
+					
+					// Душ
+					if( settings.isShower() ) 
+					{
+						filtersPanel.findElement(By.id("doucheCheckbox")).click();
+						haveFilters = true;
+					}
+					
+					// Максимальный тариф за день постоя
+					if( settings.getMaxTariff() > 0 ) 
+					{
+						WebElement tarifCombo = filtersPanel.findElement(By.id("tarif"));
+						executor.executeScript("arguments[0].value = " + settings.getMaxTariff() + ";", tarifCombo);
+						haveFilters = true;
+					}
+					
+					// Если есть хоть один фильтр - нажимаем кнопку поиска
+					if( haveFilters ) 
+					{
+						filtersPanel.findElements(By.className("button")).get(0).click();
+						Sleeper.longPause();
+					}
+				}
+				catch (Exception e) 
+				{
+					Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+					result.setErrMsg(Msgs.EC_REGISTER_FILTER_ERROR_MSG);
+					result.setSuccess(false);
+					driver.navigate().to(URL);
+					return;
+				}
+				
+				WebElement ECTable = driver.findElement(By.xpath(XPathConstants.EC_PAGE_EC_TABLE));
+				List<WebElement> stallList = ECTable.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+				
+				// Если стойл нет, возвращаемся на страницу лошади
+				if( stallList.size() == 0 ) 
+				{
+					result.setInfoMsg(Msgs.EC_REGISTER_NO_STALLS_MSG);
+					result.setSuccess(false);
+					driver.navigate().to(URL);
+					return;
+				}
+				
+				List<WebElement> termSortHeader = ECTable.findElements(By.xpath("//*[@class='grid-cell spacer-small-top spacer-small-bottom']"));
+				// Сортируем по длительности записи				
+				switch( settings.getRegTerm() ) 
+				{
+					case 3: 
+						termSortHeader.get(1).findElement(By.tagName("a")).click();
+					break;
+					case 10:
+						termSortHeader.get(2).findElement(By.tagName("a")).click();
+					break;
+					case 30: 
+						termSortHeader.get(3).findElement(By.tagName("a")).click();
+					break;
+					case 60:
+						termSortHeader.get(4).findElement(By.tagName("a")).click();
+					break;				
+				}
+				
+				Sleeper.pause();
+				
+				// Т.к страница обновилась после сортировки и поиска, заново получаем таблицу и строки списка
+				ECTable = driver.findElement(By.xpath(XPathConstants.EC_PAGE_EC_TABLE));
+				stallList = ECTable.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+				
+				List<WebElement> registerButtons = stallList.get(0).findElements(By.className("button"));
+				try 
+				{
+					// Кнопки записи не кликабельны, скроллим страницу к ним, чтобы нажать
+					switch( settings.getRegTerm() )
+					{
+						case 3: 
+							executor.executeScript("arguments[0].scrollIntoView(true);", registerButtons.get(1));
+							registerButtons.get(1).click();
+						break;
+						case 10:
+							executor.executeScript("arguments[0].scrollIntoView(true);", registerButtons.get(2));
+							registerButtons.get(2).click();
+						break;
+						case 30: 
+							executor.executeScript("arguments[0].scrollIntoView(true);", registerButtons.get(3));
+							registerButtons.get(3).click();
+						break;
+						case 60:
+							executor.executeScript("arguments[0].scrollIntoView(true);", registerButtons.get(4));
+							registerButtons.get(4).click();
+						break;	
+					}					
+				}
+				catch(Exception e) 
+				{
+					Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+					result.setInfoMsg(Msgs.EC_REGISTER_NO_STALLS_MSG);
+					result.setSuccess(false);
+					driver.navigate().to(URL);
+					return;
+				}
+			}
+		}
+		catch(Exception e) 
+		{
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
+			result.setErrMsg(Msgs.EC_REGISTER_NO_STALLS_MSG);
+			result.setSuccess(false);
+			return;
+		}
+		
+		result.setInfoMsg(Msgs.EC_REGISTER_REGISTER_SUCCESS_MSG);
+		return;
 	}
 	
-//*****************************************************************************************************************	
-//*****************************************************************************************************************	
-//*****************************************************************************************************************	
+
+	
+	
 	private void feedByMilk(){
 		Logger.getLogger("debug").debug("feedByMilk");
 		driver.findElement(By.xpath("//*[@id=\"boutonAllaiter\"]")).click();		
@@ -241,7 +639,13 @@ public class HorsePage {
 		Logger.getLogger("debug").debug("FOOD QTY: " + (reqOat - eatenOat + 1));
 		Logger.getLogger("debug").debug("IS FEED: " + isFeed);
 		return isFeed;
+	}	
+//*****************************************************************************************************************	
+//*****************************************************************************************************************
+	public String getURL() {
+		return URL;
 	}
-	
-	
+	public void setURL(String uRL) {
+		URL = uRL;
+	}
 }

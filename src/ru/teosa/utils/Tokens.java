@@ -14,9 +14,27 @@ public class Tokens {
 		HERD_RUN_STATUSES_RU = new HashMap<Integer, String>();
 		HERD_RUN_STATUSES_EN = new HashMap<Integer, String>();
 		
-		HERD_RUN_STATUSES_RU.put(1,  "СОЗДАН");			HERD_RUN_STATUSES_EN.put(1,  "CREATED");
-		HERD_RUN_STATUSES_RU.put(5,  "ВЫПОЛНЯЕТСЯ");    HERD_RUN_STATUSES_EN.put(5,  "IN PROGRESS");
-		HERD_RUN_STATUSES_RU.put(10, "ВЫПОЛНЕН");       HERD_RUN_STATUSES_EN.put(10, "DONE");
+		HERD_RUN_STATUSES_RU.put(1,  "СОЗДАН");			      HERD_RUN_STATUSES_EN.put(1,  "CREATED");
+		HERD_RUN_STATUSES_RU.put(2,  "ЗАВОД ПУСТ");           HERD_RUN_STATUSES_EN.put(2,  "EMPTY FARM");
+		HERD_RUN_STATUSES_RU.put(5,  "ВЫПОЛНЯЕТСЯ");          HERD_RUN_STATUSES_EN.put(5,  "IN PROGRESS");
+		HERD_RUN_STATUSES_RU.put(10, "ВЫПОЛНЕН");             HERD_RUN_STATUSES_EN.put(10, "DONE");
+		HERD_RUN_STATUSES_RU.put(11, "ВЫПОЛНЕНО С ОШИБКАМИ"); HERD_RUN_STATUSES_EN.put(10, "DONE WITH ERRORS");
+		HERD_RUN_STATUSES_RU.put(12, "ОШИБКА");               HERD_RUN_STATUSES_EN.put(5,  "ERROR");
+	}
+
+	public static enum herdRunStatuses
+	{
+		CREATED(1),         // Создан
+		EMPTYFARM(2),       // Завод пуст
+		INPROGRESS(5),      // Выполняется
+		DONE(10),           // Выполнено
+		DONEWITHERRORS(11), // Выполнено с ошибками
+		ERROR(12);          // Ошибка
+		
+		private int id;
+		herdRunStatuses(int val) { this.id = val; };
+		
+		public int getID() { return id; }
 	}
 
 	/*

@@ -13,6 +13,40 @@ public class XPathConstants {
 	
 	
 	
+	/** Список лошадей в заводе */
+	public static final String FARM_LIST = "//*[@id=\"horseList\"]";
+	/** Первая лошадь в заводе */
+	public static final String FARM_LIST_FIRST_HORSE = "//*[@id=\"horseList\"]/div/div[2]/ul[1]/li[1]/div/div[1]/div/ul/li[1]/a";
+	
+	
+	
+	
+	//*************************************
+	//*        СТРАНИЦА ЛОШАДИ            *
+	//*************************************
+	/** Кнопка "Записать мою лошадь" на панели Конноспортивный комплекс  */
+	public static final String HORSE_PAGE_REGISTER_IN_EC_BUTTON = "//*[@id=\"cheval-inscription\"]";
+	
+	
+	
+	//*************************************
+	//*   СТРАНИЦА ЗАПИСИ В КСК           *
+	//*************************************
+	/** Таблица зарезервированных стойл */
+	public static final String EC_PAGE_RESERVED_TABLE = "//*[@id=\"boxContent\"]";
+	/** Колонка "Цена" в таблице стойл */
+	public static final String EC_PAGE_RESERVED_TABLE_PRICE_COLUMN = "//*[@id=\"table-0\"]/thead/tr/td[6]";
+	/** Панель с фильтрами для поиска КСК */
+	public static final String EC_PAGE_FILTERS_PANEL = "//*[@id=\"cheval-centre-inscription\"]";
+	/** Таблица КСК */
+	public static final String EC_PAGE_EC_TABLE = "//*[@id=\"table-0\"]";
+	
+	
+
+	
+	
+	
+	
 	
 	
 }

@@ -3,6 +3,7 @@ package ru.teosa.utils.objects;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import ru.teosa.herdSettings.HerdRunSettings;
+import ru.teosa.utils.Tokens;
 
 
 public class RunProgramRecord {
@@ -10,6 +11,7 @@ public class RunProgramRecord {
 	private SimpleIntegerProperty num;         // Порядковый номер
 	private Integer farmID;                    // ID завода
 	private SimpleStringProperty  farmName;    // Название завода
+	private String farmURL;                    // Ссылка на завод
 	private Integer programID;                 // ID выбранной программы
 	private SimpleStringProperty programName;  // Название выбранной программы
 	private HerdRunSettings program;           // Выбранная программа
@@ -23,6 +25,7 @@ public class RunProgramRecord {
 				+ "NUM: "            + num                        + "; "
 			    + "FARM_ID: "        + farmID                     + "; "
 			    + "FARM_NAME: "      + farmName.getValueSafe()    + "; "
+			    + "FARM_URL: "       + farmURL                    + "; "
 			    + "PROGRAM_ID: "     + programID                  + "; "
 			    + "PROGRAM_NAME: "   + programName.getValueSafe() + "; "
 			    + "PROGRAM: "        + program                    + "; "
@@ -85,5 +88,27 @@ public class RunProgramRecord {
 	}
 	public void setLastHorseURL(String lastHorseURL) {
 		this.lastHorseURL = lastHorseURL;
+	}
+	public String getFarmURL() {
+		return farmURL;
+	}
+	public void setFarmURL(String farmURL) {
+		this.farmURL = farmURL;
+	}
+	public void setStatus(int statusID) 
+	{
+		String lang = MainAppHolderSingleton.getInstance().getLang();
+		switch( lang ) 
+		{
+			case "RU": 
+				this.setStatusID(statusID);
+				this.setStatus(Tokens.HERD_RUN_STATUSES_RU.get(statusID));
+			break;
+			case "EN": 
+				this.setStatusID(statusID);
+				this.setStatus(Tokens.HERD_RUN_STATUSES_EN.get(statusID));
+				break;
+			default: break;
+		}
 	}
 }

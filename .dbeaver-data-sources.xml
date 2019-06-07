@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data-sources>
 	<data-source id="derby-161e24687c2-57b7c8754fec617c" provider="generic" driver="derby" name="Derby - HBBDB" save-password="true" show-system-objects="true" read-only="false">
-		<connection server="" database="C:\VW\TeosaRepos\HBBDB" url="jdbc:derby:C:\VW\TeosaRepos\HBBDB" type="dev"/>
+		<connection server="" database="D:\eclipse-workspace\HHB\HBBDB" url="jdbc:derby:D:\eclipse-workspace\HHB\HBBDB" type="dev"/>
 	</data-source>
 	<filters/>
 </data-sources>

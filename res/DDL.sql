@@ -47,18 +47,18 @@ ALTER TABLE USERS ALTER COLUMN VERSION SET NOT NULL;
 -- автоматически выставляют всем остальным записям с такой же версией признак N.
 
 CREATE TRIGGER LASTUSED_USER
-AFTER INSERT ON USER
+AFTER INSERT ON USERS
 REFERENCING NEW AS N
 FOR EACH ROW MODE DB2SQL
 WHEN (N.LASTUSED = 'Y')
-UPDATE USER SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND VERSION = N.VERSION AND ID <> N.ID;
+UPDATE USERS SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND VERSION = N.VERSION AND ID <> N.ID;
 
 CREATE TRIGGER LASTUSED_USER_UPD
-AFTER UPDATE ON USER
+AFTER UPDATE ON USERS
 REFERENCING NEW AS N
 FOR EACH ROW MODE DB2SQL
 WHEN (N.LASTUSED = 'Y')
-UPDATE USER SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND VERSION = N.VERSION AND ID <> N.ID;
+UPDATE USERS SET LASTUSED = 'N' WHERE LASTUSED = 'Y' AND VERSION = N.VERSION AND ID <> N.ID;
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 -- При смене признака последнего использования в таблице версий на Y, автоматически выставляет всем остальным записям признак N

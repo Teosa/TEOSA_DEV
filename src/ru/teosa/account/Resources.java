@@ -1,5 +1,7 @@
 package ru.teosa.account;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -40,10 +42,15 @@ public class Resources {
 		try {
 			Sleeper.waitVisibility("//*[@id=\"reserve\"]");
 			String moneyCurBal = MainAppHolderSingleton.getInstance().getDriver().findElement(By.xpath("//*[@id=\"reserve\"]")).getText();
-			if(moneyCurBal != null) result = Integer.parseInt(moneyCurBal.replace(",", "").trim());
+			if(moneyCurBal != null) 
+			{
+				String tmp = moneyCurBal.replace(",", "");
+				tmp = tmp.replace(" ", "");
+				result = Integer.parseInt(tmp);	
+			}
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
 		}
 		
 		return result;

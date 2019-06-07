@@ -37,11 +37,19 @@ public class Queries {
 	/** Получение программ прогона */
 	public final static String GET_HERD_RUN_PROGRAMS = "SELECT ID, NAME, SETTINGS FROM PROGRAMS";
 	
+	/** Получение актуального пароля для юзера в определенной версии */
+	public final static String GET_CURRENT_PASSWORD = ""
+			+ "SELECT a.PASSWORD "
+			+ "FROM USERTOACCOUNT uta "
+			+ "JOIN ACCOUNTS a ON uta.ACCOUNTID = a.ID "
+			+ "WHERE uta.USERID = :userid "
+			+ "  AND a.VERSION = :gamever";
+	
 //***********************************************************************************************************************	
 //****************************            SAVE                 **********************************************************
 //***********************************************************************************************************************			
-	public final static String SAVE_ACCOUNT = "INSERT INTO ACCOUNTS VALUES (DEFAULT, :password, :gamever, 'Y')";
-	public final static String SAVE_USER = "INSERT INTO USERS VALUES (DEFAULT, :login)";
+	public final static String SAVE_ACCOUNT = "INSERT INTO ACCOUNTS VALUES (DEFAULT, RTRIM(:password), :gamever, 'Y')";
+	public final static String SAVE_USER = "INSERT INTO USERS VALUES (DEFAULT, RTRIM(:login))";
 	public final static String ATTACH_ACCOUNT_TO_USER = "INSERT INTO USERTOACCOUNT VALUES (:userid, :accid)";
 	public final static String SAVE_AFFIX = "INSERT INTO AFFIXES VALUES (DEFAULT, :name)";
 	public final static String ATTACH_AFFIX_TO_ACCOUNT = "INSERT INTO AFFIXTOACCOUNT VALUES (:accountid, :affixid)";
@@ -67,6 +75,18 @@ public class Queries {
 			+ " NAME     = :name "
 			+ ",SETTINGS = :settings "
 			+ "WHERE ID  = :id";
+	
+	public final static String UPD_ACCOUNT_PASSWORD = ""
+			+ "UPDATE ACCOUNTS "
+			+ "SET "
+			+ "  PASSWORD = :newPwd "
+			+ "WHERE ID = ( "
+			+ "    SELECT a.ID "
+			+ "    FROM USERTOACCOUNT uta "
+			+ "    JOIN ACCOUNTS a ON uta.ACCOUNTID = a.ID "
+			+ "    WHERE uta.USERID = :userid " 
+			+ "      AND a.VERSION = :gamever "
+			+ ")";
 //***********************************************************************************************************************	
 //****************************            REMOVE               **********************************************************
 //***********************************************************************************************************************

@@ -107,7 +107,7 @@ public class ProgramWindowController extends AbstractController{
 						
 						settings.setProgramID(rs.getInt("id"));
 						settings.setProgramName(rs.getString("name"));
-						System.out.println(settings.toString());
+						Logger.getLogger("debug").debug(settings.toString());
 						SimpleComboRecordExt record = new SimpleComboRecordExt(settings.getProgramID(), settings.getProgramName(), settings);
 						
 						programs.add(record);

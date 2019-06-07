@@ -3,6 +3,7 @@ package ru.teosa.herdSettings;
 import java.io.Serializable;
 
 public class EC_Settings implements Serializable{
+	private static final long serialVersionUID = -2806583952726248864L;
 	
 	// ****** ЗАПИСЬ В КСК ******
 	private Character EC_type;          //Тип КСК для записи     Свой: "O"   Зарезервированные стойла: "R"   Любой: null
@@ -17,6 +18,8 @@ public class EC_Settings implements Serializable{
 	private boolean mash;
 	private boolean drinker;
 	private boolean shower;
+	
+	private Integer maxTariff;         // Максимальный тариф за день постоя
 	
 	
 	// ****** ПРОДЛЕНИЕ ПОСТОЯ ******
@@ -39,6 +42,8 @@ public class EC_Settings implements Serializable{
 		this.drinker = false;
 		this.shower  = false;
 		
+		this.maxTariff = 0;
+		
 		this.daysBeforeCheckout = 1;
 		this.extendTerm = 3;
 		this.onlyMyECExtend = true;
@@ -47,7 +52,7 @@ public class EC_Settings implements Serializable{
 	@Override
 	public String toString() {
 		return ""
-			+ "EC_TYPE: "            + EC_type            + "; " 
+			+ "EC_TYPE: "            + EC_type            + "; "
 			+ "REGTERM: "            + regTerm            + "; "
 			+ "LOCATION: "           + location           + "; "
 			+ "SPECIALIZATION: "     + specialization     + "; "
@@ -59,7 +64,8 @@ public class EC_Settings implements Serializable{
 			+ "SHOWER: "             + shower             + "; "
 			+ "DAYSBEFORECHECKOUT: " + daysBeforeCheckout + "; "
 			+ "EXTENDTERM: "         + extendTerm         + "; "
-			+ "ONLYMYECEXTEND: "     + onlyMyECExtend     + "; "   
+			+ "ONLYMYECEXTEND: "     + onlyMyECExtend     + "; "
+			+ "MAXTARIFF: "          + maxTariff          + "; "
 		;
 	}
 	
@@ -140,5 +146,11 @@ public class EC_Settings implements Serializable{
 	}
 	public void setExtendTerm(Integer extendTerm) {
 		this.extendTerm = extendTerm;
-	}	
+	}
+	public Integer getMaxTariff() {
+		return maxTariff;
+	}
+	public void setMaxTariff(Integer maxTariff) {
+		this.maxTariff = maxTariff;
+	}
 }

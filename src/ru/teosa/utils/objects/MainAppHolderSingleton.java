@@ -18,8 +18,10 @@ public class MainAppHolderSingleton {
     private volatile  WebDriver driver;                    //Драйвер
     
     private static final Account account = new Account();  // Информация о юзере, аккаунте и т.д
-    private static final String VER = "Version 1.4.0";     // Версия приложения
+    private static final String VER = "Version 1.4.1-dev";     // Версия приложения
     private static String gameURL;                         // Ссылка на главную страницу игры выбранной версии
+    private String lang = "RU";
+    private static Integer maxRuntimeErrors = 20; 		   // Максимальное количество ошибок, с которым может продолжаться выполнение программы прогона
     
     // Треды
     private static MoneyConverterSercice moneyConverterService = new MoneyConverterSercice();
@@ -87,5 +89,14 @@ public class MainAppHolderSingleton {
 	}
 	public static LoginService getLoginService() {
 		return loginService;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	public static Integer getMaxRuntimeErrors() {
+		return maxRuntimeErrors;
 	}
 }

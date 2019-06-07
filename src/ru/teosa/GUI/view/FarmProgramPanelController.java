@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import ru.teosa.GUI.MainApp;
 import ru.teosa.herdSettings.HerdRunSettings;
 import ru.teosa.utils.Queries;
+import ru.teosa.utils.Tokens;
 import ru.teosa.utils.objects.MainAppHolderSingleton;
 import ru.teosa.utils.objects.RunProgramRecord;
 import ru.teosa.utils.objects.SimpleComboRecordExt;
@@ -62,10 +63,11 @@ public class FarmProgramPanelController extends AbstractController{
 		RunProgramRecord newRecord = new RunProgramRecord();
 		newRecord.setFarmID(treeViewController.getTree().getSelectionModel().getSelectedItem().getValue().getId());
 		newRecord.setFarmName(treeViewController.getTree().getSelectionModel().getSelectedItem().getValue().getName());
+		newRecord.setFarmURL(treeViewController.getTree().getSelectionModel().getSelectedItem().getValue().getUrl());
 		newRecord.setProgramID(programsCombo.getSelectionModel().getSelectedItem().getId());
 		newRecord.setProgramName(programsCombo.getSelectionModel().getSelectedItem().getName());
 		newRecord.setProgram((HerdRunSettings)programsCombo.getSelectionModel().getSelectedItem().getData());
-		newRecord.setStatus("STATUS");
+		newRecord.setStatus(Tokens.herdRunStatuses.CREATED.getID());
 
 		runProgramController.addRecord(newRecord);
 	}

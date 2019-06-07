@@ -15,7 +15,7 @@ import ru.teosa.utils.objects.MainAppHolderSingleton;
 public class HerdRunSettings implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer programID;  // ID программы
 	private String programName; // Название программы
 	

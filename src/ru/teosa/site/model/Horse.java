@@ -10,47 +10,31 @@ public class Horse {
 	private WebDriver driver;
 	private HorsePage pageContent;
 	
-	private String URL;
 	private String name;
 	private double age;
 	private char gender;
 	
 	
-	public Horse() {
+	public Horse( HorsePage page ) {
 		driver = MainAppHolderSingleton.getInstance().getDriver();
-		pageContent = new HorsePage(this);
-		
-		setURL(driver.getCurrentUrl());
+		pageContent = page;
 		
 		setName(pageContent.getName());
 		setAge(pageContent.getAge());
 		setGender(pageContent.getGender());
 	}
 	
-	
-	
-	public boolean run() throws Exception{		
-		Logger.getLogger("debug").debug(toString());
+	public boolean startProgramm() 
+	{
 		
-//		if(pageContent.isHorseProcessed()) return true;
-		pageContent.registerInAnEquestrianCenter();
-		
-//		pageContent.groom();
-//		pageContent.drink();
-//		pageContent.mission();
-//		pageContent.feed();
-//		pageContent.putToBed();
-//		pageContent.switchToNextHorse();
-		
-		Logger.getLogger("debug").debug("RUNING SUCCESS");
-		
-		return false;
+		return true;
 	}
+	
+
 	
 	@Override
 	public String toString() {
 		return ""
-				+ "URL: " + getURL() + "; "
 				+ "NAME: " + getName() + "; "
 				+ "AGE: " + getAge() + "; "
 				+ "GENDER: " + getGender() + "; ";
@@ -66,12 +50,7 @@ public class Horse {
 //*****************************************************************************************************************
 //*****************************************************************************************************************
 //*****************************************************************************************************************
-	public String getURL() {
-		return URL;
-	}
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
+
 	public String getName() {
 		return name;
 	}

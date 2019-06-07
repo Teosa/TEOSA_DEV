@@ -27,5 +27,5 @@ hs_err_pid*
 .project
 /target/
 /HBBDB/db.lck
-HBBDB/log/
+
 
