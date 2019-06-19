@@ -13,15 +13,17 @@ public class Horse {
 	private String name;
 	private double age;
 	private char gender;
+	private String URL;
 	
 	
 	public Horse( HorsePage page ) {
 		driver = MainAppHolderSingleton.getInstance().getDriver();
 		pageContent = page;
 		
-		setName(pageContent.getName());
-		setAge(pageContent.getAge());
-		setGender(pageContent.getGender());
+		name   = pageContent.getName();
+		age    = pageContent.getAge();
+		gender = pageContent.getGender();
+		URL    = pageContent.getURL();
 	}
 	
 	public boolean startProgramm() 
@@ -54,21 +56,16 @@ public class Horse {
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public double getAge() {
 		return age;
-	}
-	public void setAge(double age) {
-		this.age = age;
 	}
 	public char getGender() {
 		return gender;
 	}
-	public void setGender(char gender) {
-		this.gender = gender;
+	public String getURL() {
+		return URL;
 	}
+
 	
 	
 }

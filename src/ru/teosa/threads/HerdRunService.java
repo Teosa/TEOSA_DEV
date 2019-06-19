@@ -7,6 +7,9 @@ import org.openqa.selenium.WebDriver;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import ru.teosa.GUI.MsgWindow;
@@ -31,12 +34,15 @@ public class HerdRunService extends Service<String>{
 			@Override
 			protected String call() throws Exception 
 			{	
+				Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene();
+				
 				// Получаем таблицу со списком для прогона
-				TableView<RunProgramRecord> runProgrammTable = (TableView)MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene().lookup("#table");
+				TableView<RunProgramRecord> runProgrammTable = (TableView)scene.lookup("#table");
 				
 				if( runProgrammTable == null ) 
 				{
 					MsgWindow.showErrorWindow(Msgs.HERD_RUN_NO_LIST_ERROR_MSG);
+					manageButtons();
 					return null;
 				}
 				
@@ -45,6 +51,7 @@ public class HerdRunService extends Service<String>{
 				if( listSize == 0 ) 
 				{
 					MsgWindow.showErrorWindow(Msgs.HERD_RUN_EMPTY_LIST_ERROR_MSG);
+					manageButtons();
 					return null;
 				}
 				
@@ -52,7 +59,7 @@ public class HerdRunService extends Service<String>{
 				{
 					final RunProgramRecord record = runProgrammTable.getItems().get(i);
 					
-					if( !farmRun(record) ) 
+					if( !farmRun(record) || isStopped() ) 
 					{
 						break;
 					}
@@ -76,12 +83,26 @@ public class HerdRunService extends Service<String>{
 						break;
 					}
 				}*/
-							
+				manageButtons();		
 				return null;
 			}
 		};
 	}
 
+	private void manageButtons() 
+	{
+		Scene scene = MainAppHolderSingleton.getInstance().getMainApp().getPrimaryStage().getScene();
+		
+		// Кнопки
+		Button startRunButton =  (Button)scene.lookup("#startRun");
+		Button pauseRunButton =  (Button)scene.lookup("#pauseRun");
+		Button stopRunButton  =  (Button)scene.lookup("#stopRun");
+		
+		startRunButton.setDisable(false);
+		pauseRunButton.setDisable(true);
+		stopRunButton.setDisable(true);
+	}
+	
 	/**
 	 * Запуск программы прогона для выбранного завода
 	 * @param record Завод для прогона. Содержит внутри себя программу для выполнения.
@@ -104,22 +125,24 @@ public class HerdRunService extends Service<String>{
 		}
 		
 		// Переходим на страницу лошади
-		driver.findElement(By.xpath(XPathConstants.FARM_LIST_FIRST_HORSE)).click();
+		//driver.findElement(By.xpath(XPathConstants.FARM_LIST_FIRST_HORSE)).click();
+		driver.navigate().to("https://www.lowadi.com/elevage/chevaux/cheval?id=39860682"); // игдрасиль
 		
 		HorsePage firstHorsePage = null;
 		
 		while( !isStopped() ) 
 		{
-			HorsePage horsePage = new HorsePage();
-		
+			HorsePage horsePage = new HorsePage();	
+	
 			// Заполняем первую лошадь если она пустая
 			if( firstHorsePage == null ) 
 			{
-				firstHorsePage = horsePage;
+				firstHorsePage = new HorsePage();
 			}
 			// Если мы снова пришли к первой лошади завода - выходим из цикла
-			else if( firstHorsePage.getURL().equalsIgnoreCase(horsePage.getURL()) ) 
+			else if( sameHorse( horsePage, firstHorsePage ) ) 
 			{
+				Logger.getLogger("debug").debug( "ДОСТИГНУТО НАЧАЛО ЗАВОДА" );	
 				break;
 			}
 			
@@ -182,9 +205,14 @@ public class HerdRunService extends Service<String>{
 		}
 		
 		//record.setStatus(Tokens.herdRunStatuses.DONE.getID());
+		setStopped(true);
 		return true;			
 	}
 	
+	private boolean sameHorse( HorsePage currentPage, HorsePage firstHorsePage ) 
+	{	
+		return firstHorsePage.getURL().equalsIgnoreCase(currentPage.getURL());
+	}
 	
 //**********************************************************************************************************************************************************
 //**********************************************************************************************************************************************************

@@ -1,5 +1,7 @@
 package ru.teosa.GUI.view;
 
+import org.apache.log4j.Logger;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -47,6 +49,8 @@ public class HerdRunProgressWindowController extends AbstractController{
     	startRun.setDisable(true);
     	pauseRun.setDisable(false);
     	stopRun.setDisable(false);
+    	
+    	Logger.getLogger("debug").debug("************ START RUN ************");
 	}
 	
 	@FXML private void pauseRunHandler() 
@@ -77,5 +81,8 @@ public class HerdRunProgressWindowController extends AbstractController{
     	startRun.setDisable(false);
     	pauseRun.setDisable(true);
     	stopRun.setDisable(true);
+    	
+    	Logger.getLogger("debug").debug("************ STOP RUN ************");
 	}
+	
 }

@@ -41,7 +41,7 @@ public class HorsePage {
 	private WebElement characteristicsPanel;
 	private WebElement geneticTab;
 	private WebElement geneticPanel;
-	private WebElement infoPanel;
+	private WebElement infoPanel;  // Панель с кличкой, аффиксом и заводом
 //	private WebElement statusPanel;
 //	private WebElement skillsPanel;
 	
@@ -53,10 +53,17 @@ public class HorsePage {
 	
 	public HorsePage() {
 		driver = MainAppHolderSingleton.getInstance().getDriver();
-		setURL(driver.getCurrentUrl());
-		this.horse = new Horse( this );
+		
 		
 		try {
+				infoPanel 				= getInfoPanel();
+			
+			
+			
+			
+			
+			
+			
 //			 carePanel 				= driver.findElement(By.xpath("//*[@id=\"care\"]")); 
 //			 nightPanel 			= driver.findElement(By.xpath("//*[@id=\"night\"]"));
 			 ridesPanel 			= driver.findElement(By.xpath("//*[@id=\"col-right\"]/div[1]/div/div"));
@@ -66,7 +73,7 @@ public class HorsePage {
 			
 			 characteristicsTab 	= driver.findElement(By.xpath("//*[@id=\"tab-characteristics-title\"]"));
 			 geneticTab 			= driver.findElement(By.xpath("//*[@id=\"tab-genetics-title\"]"));
-			 infoPanel 				= driver.findElement(By.xpath("//*[@id=\"module-2\"]/div[1]/div"));
+			 
 //			 statusPanel 			= driver.findElement(By.xpath("//*[@id=\"module-2\"]/div[2]/div/div/div"));
 //			 skillsPanel 			= driver.findElement(By.xpath("//*[@id=\"skills-body-content\"]"));
 			
@@ -77,6 +84,10 @@ public class HorsePage {
 		catch(Exception e) {
 			Logger.getLogger("error").error(ExceptionUtils.getStackTrace(e));
 		}
+		
+		setURL( getPageURL() );
+		this.horse = new Horse( this );
+
 	}
 	
 	/**
@@ -88,7 +99,7 @@ public class HorsePage {
 	{
 		this.programm = programm;
 		
-		Logger.getLogger("debug").debug("HORSE " + horse.getName() + " WITH URL " + getURL());
+		//Logger.getLogger("debug").debug("HORSE " + horse.getName() + " WITH URL " + getURL());
 		
 		// Регистрация в КСК
 		if( programm.getCommonSettings().isRegisterInEC() ) 
@@ -149,6 +160,18 @@ public class HorsePage {
 	public char getGender() {		
 		String genderElText = driver.findElement(By.xpath("//*[@id=\"characteristics-body-content\"]/table/tbody/tr[3]/td[1]")).getText();
 		return genderElText.contains("female") || genderElText.contains("кобыла") ? 'F' : 'M';
+	}
+	
+	public String toString() 
+	{		try {
+		return ""
+				+ "HORSE NAME: " + horse.getName() + "; "
+				+ "PAGE URL: " + getURL() + "; "
+				+ "PROGRAM NAME: " + (programm != null ? programm.getProgramName() : "null" )+ "; "
+				;
+	}
+	catch(Exception e) {e.printStackTrace(); return null;}
+
 	}
 	
 	/** 
@@ -640,6 +663,31 @@ public class HorsePage {
 		Logger.getLogger("debug").debug("IS FEED: " + isFeed);
 		return isFeed;
 	}	
+	/**
+	 * Так как при переключении между лошадьми URL генерируется динамически, получаем не тот, который забит в адресную строку, а зашитый в кличку лошади на странице.
+	 * @return URL страницы лошади 
+	 * */
+	private String getPageURL() 
+	{
+		return infoPanel.findElement(By.className("horse-name")).findElement(By.tagName("a")).getAttribute("href");
+	}
+	
+	private WebElement getInfoPanel() 
+	{
+		
+		try 
+		{
+			return driver.findElement(By.xpath(XPathConstants.HORSE_PAGE_INFO_PANEL));
+		}
+		catch( NoSuchElementException e ) 
+		{
+			return driver.findElement(By.xpath(XPathConstants.HORSE_PAGE_INFO_PANEL_ALT));
+		}
+		catch (Exception e) 
+		{
+			return null;
+		}
+	}
 //*****************************************************************************************************************	
 //*****************************************************************************************************************
 	public String getURL() {
@@ -647,5 +695,13 @@ public class HorsePage {
 	}
 	public void setURL(String uRL) {
 		URL = uRL;
+	}
+
+	public Horse getHorse() {
+		return horse;
+	}
+
+	public void setHorse(Horse horse) {
+		this.horse = horse;
 	}
 }

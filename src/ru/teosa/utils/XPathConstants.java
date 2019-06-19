@@ -27,6 +27,11 @@ public class XPathConstants {
 	/** Кнопка "Записать мою лошадь" на панели Конноспортивный комплекс  */
 	public static final String HORSE_PAGE_REGISTER_IN_EC_BUTTON = "//*[@id=\"cheval-inscription\"]";
 	
+	/** Панель с кличкой, аффиксом и заводом */
+	public static final String HORSE_PAGE_INFO_PANEL = "//*[@id=\"module-2\"]/div[1]/div/div[2]";
+	/** Альтернативная панель с кличкой, аффиксом и заводом (например Игдрасиль)*/
+	public static final String HORSE_PAGE_INFO_PANEL_ALT = "//*[@id=\"col-center\"]/div[1]/div[1]/div/div/div/div[2]";
+	
 	
 	
 	//*************************************
